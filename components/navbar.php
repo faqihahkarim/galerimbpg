@@ -1,21 +1,23 @@
-<?php
+<nav class="navbar">
+  <div class="container">
 
-?>
+    <div class="logo">
+      <img src="assets/images/logombpg.png" alt="Logo">
+      <img src="assets/images/logogaleri.png" alt="Logo">
+      <span>Galeri Seramik Pasir Gudang</span>
+    </div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Galeri Seramik Majlis Bandaraya Pasir Gudang</title>
+    <ul class="nav-links">
+      <li><a href="#">Utama</a></li>
+      <li><a href="#">Pakej</a></li>
+      <li><a href="#">Aktiviti</a></li>
+      <li><a href="produk.php">Produk</a></li>
+      <li><a href="galeri.php">Galeri</a></li>
+    </ul>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <div class="nav-action">
+      <a href="../admin/login.php" class="btn-primary">Admin</a>
+    </div>
 
-  <!-- Favicon -->
-  <link href="pic/logo2.png" sizes="32x16" rel="shortcut icon" />
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="landingcss.css" />
-</head>
+  </div>
+</nav>
