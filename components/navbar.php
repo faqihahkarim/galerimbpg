@@ -1,10 +1,12 @@
 <nav class="navbar">
   <div class="container">
 
-    <div class="logo">
-      <img src="assets/images/logombpg.png" alt="Logo">
-      <img src="assets/images/logogaleri.png" alt="Logo">
-      <span>Galeri Seramik Pasir Gudang</span>
+    <div class ="left-nav">
+      <div class="logo">
+        <img src="assets/images/logombpg.png" alt="Logo">
+        <img src="assets/images/logogaleri.png" alt="Logo">
+        <span>Galeri Seramik Pasir Gudang</span>
+      </div>
     </div>
 
     <ul class="nav-links">
