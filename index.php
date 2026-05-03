@@ -7,6 +7,8 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/navbar.css">
@@ -20,12 +22,38 @@
   <!-- include for components-->
   <?php include 'components/navbar.php'; ?>
 
-  <!-- TEST CONTENT -->
-  <div class= "news">
-    <h1>Selamat Datang ke Galeri Seramik Pasir Gudang</h1>
-    <p>Temui keindahan seni seramik di Pasir Gudang. Kami menawarkan pelbagai pakej menarik untuk pengalaman yang tidak terlupakan.</p>
-    
+  <!-- NEWS BANNER-->
+  <section class="hero">
+  <div class="hero-slider">
+
+    <!-- Slide 1 -->
+    <div class="slide active" style="background-image: url('assets/images/banner1.jpg');">
+      <div class="overlay"></div>
+      <div class="content">
+        <h1>Koleksi Seramik Terbaru:</h1>
+        <p>Dapatkan koleksi seramik terbaru dengan segera, lihat katalog di inventori</p>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide" style="background-image: url('assets/images/banner2.jpg');">
+      <div class="overlay"></div>
+      <div class="content">
+        <h1>Bengkel Seramik Mingguan</h1>
+        <p>Sertai aktiviti menarik bersama keluarga dan pelajar</p>
+      </div>
+    </div>
+
+    <!-- Arrows -->
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+
+    <!-- Dots -->
+    <div class="dots"></div>
+
   </div>
+
+</section>
 
   <div class= "intro">
     <h2>Kenapa Pilih Kami?</h2>
