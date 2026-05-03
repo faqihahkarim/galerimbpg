@@ -12,6 +12,7 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/index_news.css">
 
   <!-- Favicon -->
   <link rel="icon" href="assets/images/logogaleri.png" type="image/png" style="width: 32px; height: 32px;">
@@ -80,5 +81,8 @@
         <p>&copy; 2026 Galeri Seramik Pasir Gudang. Hak cipta terpelihara.</p>
     </div>
 
+     <!-- SCRIPT-->
+     <script src="assets/js/index.js"></script>
+     
 </body>
 </html>
