@@ -167,6 +167,7 @@
   line-height: 1.7;
   color: #333;
   margin-bottom: 15px;
+  text-align: justify;
 }
 
 @media (max-width: 900px) {
@@ -434,5 +435,154 @@
 
   .package-content p {
     font-size: 15px;
+  }
+}
+
+/* Footer */
+.footer-section {
+  width: 100%;
+  padding: 35px 40px 15px;
+  background-color: #fff;
+  background-image: url("../images/bg-pattern.png");
+  background-size: 420px;
+  background-repeat: repeat;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-title {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.footer-title h2 {
+  font-family: "Amiri", serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #111;
+}
+
+.footer-title p {
+  font-size: 18px;
+  line-height: 1.4;
+  margin-top: 10px;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  gap: 70px;
+}
+
+.footer-vase img {
+  width: 230px;
+}
+
+.footer-info {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 45px;
+}
+
+.footer-column h3 {
+  font-family: "Amiri", serif;
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.footer-column p {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.footer-bottom {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-bottom p {
+  font-family: "Amiri", serif;
+  font-size: 15px;
+}
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.footer-social a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  font-size: 12px;
+  color: #111;
+}
+
+.footer-social i {
+  font-size: 28px;
+}
+
+@media (max-width: 900px) {
+  .footer-content {
+    gap: 35px;
+  }
+
+  .footer-vase img {
+    width: 170px;
+  }
+
+  .footer-info {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-section {
+    padding: 45px 22px 20px;
+  }
+
+  .footer-title h2 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .footer-title p {
+    font-size: 16px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-vase {
+    display: none;
+  }
+
+  .footer-info {
+    width: 100%;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .footer-social {
+    flex-direction: column;
+    gap: 10px;
   }
 }
