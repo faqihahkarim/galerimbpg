@@ -56,12 +56,15 @@
 
 </section>
 
+
+<!-- INTRO -->
+
 <section class="intro-section">
   <div class="intro-container">
 
     <!-- Image -->
     <div class="intro-image">
-      <img src="assets/images/galeri.jpg" alt="Galeri Seramik">
+      <img src="assets/images/galeri.webp" alt="Galeri Seramik">
     </div>
 
     <!-- Text -->
@@ -84,14 +87,46 @@
   </div>
 </section>
 
-  <div class="pakej">
-    <h2>Pakej Kami</h2>
-    <ul>
-      <li><strong>Pakej Asas:</strong> Bengkel seramik selama 2 jam dengan bahan disediakan.</li>
-      <li><strong>Pakej Keluarga:</strong> Aktiviti seramik untuk keluarga dengan harga istimewa.</li>
-      <li><strong>Pakej Korporat:</strong> Sesi team building dengan aktiviti seramik yang menyeronokkan.</li>
-    </ul>
+<!-- ACTIVITY -->
+
+<section class="activity-section">
+  <div class="activity-container">
+
+    <div class="section-title">
+      <h2>Aktiviti Kami</h2>
+      <p>Terokai pelbagai aktiviti menarik yang kami<br> sediakan</p>
     </div>
+
+    <div class="activity-grid">
+
+      <div class="activity-card">
+        <img src="assets/images/act1.jpg" alt="Interaktif Mewarna">
+        <h3>Interaktif<br>Mewarna</h3>
+        <p>Mewarna produk seramik yang sudah siap dibakar</p>
+      </div>
+
+      <div class="activity-card">
+        <img src="assets/images/act2.jpg" alt="Melukis dan Mewarna">
+        <h3>Melukis &<br>Mewarna</h3>
+        <p>Teknik asas melukis motif. Pewarnaan asas seramik</p>
+      </div>
+
+      <div class="activity-card">
+        <img src="assets/images/act3.jpg" alt="Pembentukan Tanah Liat">
+        <h3>Pembentukan Tanah<br>Liat</h3>
+        <p>Teknik coil/ pinch/ slab/ Pendedahan asas struktur tanah liat</p>
+      </div>
+
+      <div class="activity-card">
+        <img src="assets/images/act4.jpg" alt="Teknik Lempar Alin">
+        <h3>Teknik Lempar<br>Alin</h3>
+        <p>Teknik membentuk menggunakan mesin roda tembikar</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
 
     <div class="aktiviti">
       <h2>Aktiviti Kami</h2>

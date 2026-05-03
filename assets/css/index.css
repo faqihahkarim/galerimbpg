@@ -1,3 +1,4 @@
+/* News Section */
 .hero {
   width: 100%;
   height: 90vh;
@@ -115,5 +116,197 @@
   .prev, .next {
     font-size: 20px;
     padding: 8px 12px;
+  }
+}
+
+
+
+
+/* Introduction Section */
+.intro-section {
+  width: 100%;
+ 
+  padding: 80px 40px;
+}
+
+.intro-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+}
+
+/* Image */
+.intro-image {
+  flex: 1;
+}
+
+.intro-image img {
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  height: 350px;
+  
+}
+
+/* Text */
+.intro-text {
+  flex: 1;
+}
+
+.intro-text h2 {
+  font-family: "Amiri", serif;
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #111;
+}
+
+.intro-text p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+@media (max-width: 900px) {
+  .intro-container {
+    gap: 40px;
+  }
+
+  .intro-text h2 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .intro-container {
+    flex-direction: column;
+  }
+
+  .intro-section {
+    padding: 50px 20px;
+  }
+
+  .intro-text {
+    text-align: center;
+  }
+
+  .intro-text h2 {
+    font-size: 26px;
+  }
+
+  .intro-text p {
+    font-size: 15px;
+  }
+}
+
+
+
+
+/* Activity Section */
+
+.activity-section {
+  width: 100%;
+  padding: 65px 40px;
+  background-color: #fff;
+  background-image: url("../images/bg-pattern.png");
+  background-size: 420px;
+  background-repeat: repeat;
+}
+
+.activity-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 55px;
+}
+
+.section-title h2 {
+  font-family: "Amiri", serif;
+  font-size: 38px;
+  font-weight: 400;
+  color: #111;
+}
+
+.section-title p {
+  font-size: 18px;
+  line-height: 1.4;
+  color: #000;
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 45px;
+}
+
+.activity-card {
+  text-align: center;
+}
+
+.activity-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 120px 120px 0 0;
+  margin-bottom: 15px;
+}
+
+.activity-card h3 {
+  font-family: "Amiri", serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.25;
+  margin-bottom: 18px;
+  color: #111;
+}
+
+.activity-card p {
+  font-size: 16px;
+  line-height: 1.35;
+  color: #000;
+}
+
+@media (max-width: 1024px) {
+  .activity-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 45px 35px;
+  }
+
+  .activity-card img {
+    height: 280px;
+  }
+}
+
+@media (max-width: 600px) {
+  .activity-section {
+    padding: 50px 20px;
+  }
+
+  .section-title h2 {
+    font-size: 30px;
+  }
+
+  .section-title p {
+    font-size: 16px;
+  }
+
+  .activity-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .activity-card img {
+    max-width: 260px;
+    height: 260px;
+  }
+
+  .activity-card {
+    max-width: 300px;
+    margin: 0 auto;
   }
 }
