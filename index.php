@@ -89,7 +89,7 @@
 
 <!-- ACTIVITY -->
 
-<section class="activity-section">
+<section class="activity-section" id="activity-section">
   <div class="activity-container">
 
     <div class="section-title">
@@ -130,7 +130,7 @@
 
 <!-- PACKAGE -->
 
-<section class="package-section">
+<section class="package-section" id="package-section">
   <div class="package-container">
 
     <div class="package-title">
@@ -176,9 +176,70 @@
   </div>
 </section>
 
-    <div class= "footer">
-        <p>&copy; 2026 Galeri Seramik Pasir Gudang. Hak cipta terpelihara.</p>
+<!-- FOOTER -->
+
+<footer class="footer-section">
+  <div class="footer-container">
+
+    <div class="footer-title">
+      <h2>Mari Beramai-Ramai ke Galeri Seramik Pasir Gudang</h2>
+      <p>Hubungi kami untuk sebarang pertanyaan<br>berkenaan Galeri Seramik Pasir Gudang</p>
     </div>
+
+    <div class="footer-content">
+
+      <div class="footer-vase">
+        <img src="assets/images/vase.png" alt="Seramik Vase">
+      </div>
+
+      <div class="footer-info">
+        <div class="footer-column">
+          <h3>Lokasi</h3>
+          <p>
+            Galeri seramik MBPG,<br>
+            Lot 97769, Plot 6,<br>
+            Taman Bandar, 81700<br>
+            Pasir Gudang, Johor
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h3>Waktu Operasi</h3>
+          <p>
+            Sabtu - Khamis<br>
+            9.00 pagi - 1.00 petang<br>
+            2.00 petang - 5.00 petang
+          </p>
+
+          <p>
+            Jumaat<br>
+            9.00 pagi - 12.15 tengahari<br>
+            2.45 petang - 5.00 petang
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h3>Hubungi Kami</h3>
+          <p>
+            Telefon: 013-2988693 / 019-2028241<br>
+            Emel: galeriseramik.mbpg@gmail.com
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Galeri Seramik Pasir Gudang. All Rights Reserved</p>
+
+      <div class="footer-social">
+        <a href="#"><i class="fa-brands fa-facebook"></i> Majlis Bandaraya Pasir Gudang</a>
+        <a href="https://www.instagram.com/pasirgudangkraf/"><i class="fa-brands fa-instagram"></i> pasirgudangkraf</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
 
      <!-- SCRIPT-->
      <script src="assets/js/index.js"></script>

@@ -16,8 +16,8 @@
     <div class="menu-wrapper">
       <ul class="nav-links">
         <li><a href="#">Utama</a></li>
-        <li><a href="#">Pakej</a></li>
-        <li><a href="#">Aktiviti</a></li>
+        <li><a href="#package-section">Pakej</a></li>
+        <li><a href="#activity-section">Aktiviti</a></li>
         <li><a href="produk.php">Produk</a></li>
         <li><a href="galeri.php">Galeri</a></li>
       </ul>
