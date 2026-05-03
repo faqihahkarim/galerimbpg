@@ -12,7 +12,7 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/navbar.css">
-  <link rel="stylesheet" href="assets/css/index_news.css">
+  <link rel="stylesheet" href="assets/css/index.css">
 
   <!-- Favicon -->
   <link rel="icon" href="assets/images/logogaleri.png" type="image/png" style="width: 32px; height: 32px;">
@@ -56,10 +56,33 @@
 
 </section>
 
-  <div class= "intro">
-    <h2>Kenapa Pilih Kami?</h2>
-    <p>Kami menyediakan pengalaman yang unik dengan aktiviti seramik yang menyeronokkan untuk semua peringkat umur. Dari bengkel kreatif hingga pameran seni, kami mempunyai sesuatu untuk semua orang.</p> 
+<section class="intro-section">
+  <div class="intro-container">
+
+    <!-- Image -->
+    <div class="intro-image">
+      <img src="assets/images/galeri.jpg" alt="Galeri Seramik">
+    </div>
+
+    <!-- Text -->
+    <div class="intro-text">
+      <h2>Selamat Datang Ke<br>Galeri Seramik Pasir Gudang</h2>
+
+      <p>
+        Temui warisan yang kaya mengenai seni seramik di galeri kami.
+        Kami menempatkan koleksi yang luas merangkumi tembikar tradisional,
+        jubin, dan kepingan hiasan yang merentas berabad-abad kecemerlangan artistik.
+      </p>
+
+      <p>
+        Galeri kami memaparkan rekaan yang rumit, warna-warna yang terang,
+        dan ketukangan mahir yang mencerminkan pencapaian budaya dan artistik.
+        Daripada pinggan yang berhias kepada jubin yang elegan.
+      </p>
+    </div>
+
   </div>
+</section>
 
   <div class="pakej">
     <h2>Pakej Kami</h2>
