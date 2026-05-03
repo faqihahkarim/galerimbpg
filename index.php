@@ -128,12 +128,53 @@
   </div>
 </section>
 
-    <div class="aktiviti">
-      <h2>Aktiviti Kami</h2>
-      <ul>
-        <li><strong>Bengkel Seramik:</strong> Pelajari teknik membuat seramik dengan pakar kami.</li>
-        <li><strong>Pameran Seni:</strong> Saksikan karya
+<!-- PACKAGE -->
+
+<section class="package-section">
+  <div class="package-container">
+
+    <div class="package-title">
+      <h2>Pakej Kami</h2>
+      <p>
+        Terokai pakej kami yang kami sediakan untuk<br>
+        pengalaman anda di Galeri Seramik Pasir Gudang
+      </p>
     </div>
+
+    <div class="package-grid">
+
+      <div class="package-card">
+        <img src="assets/images/lawatan.jpg" alt="Sesi Lawatan Berkumpulan">
+
+        <div class="package-content">
+          <h3>Sesi Lawatan Berkumpulan</h3>
+          <p>
+            Pengalaman lawatan berkumpulan yang komprehensif untuk meneroka
+            koleksi seramik Islam kami dengan panduan pakar serendah RM2.00
+          </p>
+
+          <a href="#" class="package-btn">Baca Lebih Lanjut</a>
+        </div>
+      </div>
+
+      <div class="package-card">
+        <img src="assets/images/pendidikan.jpg" alt="Pakej Pendidikan">
+
+        <div class="package-content">
+          <h3>Pakej Pendidikan</h3>
+          <p>
+            Rasai pengalaman hands-on pembuatan seramik dalam bentuk pembelajaran
+            interaktif berdasarkan aktiviti yang dipilih serendah RM10.00
+          </p>
+
+          <a href="#" class="package-btn">Baca Lebih Lanjut</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
 
     <div class= "footer">
         <p>&copy; 2026 Galeri Seramik Pasir Gudang. Hak cipta terpelihara.</p>
