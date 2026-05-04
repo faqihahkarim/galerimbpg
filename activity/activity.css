@@ -1,0 +1,153 @@
+.activity-detail-page {
+  width: 100%;
+  padding: 45px 40px 25px;
+  background-color: #fff;
+  background-image: url("../assets/images/bg-pattern.png");
+  background-size: 420px;
+  background-repeat: repeat;
+}
+
+.detail-banner {
+  max-width: 1200px;
+  height: 360px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  position: relative;
+}
+
+.detail-overlay {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.55) 28%,
+    rgba(0, 0, 0, 0.1) 65%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  display: flex;
+  align-items: center;
+}
+
+.detail-content {
+  width: 360px;
+  margin-left: 45px;
+  color: #fff;
+}
+
+.detail-content h1 {
+  font-family: "Amiri", serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.detail-content p {
+  font-size: 15px;
+  line-height: 1.35;
+  margin-bottom: 20px;
+}
+
+.detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.detail-info span {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.detail-info i {
+  width: 23px;
+  height: 23px;
+  border: 1.5px solid #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+/* Gallery */
+.activity-gallery {
+  max-width: 1200px;
+  margin: 60px auto 0;
+}
+
+.activity-gallery h2 {
+  font-family: "Amiri", serif;
+  font-size: 34px;
+  font-weight: 400;
+  margin-bottom: 22px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.18);
+}
+
+@media (max-width: 900px) {
+  .detail-banner {
+    height: 330px;
+  }
+
+  .gallery-grid {
+    gap: 20px;
+  }
+
+  .gallery-grid img {
+    height: 190px;
+  }
+}
+
+@media (max-width: 768px) {
+  .activity-detail-page {
+    padding: 30px 20px 25px;
+  }
+
+  .detail-banner {
+    height: auto;
+    min-height: 430px;
+  }
+
+  .detail-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    align-items: flex-end;
+    padding: 30px 20px;
+  }
+
+  .detail-content {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .detail-content h1 {
+    font-size: 28px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-grid img {
+    height: 220px;
+  }
+}
