@@ -152,7 +152,7 @@
             koleksi seramik Islam kami dengan panduan pakar serendah RM2.00
           </p>
 
-          <a href="#" class="package-btn">Baca Lebih Lanjut</a>
+          <a href="package/lawatan.php" class="package-btn">Baca Lebih Lanjut</a>
         </div>
       </div>
 
@@ -166,7 +166,7 @@
             interaktif berdasarkan aktiviti yang dipilih serendah RM10.00
           </p>
 
-          <a href="#" class="package-btn">Baca Lebih Lanjut</a>
+          <a href="package/pendidikan.php" class="package-btn">Baca Lebih Lanjut</a>
         </div>
       </div>
 
