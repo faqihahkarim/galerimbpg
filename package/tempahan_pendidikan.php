@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="../assets/css/navbar.css">
   <link rel="stylesheet" href="../assets/css/index.css">
   <link rel="stylesheet" href="package.css">
+  <link rel="stylesheet" href="tempahan.css">
 
   <!-- Favicon -->
   <link rel="icon" href="../assets/images/logogaleri.png" type="image/png" style="width: 32px; height: 32px;">
@@ -22,13 +23,13 @@
 <body>
 
   <!-- include for components-->
-  <?php include 'navbar.php'; ?>
+  <?php include 'navbar_pend.php'; ?>
 
   <section class="booking-section">
   <div class="booking-container">
 
     <div class="booking-title">
-      <h1>Lawatan Berkumpulan</h1>
+      <h1>Pakej Pendidikan</h1>
       <p>Pilih tarikh yang mempunyai kekosongan pada kalendar untuk tempahan slot.</p>
       <span>Lakukan tempahan 3 hari sebelum.</span>
     </div>
@@ -57,13 +58,13 @@
       <!-- CALENDAR -->
       <div class="calendar-box">
         <div class="calendar-days">
-          <div>Ahad</div>
           <div>Isnin</div>
           <div>Selasa</div>
           <div>Rabu</div>
           <div>Khamis</div>
           <div>Jumaat</div>
           <div>Sabtu</div>
+          <div>Ahad</div>
         </div>
 
         <div class="calendar-grid">
