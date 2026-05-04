@@ -21,7 +21,7 @@
 <body>
 
   <!-- include for components-->
-  <?php include 'components/navbar.php'; ?>
+  <?php include 'components/index_navbar.php'; ?>
 
   <!-- NEWS BANNER-->
   <section class="hero">
@@ -45,11 +45,9 @@
       </div>
     </div>
 
-    <!-- Arrows -->
     <button class="prev">&#10094;</button>
     <button class="next">&#10095;</button>
 
-    <!-- Dots -->
     <div class="dots"></div>
 
   </div>
@@ -99,26 +97,26 @@
 
     <div class="activity-grid">
 
-      <a href="aktiviti_melukis.php" class="activity-card">
+      <a href="activity/interaktif_mewarna.php" class="activity-card">
         <img src="assets/images/act1.jpg" alt="Interaktif Mewarna">
         <h3>Interaktif<br>Mewarna</h3>
         <p>Mewarna produk seramik yang sudah siap dibakar</p>
       </a>
 
       
-      <a href="aktiviti_melukis.php" class="activity-card">
+      <a href="activity/melukis_mewarna.php" class="activity-card">
         <img src="assets/images/act2.jpg" alt="Melukis dan Mewarna">
         <h3>Melukis & Mewarna</h3>
         <p>Teknik asas melukis motif. Pewarnaan asas seramik</p>
       </a>
 
-      <a href="aktiviti_melukis.php" class="activity-card">
+      <a href="activity/pembentukan_tanah_liat.php" class="activity-card">
         <img src="assets/images/act3.jpg" alt="Pembentukan Tanah Liat">
         <h3>Pembentukan Tanah<br>Liat</h3>
         <p>Teknik coil/ pinch/ slab/ Pendedahan asas struktur tanah liat</p>
       </a>
 
-      <a href="aktiviti_melukis.php" class="activity-card">
+      <a href="activity/teknik_lempar_alin.php" class="activity-card">
         <img src="assets/images/act4.jpg" alt="Teknik Lempar Alin">
         <h3>Teknik Lempar<br>Alin</h3>
         <p>Teknik membentuk menggunakan mesin roda tembikar</p>
