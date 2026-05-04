@@ -59,11 +59,16 @@
         <p>Bayaran bagi setiap aktiviti:</p>
 
         <table class="price-table">
+            <colgroup>
+                <col style="width: 50%">
+                <col style="width: 50%">
+            </colgroup>
+
             <thead>
-            <tr>
+                <tr>
                 <th>Aktiviti</th>
                 <th>Harga</th>
-            </tr>
+                </tr>
             </thead>
 
             <tbody>
