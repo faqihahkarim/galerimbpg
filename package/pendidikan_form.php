@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="../assets/css/navbar.css">
   <link rel="stylesheet" href="../assets/css/index.css">
   <link rel="stylesheet" href="package.css">
-  <link rel="stylesheet" href="tempahan.css">
+  <link rel="stylesheet" href="form.css">
 
   <!-- Favicon -->
   <link rel="icon" href="../assets/images/logogaleri.png" type="image/png" style="width: 32px; height: 32px;">
@@ -82,22 +82,30 @@
 
         <!-- 3 -->
         <div class="form-box small-box">
-          <h3>3. Tarikh & Slot Pilihan</h3>
+            <h3>3. Tarikh & Slot Pilihan</h3>
 
-          <div class="form-grid two">
-            <div class="form-group">
-              <label>Tarikh</label>
-              <input type="text" value="2 Mei 2026 (Sabtu)">
-            </div>
+            <div class="form-grid two">
+                <div class="form-group">
+                <label>Tarikh</label>
+                <input type="date" name="tarikh" id="tarikh" min="2026-05-07">
+                </div>
 
-            <div class="form-group">
-              <label>Slot Pilihan</label>
-              <input type="text" value="9.00 Pagi - 12.00 Tengahari">
+                <div class="form-group">
+                <label>Slot Pilihan</label>
+                <select name="slot" id="slot">
+                    <option value="">-- Pilih Slot --</option>
+                    <option value="9.00 Pagi - 12.00 Tengahari">
+                    9.00 Pagi - 12.00 Tengahari
+                    </option>
+                    <option value="2.00 Petang - 5.00 Petang">
+                    2.00 Petang - 5.00 Petang
+                    </option>
+                </select>
+                </div>
             </div>
-          </div>
         </div>
+      
 
-      </div>
 
       <!-- 4 -->
       <div class="form-box">
@@ -109,7 +117,7 @@
         <div class="activity-list">
 
           <div class="activity-item">
-            <img src="assets/images/act1.jpg" alt="Interaktif Mewarna">
+            <img src="../assets/images/act1.jpg" alt="Interaktif Mewarna">
 
             <div class="activity-info">
               <h4>Interaktif Mewarna</h4>
@@ -129,7 +137,7 @@
           </div>
 
           <div class="activity-item">
-            <img src="assets/images/act2.jpg" alt="Melukis dan Mewarna">
+            <img src="../assets/images/act2.jpg" alt="Melukis dan Mewarna">
 
             <div class="activity-info">
               <h4>Melukis dan Mewarna</h4>
@@ -149,7 +157,7 @@
           </div>
 
           <div class="activity-item">
-            <img src="assets/images/act3.jpg" alt="Pembentukan Tanah Liat">
+            <img src="../assets/images/act3.jpg" alt="Pembentukan Tanah Liat">
 
             <div class="activity-info">
               <h4>Pembentukan Tanah Liat</h4>
@@ -169,7 +177,7 @@
           </div>
 
           <div class="activity-item">
-            <img src="assets/images/act4.jpg" alt="Teknik Lempar Alin">
+            <img src="../assets/images/act4.jpg" alt="Teknik Lempar Alin">
 
             <div class="activity-info">
               <h4>Teknik Lempar Alin</h4>
