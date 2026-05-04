@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="../assets/css/navbar.css">
   <link rel="stylesheet" href="../assets/css/index.css">
   <link rel="stylesheet" href="package.css">
-  <link rel="stylesheet" href="tempahan.css">
+  <link rel="stylesheet" href="calendar_page.css">
 
   <!-- Favicon -->
   <link rel="icon" href="../assets/images/logogaleri.png" type="image/png" style="width: 32px; height: 32px;">
@@ -128,7 +128,7 @@
             <strong><i class="fa-regular fa-clock"></i> 9.00AM - 12.00PM</strong>
             <p>Bilangan Peserta: 0 / 50</p>
           </div>
-          <a href="booking_form.php" class="book-btn">Pilih Slot</a>
+          <a href="pendidikan_form.php" class="book-btn">Pilih Slot</a>
         </div>
 
         <div class="slot-item">
@@ -136,7 +136,7 @@
             <strong><i class="fa-regular fa-clock"></i> 9.00AM - 12.00PM</strong>
             <p>Bilangan Peserta: 0 / 50</p>
           </div>
-          <a href="booking_form.php" class="book-btn">Pilih Slot</a>
+          <a href="pendidikan_form.php" class="book-btn">Pilih Slot</a>
         </div>
 
         <div class="slot-item">
@@ -144,7 +144,7 @@
             <strong><i class="fa-regular fa-clock"></i> 9.00AM - 12.00PM</strong>
             <p>Bilangan Peserta: 0 / 50</p>
           </div>
-          <a href="booking_form.php" class="book-btn">Pilih Slot</a>
+          <a href="pendidikan_form.php" class="book-btn">Pilih Slot</a>
         </div>
 
         <h4>Slot penuh / tidak tersedia</h4>
