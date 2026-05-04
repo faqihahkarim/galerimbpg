@@ -99,29 +99,30 @@
 
     <div class="activity-grid">
 
-      <div class="activity-card">
+      <a href="aktiviti_melukis.php" class="activity-card">
         <img src="assets/images/act1.jpg" alt="Interaktif Mewarna">
         <h3>Interaktif<br>Mewarna</h3>
         <p>Mewarna produk seramik yang sudah siap dibakar</p>
-      </div>
+      </a>
 
-      <div class="activity-card">
+      
+      <a href="aktiviti_melukis.php" class="activity-card">
         <img src="assets/images/act2.jpg" alt="Melukis dan Mewarna">
-        <h3>Melukis &<br>Mewarna</h3>
+        <h3>Melukis & Mewarna</h3>
         <p>Teknik asas melukis motif. Pewarnaan asas seramik</p>
-      </div>
+      </a>
 
-      <div class="activity-card">
+      <a href="aktiviti_melukis.php" class="activity-card">
         <img src="assets/images/act3.jpg" alt="Pembentukan Tanah Liat">
         <h3>Pembentukan Tanah<br>Liat</h3>
         <p>Teknik coil/ pinch/ slab/ Pendedahan asas struktur tanah liat</p>
-      </div>
+      </a>
 
-      <div class="activity-card">
+      <a href="aktiviti_melukis.php" class="activity-card">
         <img src="assets/images/act4.jpg" alt="Teknik Lempar Alin">
         <h3>Teknik Lempar<br>Alin</h3>
         <p>Teknik membentuk menggunakan mesin roda tembikar</p>
-      </div>
+      </a>
 
     </div>
 
