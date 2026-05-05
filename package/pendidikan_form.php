@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,12 +24,12 @@
 <body>
 
   <!-- include for components-->
-  <?php include 'navbar_lawatan.php'; ?>
+  <?php include 'navbar.php'; ?>
 <section class="form-section">
   <div class="form-container">
 
     <div class="form-title">
-      <h1>Borang Tempahan Pakej Pendidikan</h1>
+      <h1>Borang Tempahan Lawatan Berkumpulan</h1>
       <p>Sila lengkapkan maklumat tempahan dan agihan peserta</p>
     </div>
 
@@ -80,32 +81,31 @@
           </div>
         </div>
 
-        <!-- 3 -->
+       <!-- 3 -->
         <div class="form-box small-box">
-            <h3>3. Tarikh & Slot Pilihan</h3>
+        <h3>3. Tarikh & Slot Pilihan</h3>
 
-            <div class="form-grid two">
-                <div class="form-group">
-                <label>Tarikh</label>
-                <input type="date" name="tarikh" id="tarikh" min="2026-05-07">
-                </div>
+        <div class="form-grid two">
+            <div class="form-group">
+            <label>Tarikh</label>
+            <input type="date" name="tarikh" id="tarikh" min="2026-05-07">
+            </div>
 
-                <div class="form-group">
-                <label>Slot Pilihan</label>
-                <select name="slot" id="slot">
-                    <option value="">-- Pilih Slot --</option>
-                    <option value="9.00 Pagi - 12.00 Tengahari">
-                    9.00 Pagi - 12.00 Tengahari
-                    </option>
-                    <option value="2.00 Petang - 5.00 Petang">
-                    2.00 Petang - 5.00 Petang
-                    </option>
-                </select>
-                </div>
+            <div class="form-group">
+            <label>Slot Pilihan</label>
+            <select name="slot" id="slot">
+                <option value="">-- Pilih Slot --</option>
+                <option value="9.00 Pagi - 12.00 Tengahari">
+                9.00 Pagi - 12.00 Tengahari
+                </option>
+                <option value="2.00 Petang - 5.00 Petang">
+                2.00 Petang - 5.00 Petang
+                </option>
+            </select>
             </div>
         </div>
-      
-
+        </div>
+      </div>
 
       <!-- 4 -->
       <div class="form-box">
@@ -204,6 +204,7 @@
         </div>
       </div>
 
+      
       <!-- 5 -->
       <div class="form-box">
         <h3>5. Maklumat Tambahan</h3>
