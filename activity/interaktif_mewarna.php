@@ -1,3 +1,4 @@
+<?php $base = "/web/galeriseramikmbpg/"; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
