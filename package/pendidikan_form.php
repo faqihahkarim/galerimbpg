@@ -32,7 +32,7 @@ include '../components/navbar.php';
   <div class="form-container">
 
     <div class="form-title">
-      <h1>Borang Tempahan Lawatan Berkumpulan</h1>
+      <h1>Borang Tempahan Pakej Pendidikan</h1>
       <p>Sila lengkapkan maklumat tempahan dan agihan peserta</p>
     </div>
 
