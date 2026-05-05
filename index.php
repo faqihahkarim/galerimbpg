@@ -1,3 +1,8 @@
+<?php 
+$base = "/web/galeriseramikmbpg/";
+$pageType = "home";
+include 'components/navbar.php'; 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,9 +24,6 @@
 </head>
 
 <body>
-
-  <!-- include for components-->
-  <?php include 'components/index_navbar.php'; ?>
 
   <!-- NEWS BANNER-->
   <section class="hero">
