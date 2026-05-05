@@ -1,4 +1,8 @@
-<?php $base = "/web/galeriseramikmbpg/"; ?>
+<?php 
+$base = "/web/galeriseramikmbpg/";
+$pageType = "inner";
+include '../components/navbar.php'; 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +26,6 @@
 </head>
 
 <body>
-
-  <!-- include for components-->
-  <?php include 'navbar_lawatan.php'; ?>
 
   <section class="booking-section">
   <div class="booking-container">
