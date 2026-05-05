@@ -18,7 +18,7 @@
           <li><a href="<?= $base ?>index.php">Utama</a></li>
           <li><a href="<?= $base ?>#activity-section">Aktiviti</a></li>
           <li><a href="<?= $base ?>#package-section">Pakej</a></li>
-          <li><a href="<?= $base ?>produk.php">Produk</a></li>
+          <li><a href="<?= $base ?>product/produk.php">Produk</a></li>
           <li><a href="<?= $base ?>galeri.php">Galeri</a></li>
         </ul>
 
