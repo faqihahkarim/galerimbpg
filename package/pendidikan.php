@@ -101,6 +101,7 @@ include '../components/navbar.php';
 
         </div>
     </section>
+<?php include '../components/footer.php'; ?>
 
 </body>
 </html>
