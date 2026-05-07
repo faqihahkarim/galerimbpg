@@ -15,5 +15,8 @@
 </style>
 
 <footer class="copyright-footer">
-  <p>© 2026 Galeri Seramik Pasir Gudang. All Rights Reserved</p>
+  <p>
+    © <?php echo date("Y"); ?> Galeri Seramik Pasir Gudang.
+    All Rights Reserved
+  </p>
 </footer>
