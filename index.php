@@ -1,8 +1,25 @@
-<?php 
+<?php
+
+include 'db.php';
+$activityQuery = "SELECT
+                   a.activity_id,
+                   a.activity_name,
+                   a.description,
+                   ai.image_url
+                  FROM activities a
+                  LEFT JOIN activity_images ai
+                  ON a.activity_id = ai.activity_id
+                  AND ai.is_main = 1
+                  WHERE a.status = 'active'
+                  ORDER BY a.activity_id ASC";
+
+$activityResult = mysqli_query($conn, $activityQuery);
+
 $base = "/web/galeriseramikmbpg/";
 $pageType = "home";
 include 'components/navbar.php'; 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,30 +116,32 @@ include 'components/navbar.php';
 
     <div class="activity-grid">
 
-      <a href="activity/interaktif_mewarna.php" class="activity-card">
-        <img src="assets/images/act1.jpg" alt="Interaktif Mewarna">
-        <h3>Interaktif<br>Mewarna</h3>
-        <p>Mewarna produk seramik yang sudah siap dibakar</p>
-      </a>
+      <?php while ($activity = mysqli_fetch_assoc($activityResult)): ?>
 
-      
-      <a href="activity/melukis_mewarna.php" class="activity-card">
-        <img src="assets/images/act2.jpg" alt="Melukis dan Mewarna">
-        <h3>Melukis & Mewarna</h3>
-        <p>Teknik asas melukis motif. Pewarnaan asas seramik</p>
-      </a>
+        <?php
+          $image = !empty($activity['image_url'])
+            ? $activity['image_url']
+            : "assets/images/default-activity.jpg";
+        ?>
 
-      <a href="activity/pembentukan_tanah_liat.php" class="activity-card">
-        <img src="assets/images/act3.jpg" alt="Pembentukan Tanah Liat">
-        <h3>Pembentukan Tanah<br>Liat</h3>
-        <p>Teknik coil/ pinch/ slab/ Pendedahan asas struktur tanah liat</p>
-      </a>
+        <a href="activity/activity_detail.php?id=<?= $activity['activity_id']; ?>" class="activity-card">
 
-      <a href="activity/teknik_lempar_alin.php" class="activity-card">
-        <img src="assets/images/act4.jpg" alt="Teknik Lempar Alin">
-        <h3>Teknik Lempar<br>Alin</h3>
-        <p>Teknik membentuk menggunakan mesin roda tembikar</p>
-      </a>
+          <img 
+            src="<?= htmlspecialchars($image); ?>" 
+            alt="<?= htmlspecialchars($activity['activity_name']); ?>"
+          >
+
+          <h3>
+            <?= htmlspecialchars($activity['activity_name']); ?>
+          </h3>
+
+          <p>
+            <?= htmlspecialchars($activity['description']); ?>
+          </p>
+
+        </a>
+
+      <?php endwhile; ?>
 
     </div>
 
