@@ -231,7 +231,7 @@ include 'components/navbar.php';
     </div>
 
     <div class="footer-bottom">
-      <p>© 2026 Galeri Seramik Pasir Gudang. All Rights Reserved</p>
+      <p>© <?php echo date("Y"); ?> Galeri Seramik Pasir Gudang. All Rights Reserved</p>
 
       <div class="footer-social">
         <a href="#"><i class="fa-brands fa-facebook"></i> Majlis Bandaraya Pasir Gudang</a>
