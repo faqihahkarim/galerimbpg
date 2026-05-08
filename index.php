@@ -15,6 +15,18 @@ $activityQuery = "SELECT
 
 $activityResult = mysqli_query($conn, $activityQuery);
 
+
+$packageQuery= "SELECT
+                package_id,
+                package_name,
+                description,
+                image_url
+              FROM packages
+              WHERE status = 'active'
+              ORDER BY package_id ASC";
+
+$packageResult = mysqli_query($conn, $packageQuery);
+
 $base = "/web/galeriseramikmbpg/";
 $pageType = "home";
 include 'components/navbar.php'; 
@@ -163,34 +175,38 @@ include 'components/navbar.php';
 
     <div class="package-grid">
 
+    <?php while ($package = mysqli_fetch_assoc($packageResult)): ?>
       <div class="package-card">
-        <img src="assets/images/lawatan.jpg" alt="Sesi Lawatan Berkumpulan">
+        <?php
+
+        //package image
+         $image = !empty($package['image_url'])
+            ? $package['image_url']
+            : "assets/images/default-package.jpg";
+
+          // assigning page for each package
+          if ($package['package_id'] == 1) {
+            $detailPage = "package/lawatan.php?id=" . $package['package_id'];
+          } elseif ($package['package_id'] == 2) {
+            $detailPage = "package/pendidikan.php?id=" . $package['package_id'];
+          } else {
+            $detailPage = "#";
+          }
+        ?>
+
+        <img src="<?= htmlspecialchars($image); ?>" alt="<?= htmlspecialchars($package['package_name']); ?>">
 
         <div class="package-content">
-          <h3>Sesi Lawatan Berkumpulan</h3>
+          <h3><?= htmlspecialchars($package['package_name']); ?></h3>
           <p>
-            Pengalaman lawatan berkumpulan yang komprehensif untuk meneroka
-            koleksi seramik Islam kami dengan panduan pakar serendah RM2.00
+            <?= htmlspecialchars($package['description']); ?>
           </p>
-
-          <a href="package/lawatan.php" class="package-btn">Baca Lebih Lanjut</a>
+           <a href="<?= $detailPage; ?>" class="package-btn">
+              Baca Lebih Lanjut
+            </a>
         </div>
       </div>
-
-      <div class="package-card">
-        <img src="assets/images/pendidikan.jpg" alt="Pakej Pendidikan">
-
-        <div class="package-content">
-          <h3>Pakej Pendidikan</h3>
-          <p>
-            Rasai pengalaman hands-on pembuatan seramik dalam bentuk pembelajaran
-            interaktif berdasarkan aktiviti yang dipilih serendah RM10.00
-          </p>
-
-          <a href="package/pendidikan.php" class="package-btn">Baca Lebih Lanjut</a>
-        </div>
-      </div>
-
+    <?php endwhile; ?>
     </div>
 
   </div>
