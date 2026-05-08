@@ -88,14 +88,7 @@ $galleryResult = mysqli_query($conn, $galleryQuery);
           src="<?= $base . htmlspecialchars($image['image_url']); ?>" 
           alt="<?= htmlspecialchars($activity['activity_name']); ?>"
         >
-        <img 
-          src="<?= $base . htmlspecialchars($image['image_url']); ?>" 
-          alt="<?= htmlspecialchars($activity['activity_name']); ?>"
-        >
-        <img 
-          src="<?= $base . htmlspecialchars($image['image_url']); ?>" 
-          alt="<?= htmlspecialchars($activity['activity_name']); ?>"
-        >
+        
       <?php endwhile; ?>
     </div>
   </div>
