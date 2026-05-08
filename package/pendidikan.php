@@ -1,7 +1,45 @@
 <?php 
+
+include '../db.php';
 $base = "/web/galeriseramikmbpg/";
 $pageType = "inner";
-include '../components/navbar.php'; 
+
+$packageQuery= "SELECT
+                package_id,
+                package_name,
+                description,
+                image_url
+              FROM packages
+              WHERE status = 'active'
+              ORDER BY package_id ASC";
+
+$packageResult = mysqli_query($conn, $packageQuery);
+
+$bookingRulesQuery = "SELECT
+                rule_id,
+                package_id,
+                day_of_week,
+                start_time,
+                end_time
+              FROM booking_rules
+              WHERE status = 'active'
+              AND package_id = 2
+              ORDER BY rule_id ASC";
+
+$bookingRulesResult = mysqli_query($conn, $bookingRulesQuery);
+
+$activityQuery = "SELECT
+                activity_id,
+                activity_name,
+                description,
+                price
+              FROM activities
+              WHERE status = 'active'
+              ORDER BY activity_id ASC";
+$activityResult = mysqli_query($conn, $activityQuery);
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,6 +64,7 @@ include '../components/navbar.php';
 
 <body>
 
+<?php include '../components/navbar.php'; ?>
 
     <section class="package-detail-section">
     <div class="package-detail-container">
@@ -39,24 +78,61 @@ include '../components/navbar.php';
 
         <p>Terdiri daripada 4 aktiviti yang boleh dipilih untuk sesi selama 3 jam:</p>
 
+        <?php
+
+            $saturday = [];
+            $sunday = [];
+
+            while ($rule = mysqli_fetch_assoc($bookingRulesResult)) {
+
+                $time =
+                    date("g.i A", strtotime($rule['start_time'])) .
+                    " - " .
+                    date("g.i A", strtotime($rule['end_time']));
+
+                if ($rule['day_of_week'] == 'Saturday') {
+                    $saturday[] = $time;
+                }
+
+                if ($rule['day_of_week'] == 'Sunday') {
+                    $sunday[] = $time;
+                }
+            }
+            ?>
+
         <table class="schedule-table">
-            <thead>
-            <tr>
-                <th>Sabtu</th>
-                <th>Ahad</th>
-            </tr>
-            </thead>
+
+    <thead>
+        <tr>
+            <th>Saturday</th>
+            <th>Sunday</th>
+        </tr>
+    </thead>
 
             <tbody>
-            <tr>
-                <td>9.00 Pagi - 12.00 Tengahari</td>
-                <td>9.00 Pagi - 12.00 Tengahari</td>
-            </tr>
-            <tr>
-                <td>2.00 Petang - 5.00 Petang</td>
-                <td>2.00 Petang - 5.00 Petang</td>
-            </tr>
+
+                <?php
+                $maxRows = max(count($saturday), count($sunday));
+
+                for ($i = 0; $i < $maxRows; $i++):
+                ?>
+
+                <tr>
+
+                    <td>
+                        <?= $saturday[$i] ?? '-'; ?>
+                    </td>
+
+                    <td>
+                        <?= $sunday[$i] ?? '-'; ?>
+                    </td>
+
+                </tr>
+
+                <?php endfor; ?>
+
             </tbody>
+
         </table>
 
         <p>Bayaran bagi setiap aktiviti:</p>
@@ -75,22 +151,12 @@ include '../components/navbar.php';
             </thead>
 
             <tbody>
-            <tr>
-                <td>Interaktif Mewarna</td>
-                <td>RM10.00</td>
-            </tr>
-            <tr>
-                <td>Melukis dan Mewarna</td>
-                <td>RM15.00</td>
-            </tr>
-            <tr>
-                <td>Pembentukan Tanah Liat</td>
-                <td>RM20.00</td>
-            </tr>
-            <tr>
-                <td>Teknik Lempar Alin</td>
-                <td>RM30.00</td>
-            </tr>
+            <?php while ($activity = mysqli_fetch_assoc($activityResult)): ?>
+                <tr>
+                    <td><?= htmlspecialchars($activity['activity_name']); ?></td>
+                    <td>RM <?= number_format($activity['price'], 2); ?></td>
+                </tr>
+            <?php endwhile; ?>
             </tbody>
         </table>
 
@@ -102,6 +168,7 @@ include '../components/navbar.php';
         </div>
     </section>
 <?php include '../components/footer.php'; ?>
+
 
 </body>
 </html>
