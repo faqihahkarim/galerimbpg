@@ -161,7 +161,6 @@ include 'components/navbar.php';
 </section>
 
 <!-- PACKAGE -->
-
 <section class="package-section" id="package-section">
   <div class="package-container">
 
@@ -175,38 +174,36 @@ include 'components/navbar.php';
 
     <div class="package-grid">
 
-    <?php while ($package = mysqli_fetch_assoc($packageResult)): ?>
-      <div class="package-card">
-        <?php
+      <?php while ($package = mysqli_fetch_assoc($packageResult)): ?>
 
-        //package image
-         $image = !empty($package['image_url'])
+        <?php
+          $image = !empty($package['image_url'])
             ? $package['image_url']
             : "assets/images/default-package.jpg";
-
-          // assigning page for each package
-          if ($package['package_id'] == 1) {
-            $detailPage = "package/lawatan.php?id=" . $package['package_id'];
-          } elseif ($package['package_id'] == 2) {
-            $detailPage = "package/pendidikan.php?id=" . $package['package_id'];
-          } else {
-            $detailPage = "#";
-          }
         ?>
 
-        <img src="<?= htmlspecialchars($image); ?>" alt="<?= htmlspecialchars($package['package_name']); ?>">
+        <div class="package-card">
+          <img 
+            src="<?= htmlspecialchars($image); ?>" 
+            alt="<?= htmlspecialchars($package['package_name']); ?>"
+          >
 
-        <div class="package-content">
-          <h3><?= htmlspecialchars($package['package_name']); ?></h3>
-          <p>
-            <?= htmlspecialchars($package['description']); ?>
-          </p>
-           <a href="<?= $detailPage; ?>" class="package-btn">
-              Baca Lebih Lanjut
+          <div class="package-content">
+            <h3><?= htmlspecialchars($package['package_name']); ?></h3>
+
+            <p><?= htmlspecialchars($package['description']); ?></p>
+
+            <a 
+              href="package/package_detail.php?id=<?= $package['package_id']; ?>" 
+              class="package-btn"
+            >
+              Lihat Slot Pakej
             </a>
+          </div>
         </div>
-      </div>
-    <?php endwhile; ?>
+
+      <?php endwhile; ?>
+
     </div>
 
   </div>
