@@ -1,0 +1,271 @@
+:root {
+  --bg-main: #ffffff;
+  --sidebar-bg: #2d160a;
+  --sidebar-hover: #5A433C;
+
+  --primary: #8a7051;
+  --primary-light: #f3e5d1;
+  --primary-dark: #6e5332;
+
+  --text-main: #1F2937;
+  --text-soft: #6B7280;
+
+  --border: #E5E7EB;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+  width: 250px;
+  background: var(--sidebar-bg);
+  color: #fff;
+  padding: 28px 20px;
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: rgba(196,147,76,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-icon i {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 16px;
+  background: #c4934c;
+  color: #fff;
+  padding: 4px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.logo h2 {
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.logo span {
+  font-size: 13px;
+  color: #D8CCC7;
+}
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #F5F5F5;
+  text-decoration: none;
+  padding: 14px 16px;
+  border-radius: 14px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.nav a:hover {
+  background: var(--sidebar-hover);
+}
+
+.nav a.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* =========================
+   SUBMENU
+========================= */
+
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.has-submenu.active .submenu {
+  max-height: 200px;
+}
+
+/* =========================
+   SIDEBAR FOOTER
+========================= */
+
+.sidebar-footer {
+  position: absolute;
+  bottom: 25px;
+  left: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+  color: #EDEDED;
+  font-size: 13px;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.main {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  min-height: 100vh;
+  padding: 30px 36px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.topbar h1 {
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+
+.topbar p {
+  color: var(--text-soft);
+  font-size: 14px;
+}
+
+/* =========================
+   MENU TOGGLE
+========================= */
+
+.menu-toggle {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #3b1f12;
+  font-size: 24px;
+  cursor: pointer;
+  display: none;
+}
+
+/* =========================
+   GLOBAL BUTTON
+========================= */
+
+.btn,
+select {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 10px;
+  padding: 9px 13px;
+  font-family: inherit;
+  color: var(--text-main);
+}
+
+/* =========================
+   OVERLAY
+========================= */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s ease;
+  z-index: 998;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: 0.3s ease;
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .main {
+    padding: 24px 20px;
+  }
+
+  .topbar {
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .topbar h1 {
+    font-size: 26px;
+  }
+}
