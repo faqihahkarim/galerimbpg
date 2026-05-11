@@ -32,7 +32,7 @@
 
           <?php else: ?>
 
-            <a href="admin/login.php" class="btn-primary">Admin</a>
+            <a href="<?= $base ?>../admin/login.php" class="btn-primary">Admin</a>
 
           <?php endif; ?>
         </div>
