@@ -3,7 +3,7 @@ include '../db.php';
 
 $base = "/web/galeriseramikmbpg/";
 $pageType = "inner";
-$package_id = 1;
+$package_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 /* Package info */
 $packageQuery = "
@@ -37,29 +37,55 @@ $bookingRulesQuery = "
 $bookingRulesResult = mysqli_query($conn, $bookingRulesQuery);
 
 /* Arrange schedule into columns */
-$weekdaySlots = [];
-$fridaySlots = [];
+$slotsByDay = [
+  'Isnin' => [],
+  'Selasa' => [],
+  'Rabu' => [],
+  'Khamis' => [],
+  'Jumaat' => [],
+  'Sabtu' => [],
+  'Ahad' => []
+];
+
+$dayMap = [
+  'Monday' => 'Isnin',
+  'Tuesday' => 'Selasa',
+  'Wednesday' => 'Rabu',
+  'Thursday' => 'Khamis',
+  'Friday' => 'Jumaat',
+  'Saturday' => 'Sabtu',
+  'Sunday' => 'Ahad',
+  'Isnin' => 'Isnin',
+  'Selasa' => 'Selasa',
+  'Rabu' => 'Rabu',
+  'Khamis' => 'Khamis',
+  'Jumaat' => 'Jumaat',
+  'Sabtu' => 'Sabtu',
+  'Ahad' => 'Ahad'
+];
 
 while ($rule = mysqli_fetch_assoc($bookingRulesResult)) {
+  $day = $dayMap[$rule['day_of_week']] ?? null;
+
+  if (!$day) {
+    continue;
+  }
 
   $start = date("g.i A", strtotime($rule['start_time']));
   $end = !empty($rule['end_time']) ? date("g.i A", strtotime($rule['end_time'])) : "";
-
   $time = $end ? "$start - $end" : $start;
 
-  if (
-    in_array($rule['day_of_week'], ['Monday', 'Tuesday', 'Wednesday', 'Thursday']) 
-    || $rule['day_of_week'] == 'Isnin-Khamis'
-  ) {
-    if (!in_array($time, $weekdaySlots)) {
-      $weekdaySlots[] = $time;
-    }
+  if (!in_array($time, $slotsByDay[$day])) {
+    $slotsByDay[$day][] = $time;
   }
+}
 
-  if ($rule['day_of_week'] == 'Friday' || $rule['day_of_week'] == 'Jumaat') {
-    if (!in_array($time, $fridaySlots)) {
-      $fridaySlots[] = $time;
-    }
+/* Only display days that have slots */
+$visibleDays = [];
+
+foreach ($slotsByDay as $day => $slots) {
+  if (!empty($slots)) {
+    $visibleDays[$day] = $slots;
   }
 }
 ?>
@@ -98,35 +124,37 @@ while ($rule = mysqli_fetch_assoc($bookingRulesResult)) {
     <div class="package-detail-content">
       <h1><?= htmlspecialchars($package['package_name']); ?></h1>
 
-      <p>Berikut merupakan sesi untuk lawatan berkumpulan:</p>
+      <p>Berikut merupakan sesi untuk pakej ini:</p>
 
       <table class="schedule-table">
         <thead>
           <tr>
-            <th>Isnin - Khamis</th>
-            <th>Jumaat</th>
+            <?php foreach ($visibleDays as $day => $slots): ?>
+              <th><?= htmlspecialchars($day); ?></th>
+            <?php endforeach; ?>
           </tr>
         </thead>
 
         <tbody>
           <?php
-            $maxRows = max(count($weekdaySlots), count($fridaySlots));
+            $maxRows = 0;
+
+            foreach ($visibleDays as $slots) {
+              $maxRows = max($maxRows, count($slots));
+            }
 
             for ($i = 0; $i < $maxRows; $i++):
           ?>
             <tr>
-              <td><?= htmlspecialchars($weekdaySlots[$i] ?? ''); ?></td>
-              <td><?= htmlspecialchars($fridaySlots[$i] ?? ''); ?></td>
+              <?php foreach ($visibleDays as $day => $slots): ?>
+                <td><?= htmlspecialchars($slots[$i] ?? ''); ?></td>
+              <?php endforeach; ?>
             </tr>
           <?php endfor; ?>
         </tbody>
       </table>
 
-      <p class="price-note">
-        Tiket Bayaran RM 2.00 bagi pengunjung 7 tahun ke atas
-      </p>
-
-      <a href="tempahan_lawatan.php?id=<?= $package['package_id']; ?>" class="booking-btn">
+      <a href="package_calendar.php?package_id=<?= $package['package_id']; ?>" class="booking-btn">
         Tempah Sekarang
       </a>
     </div>
