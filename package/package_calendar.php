@@ -47,7 +47,7 @@ while ($rule = mysqli_fetch_assoc($rulesResult)) {
 
 /* CLOSURE DATES */
 $closureQuery = "
-  SELECT closure_date
+  SELECT closure_date, closure_name
   FROM closure_dates
   WHERE closure_date BETWEEN '$startMonth' AND '$endMonth'
   AND status = 'active'
@@ -58,7 +58,7 @@ $closureResult = mysqli_query($conn, $closureQuery);
 $closureDates = [];
 
 while ($closure = mysqli_fetch_assoc($closureResult)) {
-  $closureDates[] = $closure['closure_date'];
+  $closureDates[$closure['closure_date']] = $closure['closure_name'];
 }
 
 /* ALL SLOTS FOR CURRENT MONTH */
@@ -253,7 +253,7 @@ $monthName = date('F Y', strtotime($startMonth));
           <select name="year" onchange="this.form.submit()">
             <?php
               $currentYear = date('Y');
-
+                // Allow selection of current year and next 2 years
               for ($y = $currentYear; $y <= $currentYear + 2; $y++):
             ?>
               <option value="<?= $y; ?>" <?= ($year == $y) ? 'selected' : ''; ?>>
@@ -273,6 +273,7 @@ $monthName = date('F Y', strtotime($startMonth));
       <span><i class="dot available"></i> Tersedia</span>
       <span><i class="dot almost"></i> Hampir Penuh</span>
       <span><i class="dot full"></i> Penuh</span>
+      <span><i class="dot less"></i> Kurang 3 Hari</span>
       <span><i class="dot none"></i> Tiada Slot</span>
     </div>
 
@@ -303,20 +304,21 @@ $monthName = date('F Y', strtotime($startMonth));
               $dayName = date('l', strtotime($currentDate));
 
               $isAllowedDay = in_array($dayName, $allowedDays);
-              $isClosure = in_array($currentDate, $closureDates);
+              $isClosure = isset($closureDates[$currentDate]);
               $isTooEarly = $currentDate < $minBookingDate;
 
               $dateStatus = "disabled";
-              $label = "Tiada Slot";
+              $label = "";
 
               if (!$isAllowedDay) {
-                $label = "Tiada Slot";
+                $label = "";
               } elseif ($isClosure) {
-                $label = "Tutup";
+                $label = $closureDates[$currentDate];
               } elseif ($isTooEarly) {
-                $label = "Terlalu Awal";
+                $dateStatus = "too-early";
+                $label = "";
               } elseif (!isset($slotsByDate[$currentDate])) {
-                $label = "Tiada Slot";
+                $label = "";
               } else {
                 $total = $slotsByDate[$currentDate]['total'];
                 $available = $slotsByDate[$currentDate]['available'];
@@ -342,7 +344,6 @@ $monthName = date('F Y', strtotime($startMonth));
                 class="date <?= $dateStatus ?> <?= $activeClass ?>"
               >
                 <span><?= $day; ?></span>
-                <i></i>
               </a>
             <?php else: ?>
               <button class="date disabled <?= $dateStatus ?>" disabled>

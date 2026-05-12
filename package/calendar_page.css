@@ -47,6 +47,7 @@
   border-radius: 8px;
   font-size: 15px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .month-select {
@@ -59,6 +60,7 @@
   align-items: center;
   color: #7b554a;
   background: #fff;
+  text-decoration: none;
 }
 
 /* Legend */
@@ -89,6 +91,7 @@
 .dot.available { background: #8bd17c; }
 .dot.almost { background: #f4b54f; }
 .dot.full { background: #a91515; }
+.dot.less { background: #deebff; }
 .dot.none { background: #c7c7c7; }
 
 /* Main layout */
@@ -120,8 +123,9 @@
   text-align: center;
   border-radius: 7px;
   padding: 7px 0;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
+  margin-top: 20px;
 }
 
 .calendar-grid {
@@ -144,6 +148,9 @@
 .date span {
   font-weight: 600;
   font-size: 14px;
+  text-decoration: none;
+  margin-top: -30px;
+  
 }
 
 .date i {
@@ -153,14 +160,18 @@
   position: absolute;
   right: 12px;
   top: 50%;
+  text-decoration: none;
+  margin-top: -30px;
 }
 
 .date.available i {
   background: #8bd17c;
+  text-decoration: none;
 }
 
 .date.almost i {
   background: #f4b54f;
+  text-decoration: none;
 }
 
 .date.full small {
@@ -172,6 +183,7 @@
   position: absolute;
   right: 7px;
   bottom: 8px;
+  text-decoration: none;
 }
 
 .date.disabled {
@@ -189,6 +201,7 @@
   position: absolute;
   right: 7px;
   bottom: 8px;
+  margin-top: 20px;
 }
 
 .date.active {
@@ -271,6 +284,7 @@
 
 .slot-item {
   border: 1px solid #9bd48c;
+  background-color: #e9fde6;
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 9px;
@@ -290,6 +304,7 @@
 .book-btn {
   border: 1px solid #7cc76f;
   color: #4ca83f;
+  background-color: #fff;
   text-decoration: none;
   padding: 6px 10px;
   border-radius: 5px;
@@ -335,19 +350,24 @@
 .date.available {
   background: #f3fff1 !important;
   border-color: #8bd17c !important;
+  text-decoration: none !important;
 }
 
 .date.available i {
   background: #8bd17c !important;
+  text-decoration: none !important;
 }
 
 .date.almost {
   background: #fff3d6 !important;
   border-color: #f4b54f !important;
+  text-decoration: none !important;
+  
 }
 
 .date.almost i {
   background: #f4b54f !important;
+  text-decoration: none !important;
 }
 
 .date.full,
@@ -355,23 +375,42 @@
   background: #ffdede !important;
   border-color: #ffb3b3 !important;
   color: #7a1b1b !important;
+  text-decoration: none !important;
 }
 
 .date.full small,
 .date.disabled.full small {
   background: #d85c5c !important;
   color: #fff !important;
+  text-decoration: none !important;
+}
+
+.date.too-early,
+.date.disabled.too-early {
+  background: #deebff !important;
+  border-color: #b3d1ff !important;
+  color: #1b3a7a !important;
+  text-decoration: none !important;
+}
+
+.date.too-early small,
+.date.disabled.too-early small {
+  background: #5c85d8 !important;
+  color: #fff !important;
+  text-decoration: none !important;
 }
 
 .date.disabled {
   background: #e9e9e9 !important;
   border-color: #ccc !important;
   color: #666 !important;
+  text-decoration: none !important;
 }
 
 .date.disabled small {
   background: #765348;
   color: #fff;
+  text-decoration: none !important;
 }
 
 .date.active {
