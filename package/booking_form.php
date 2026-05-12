@@ -28,6 +28,29 @@ $slotQuery = "
 $slotResult = mysqli_query($conn, $slotQuery);
 $slot = mysqli_fetch_assoc($slotResult);
 
+$selected_date = $slot ? $slot['slot_date'] : $selected_date;
+$minBookingDate = date('Y-m-d', strtotime('+3 days'));
+
+$availableSlotQuery = "
+  SELECT slot_id, slot_date, start_time, end_time
+  FROM booking_slots
+  WHERE package_id = $package_id
+    AND slot_date >= '$minBookingDate'
+    AND slot_status = 'available'
+  ORDER BY slot_date ASC, start_time ASC
+";
+$availableSlotResult = mysqli_query($conn, $availableSlotQuery);
+
+$availableSlots = [];
+$slotDates = [];
+
+while ($availableSlot = mysqli_fetch_assoc($availableSlotResult)) {
+  $availableSlots[] = $availableSlot;
+  if (!in_array($availableSlot['slot_date'], $slotDates)) {
+    $slotDates[] = $availableSlot['slot_date'];
+  }
+}
+
 /* Activities */
 $activityQuery = "
   SELECT 
@@ -82,7 +105,6 @@ $additionalSectionNumber = $showActivitySection ? 5 : 4;
     <form action="booking_process.php" method="POST" id="bookingForm">
 
       <input type="hidden" name="package_id" value="<?= $package_id; ?>">
-      <input type="hidden" name="slot_id" value="<?= $slot_id; ?>">
 
       <!-- 1 -->
       <div class="form-box">
@@ -133,22 +155,31 @@ $additionalSectionNumber = $showActivitySection ? 5 : 4;
           <div class="form-grid two">
             <div class="form-group">
               <label>Tarikh</label>
-              <input 
-                type="text" 
-                name="selected_date_display"
-                value="<?= $slot ? date('d M Y', strtotime($slot['slot_date'])) : htmlspecialchars($selected_date); ?>" 
-                readonly
-              >
+              <select name="slot_date" id="slotDateSelect" required>
+                <option value="">Pilih Tarikh</option>
+                <?php foreach ($slotDates as $date): ?>
+                  <option value="<?= $date; ?>" <?= ($selected_date === $date) ? 'selected' : ''; ?>>
+                    <?= date('d M Y', strtotime($date)); ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
             </div>
 
             <div class="form-group">
               <label>Slot Pilihan</label>
-              <input 
-                type="text" 
-                name="selected_slot_display"
-                value="<?= $slot ? date('g.i A', strtotime($slot['start_time'])) . ' - ' . date('g.i A', strtotime($slot['end_time'])) : ''; ?>" 
-                readonly
-              >
+              <select name="slot_id" id="slotSelect" required>
+                <option value="">Pilih Slot</option>
+                <?php foreach ($availableSlots as $availableSlot): ?>
+                  <option
+                    value="<?= $availableSlot['slot_id']; ?>"
+                    data-slot-date="<?= $availableSlot['slot_date']; ?>"
+                    <?= ($availableSlot['slot_id'] == $slot_id) ? 'selected' : ''; ?>
+                  >
+                    <?= date('g.i A', strtotime($availableSlot['start_time'])) . ' - ' . date('g.i A', strtotime($availableSlot['end_time'])); ?>
+                    (<?= date('d M Y', strtotime($availableSlot['slot_date'])); ?>)
+                  </option>
+                <?php endforeach; ?>
+              </select>
             </div>
           </div>
         </div>

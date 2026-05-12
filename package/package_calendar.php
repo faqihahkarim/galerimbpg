@@ -310,7 +310,7 @@ $monthName = date('F Y', strtotime($startMonth));
               $dateStatus = "disabled";
               $label = "";
 
-              if ($isClosure) {
+            if ($isClosure) {
               $dateStatus = "closure";
               $label = $closureDates[$currentDate];
 
