@@ -310,30 +310,37 @@ $monthName = date('F Y', strtotime($startMonth));
               $dateStatus = "disabled";
               $label = "";
 
-              if (!$isAllowedDay) {
-                $label = "";
-              } elseif ($isClosure) {
-                $label = $closureDates[$currentDate];
-              } elseif ($isTooEarly) {
-                $dateStatus = "too-early";
-                $label = "";
-              } elseif (!isset($slotsByDate[$currentDate])) {
+              if ($isClosure) {
+              $dateStatus = "closure";
+              $label = $closureDates[$currentDate];
+
+            } elseif (!$isAllowedDay) {
+              $dateStatus = "disabled";
+              $label = "";
+
+            } elseif ($isTooEarly) {
+              $dateStatus = "too-early";
+              $label = "";
+
+            } elseif (!isset($slotsByDate[$currentDate])) {
+              $dateStatus = "disabled";
+              $label = "";
+
+            } else {
+              $total = $slotsByDate[$currentDate]['total'];
+              $available = $slotsByDate[$currentDate]['available'];
+
+              if ($available == 0) {
+                $dateStatus = "full";
+                $label = "Penuh";
+              } elseif ($available < $total) {
+                $dateStatus = "almost";
                 $label = "";
               } else {
-                $total = $slotsByDate[$currentDate]['total'];
-                $available = $slotsByDate[$currentDate]['available'];
-
-                if ($available == 0) {
-                  $dateStatus = "full";
-                  $label = "Penuh";
-                } elseif ($available < $total) {
-                  $dateStatus = "almost";
-                  $label = "";
-                } else {
-                  $dateStatus = "available";
-                  $label = "";
-                }
+                $dateStatus = "available";
+                $label = "";
               }
+            }
 
               $activeClass = ($currentDate == $selected_date) ? "active" : "";
           ?>
