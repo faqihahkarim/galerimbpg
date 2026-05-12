@@ -1,6 +1,6 @@
 <?php
 session_start();
-include "conn.php";
+include "db.php";
 
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';
