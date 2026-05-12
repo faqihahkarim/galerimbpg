@@ -38,14 +38,14 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("confirmParticipants").textContent =
       (form.total_participants.value || "0") + " orang";
 
-    const dateInput = document.querySelector('input[name="selected_date_display"]');
-    const slotInput = document.querySelector('input[name="selected_slot_display"]');
+    const dateSelect = document.querySelector('select[name="slot_date"]');
+    const slotSelect = document.querySelector('select[name="slot_id"]');
 
     document.getElementById("confirmDate").textContent =
-      dateInput ? dateInput.value : "-";
+      dateSelect ? dateSelect.options[dateSelect.selectedIndex].text : "-";
 
     document.getElementById("confirmSlot").textContent =
-      slotInput ? slotInput.value : "-";
+      slotSelect ? slotSelect.options[slotSelect.selectedIndex].text : "-";
 
     const remark = form.admin_remark ? form.admin_remark.value : "";
     document.getElementById("confirmRemark").textContent =
