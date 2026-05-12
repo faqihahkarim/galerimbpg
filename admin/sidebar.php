@@ -45,18 +45,6 @@ $current = basename($_SERVER['PHP_SELF']);
             </div>
         </div>
 
-        <div class="nav-item has-submenu <?= in_array($current, ['tempahan.php','slot.php','peraturan.php']) ? 'active' : '' ?>">
-            <a href="#">
-                <i class="fa-solid fa-gear"></i> Konfigurasi Kalendar
-                <span class="arrow">▾</span>
-            </a>
-
-            <div class="submenu">
-                <a href="tempahan.php">Jana Slot</a>
-                <a href="peraturan.php">Set Hari Tutup</a>
-            </div>
-        </div>
-
         <!-- <a href="#"><i class="fa-regular fa-calendar-days"></i> Kalendar Slot</a>
         <a href="#"><i class="fa-solid fa-users"></i> Pelanggan</a>
         <a href="#"><i class="fa-solid fa-layer-group"></i> Produk</a>
