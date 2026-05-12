@@ -15,6 +15,7 @@ $phone_number = mysqli_real_escape_string($conn, $_POST['phone_number']);
 $email = mysqli_real_escape_string($conn, $_POST['email']);
 $total_participants = intval($_POST['total_participants']);
 $admin_remark = mysqli_real_escape_string($conn, $_POST['admin_remark'] ?? '');
+$booked = 'pending'; // Initial booking status
 
 /* Insert booking */
 $bookingQuery = "
@@ -37,7 +38,7 @@ $bookingQuery = "
     '$phone_number',
     '$email',
     '$total_participants',
-    'booked',
+    '$booked',
     '$admin_remark',
     NOW()
   )
