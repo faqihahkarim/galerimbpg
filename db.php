@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "galeriseramikmbpg"; 
+$database = "db_galerimbpg"; 
 
 $conn = mysqli_connect($host, $user, $password, $database);
 
