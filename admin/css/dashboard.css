@@ -5,6 +5,10 @@
   margin-bottom: 24px;
 }
 
+body {
+  font-family: "Amiri", serif;
+}
+
 .stat-card,
 .panel {
   background: var(--bg-card);
@@ -16,14 +20,18 @@
 .stat-card {
   padding: 22px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   min-height: 145px;
+  text-align: center;
 }
 
 .stat-left {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
 .stat-icon {
@@ -36,17 +44,20 @@
 }
 
 .stat-card h3 {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-main);
   font-weight: 600;
 }
 
 .stat-card strong {
-  font-size: 32px;
+  font-size: 40px;
+  margin-top: -20px;
+  color: #4f3c1f;
 }
 
 .trend {
-  font-size: 13px;
+  font-size: 15px;
+  margin-top: -20px;
 }
 
 .trend.up {
@@ -110,14 +121,14 @@
 }
 
 .panel-header h2 {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .calendar-head {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-soft);
   border-bottom: 1px solid var(--border);
   padding-bottom: 12px;
@@ -154,7 +165,7 @@
   display: inline-block;
   margin-top: 15px;
   margin-left: 6px;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 700;
   color: #1769c2;
 }
