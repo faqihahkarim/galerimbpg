@@ -47,7 +47,18 @@
 
 .trend {
   font-size: 13px;
-  color: var(--primary-dark);
+}
+
+.trend.up {
+  color: #16a34a;
+}
+
+.trend.down {
+  color: #dc2626;
+}
+
+.trend.neutral {
+  color: #6b7280;
 }
 
 .mini-line {
@@ -62,22 +73,22 @@
 
 .blue {
   color: var(--blue);
-  background: #EAF1FF;
+  background: #eaf1ff;
 }
 
 .green {
   color: var(--green);
-  background: #E6F2EF;
+  background: #e6f2ef;
 }
 
 .orange {
   color: var(--orange);
-  background: #FFF4DB;
+  background: #fff4db;
 }
 
 .purple {
   color: var(--purple);
-  background: #F1EAFF;
+  background: #f1eaff;
 }
 
 .content-grid {
@@ -126,12 +137,108 @@
   font-size: 14px;
 }
 
+/*CALENDAR*/
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+  min-height: 88px;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.day small {
+  display: inline-block;
+  margin-top: 15px;
+  margin-left: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #1769c2;
+}
+
+.day.booking-day {
+  background: #e8f2ff;
+  color: #1f4d8f;
+}
+
+.day.available-day {
+  background: #e8ffe3;
+  color: #1f5d1c;
+}
+
+.day.closure-day {
+  background: #ffe8e8;
+  color: #9b1c1c;
+  cursor: default;
+}
+
+.day.closure-day small.closure-name {
+  color: #9b1c1c;
+}
+
+.muted {
+  background: #f9fafb;
+  cursor: default;
+}
+
+.nav-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #111827;
+  text-decoration: none;
+}
+
+.legend-box {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+
+.lawatan-box {
+  background: #e8f2ff;
+  border: 1px solid #1769c2;
+}
+
+.pendidikan-box {
+  background: #eaf8ee;
+  border: 1px solid #1f7a3f;
+}
+
+.mixed-box {
+  background: #fff3df;
+  border: 1px solid #b86500;
+}
+
+.booking-box {
+  background: #e8f2ff;
+  border: 1px solid #1f4d8f;
+}
+
+.closure-box {
+  background: #ffe8e8;
+  border: 1px solid #9b1c1c;
+}
+
+.available-box {
+  background: #e8ffe3;
+  border: 1px solid #1f5d1c;
+}
+
 .day:nth-child(7n) {
   border-right: none;
 }
 
 .muted {
-  color: #A0AEC0;
+  color: #a0aec0;
 }
 
 .today {
@@ -277,7 +384,7 @@
 .stock-img {
   width: 44px;
   height: 44px;
-  background: #E5E7EB;
+  background: #e5e7eb;
   border-radius: 12px;
 }
 
