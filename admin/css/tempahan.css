@@ -155,10 +155,18 @@
   background: #f7eee8;
 }
 
-.table-wrap a {
+.table-wrap a,
+.table-wrap button.edit-rule-btn,
+.table-wrap button.edit-slot-btn,
+.table-wrap button.edit-closure-btn {
+  background: transparent;
+  border: none;
   color: #5a2f1f;
   font-weight: 700;
   text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: Amiri;
 }
 
 .table-wrap th:nth-child(5),

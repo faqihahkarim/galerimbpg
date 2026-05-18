@@ -313,6 +313,10 @@ $monthName = date('F Y', strtotime($startMonth));
             if ($isClosure) {
               $dateStatus = "closure";
               $label = $closureDates[$currentDate];
+              /*-- Shorten long closure names*/
+              if (strlen($label) > 8) {
+                $label = substr($label, 0, 8) . '...';
+              }
 
             } elseif (!$isAllowedDay) {
               $dateStatus = "disabled";
