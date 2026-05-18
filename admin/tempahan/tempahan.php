@@ -6,7 +6,7 @@ if (!isset($_SESSION['admin_login'])) {
     exit;
 }
 
-include '../db.php';
+include '../../db.php';
 
 function getBookingStatusLabel($status) {
   switch ($status) {
@@ -150,8 +150,8 @@ unset($booking);
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/tempahan.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/tempahan.css">
 </head>
 
 <body>
@@ -159,7 +159,7 @@ unset($booking);
 
 <div class="admin-layout">
 
-    <?php include 'sidebar.php'; ?>
+    <?php include '../sidebar.php'; ?>
 
     <main class="main">
 

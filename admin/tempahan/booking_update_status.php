@@ -6,7 +6,7 @@ if (!isset($_SESSION['admin_login'])) {
     exit;
 }
 
-include '../db.php';
+include '../../db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: tempahan.php");

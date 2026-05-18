@@ -6,7 +6,7 @@ if (!isset($_SESSION['admin_login'])) {
     exit;
 }
 
-include '../db.php';
+include '../../db.php';
 
 $limit = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
@@ -70,9 +70,9 @@ if (isset($_GET['error'])) {
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/tempahan.css">
-  <link rel="stylesheet" href="css/rule.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/tempahan.css">
+  <link rel="stylesheet" href="../css/rule.css">
 </head>
 
 <body>
@@ -80,7 +80,7 @@ if (isset($_GET['error'])) {
 
 <div class="admin-layout">
 
-    <?php include 'sidebar.php'; ?>
+    <?php include '../sidebar.php'; ?>
 
     <main class="main">
 
