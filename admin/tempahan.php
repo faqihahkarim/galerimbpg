@@ -11,8 +11,9 @@ include '../db.php';
 function getBookingStatusLabel($status) {
   switch ($status) {
     case 'approved':
+    case 'accepted':
       return 'Lulus';
-    case 'cancelled':
+    case 'rejected':
       return 'Batal';
     case 'pending':
     default:
@@ -23,9 +24,10 @@ function getBookingStatusLabel($status) {
 function getBookingStatusClass($status) {
   switch ($status) {
     case 'approved':
+    case 'accepted':
       return 'approved';
-    case 'cancelled':
-      return 'cancelled';
+    case 'rejected':
+      return 'rejected';
     case 'pending':
     default:
       return 'pending';
@@ -35,8 +37,17 @@ function getBookingStatusClass($status) {
 function countBookings($conn, $status = null) {
   $where = '1';
   if ($status !== null) {
-    $status = mysqli_real_escape_string($conn, $status);
-    $where = "booking_status = '$status'";
+    if (is_array($status)) {
+      $escaped = array_map(function ($item) use ($conn) {
+        return "'" . mysqli_real_escape_string($conn, $item) . "'";
+      }, $status);
+      $where = 'booking_status IN (' . implode(',', $escaped) . ')';
+    } elseif ($status === 'pending') {
+      $where = "booking_status IN ('pending', '')";
+    } else {
+      $status = mysqli_real_escape_string($conn, $status);
+      $where = "booking_status = '$status'";
+    }
   }
 
   $query = "SELECT COUNT(*) AS total FROM bookings WHERE $where";
@@ -46,8 +57,8 @@ function countBookings($conn, $status = null) {
 
 $totalBookings = countBookings($conn);
 $pendingBookings = countBookings($conn, 'pending');
-$approvedBookings = countBookings($conn, 'approved');
-$cancelledBookings = countBookings($conn, 'cancelled');
+$approvedBookings = countBookings($conn, ['approved', 'accepted']);
+$rejectedBookings = countBookings($conn, 'rejected');
 
 $bookings = [];
 $bookingQuery = "
@@ -61,6 +72,7 @@ $bookingQuery = "
     b.email,
     b.total_participants,
     b.booking_status,
+    b.admin_comment,
     b.admin_remark,
     b.created_at,
     s.slot_date,
@@ -70,7 +82,7 @@ $bookingQuery = "
   FROM bookings b
   LEFT JOIN booking_slots s ON b.slot_id = s.slot_id
   LEFT JOIN packages p ON b.package_id = p.package_id
-  ORDER BY b.created_at DESC
+  ORDER BY b.created_at ASC
 ";
 $bookingResult = mysqli_query($conn, $bookingQuery);
 $bookingIds = [];
@@ -162,6 +174,18 @@ unset($booking);
         </div>
     </header>
 
+    <?php if (isset($_GET['success']) && $_GET['success'] === 'status_updated'): ?>
+      <div class="alert success-alert">
+        Status tempahan berjaya dikemaskini.
+      </div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['error'])): ?>
+      <div class="alert error-alert">
+        Status tempahan gagal dikemaskini.
+      </div>
+    <?php endif; ?>
+
     <section class="stats-grid">
         <div class="stat-card">
           <div class="stat-left">
@@ -187,7 +211,7 @@ unset($booking);
         <div class="stat-card">
           <div class="stat-left">
             <h3>Permohonan Dibatalkan</h3>
-            <strong><?= $cancelledBookings ?></strong>
+            <strong><?= $rejectedBookings ?></strong>
           </div>
         </div>
     </section>
@@ -231,6 +255,7 @@ unset($booking);
                 <th>Tarikh & Slot Masa</th>
                 <th>Pax</th>
                 <th>Status</th>
+                <th>Catatan</th>
             </tr>
             </thead>
 
@@ -246,11 +271,12 @@ unset($booking);
                   <td><?= htmlspecialchars($booking['slot_display']) ?></td>
                   <td><?= (int) $booking['total_participants'] ?></td>
                   <td><span class="status <?= $booking['status_class'] ?>"><?= $booking['status_label'] ?></span></td>
+                  <td><?= htmlspecialchars($booking['admin_comment'] ?? '-') ?></td>
                 </tr>
               <?php endforeach; ?>
             <?php else: ?>
               <tr>
-                <td colspan="6" style="text-align:center; padding: 24px;">Tiada rekod tempahan ditemui.</td>
+                <td colspan="7" style="text-align:center; padding: 24px;">Tiada rekod tempahan ditemui.</td>
               </tr>
             <?php endif; ?>
             </tbody>
@@ -267,6 +293,9 @@ unset($booking);
           </div>
         </div>
     </section>
+
+
+    <!-- POP UP MODAL FOR BOOKING DETAILS-->
 
     <div class="booking-modal" id="bookingModal">
       <div class="booking-modal-card">
@@ -351,6 +380,7 @@ unset($booking);
         <form action="booking_update_status.php" method="POST" class="booking-modal-actions" id="bookingActionForm">
             <input type="hidden" name="booking_id" id="actionBookingId">
             <input type="hidden" name="action" id="actionBookingStatus">
+            <input type="hidden" name="admin_comment" id="adminCommentInput">
 
             <button type="button" class="approve-booking-btn" id="approveBookingBtn">
                 Terima
@@ -361,6 +391,31 @@ unset($booking);
             </button>
             </form>
       </div>
+    </div>
+
+    <div class="reject-modal" id="rejectModal">
+
+      <div class="reject-modal-content">
+
+        <h3>Sebab Penolakan</h3>
+
+        <textarea 
+          id="rejectReason"
+          placeholder="Masukkan sebab penolakan..."
+        ></textarea>
+
+        <div class="reject-modal-actions">
+          <button type="button" id="cancelRejectBtn">
+            Batal
+          </button>
+
+          <button type="button" id="confirmRejectBtn">
+            Hantar
+          </button>
+        </div>
+
+      </div>
+
     </div>
 
     </main>
@@ -383,6 +438,13 @@ unset($booking);
   const modalParticipants = document.getElementById('modalParticipants');
   const modalRemark = document.getElementById('modalRemark');
 
+
+  const actionBookingId = document.getElementById('actionBookingId');
+  const actionBookingStatus = document.getElementById('actionBookingStatus');
+  const bookingActionForm = document.getElementById('bookingActionForm');
+  const approveBookingBtn = document.getElementById('approveBookingBtn');
+  const rejectBookingBtn = document.getElementById('rejectBookingBtn');
+
   const bookingSearch = document.getElementById('bookingSearch');
   const bookingTypeFilter = document.getElementById('bookingTypeFilter');
   const bookingStatusFilter = document.getElementById('bookingStatusFilter');
@@ -393,6 +455,12 @@ unset($booking);
   const bookingPaginationInfo = document.getElementById('paginationInfo');
   const prevPageBtn = document.getElementById('prevPageBtn');
   const nextPageBtn = document.getElementById('nextPageBtn');
+
+  const rejectModal = document.getElementById('rejectModal');
+  const rejectReason = document.getElementById('rejectReason');
+  const confirmRejectBtn = document.getElementById('confirmRejectBtn');
+  const cancelRejectBtn = document.getElementById('cancelRejectBtn');
+  const adminCommentInput = document.getElementById('adminCommentInput');
 
   let currentPage = 1;
   const pageSize = 10;
@@ -418,6 +486,19 @@ unset($booking);
     modalActivities.textContent = booking.activity_list || 'Tiada';
     modalParticipants.textContent = booking.total_participants ? booking.total_participants : '-';
     modalRemark.textContent = booking.admin_remark ? booking.admin_remark : '-';
+    modal.classList.add('active');
+
+    actionBookingId.value = booking.booking_id;
+    actionBookingStatus.value = booking.booking_status;
+    // Use the normalized status_class (set by PHP) to decide visibility
+    if (booking.status_class === 'pending') {
+      approveBookingBtn.style.display = 'inline-block';
+      rejectBookingBtn.style.display = 'inline-block';
+    } else {
+      approveBookingBtn.style.display = 'none';
+      rejectBookingBtn.style.display = 'none';
+    }
+
     modal.classList.add('active');
   }
 
@@ -481,6 +562,48 @@ unset($booking);
     prevPageBtn.disabled = currentPage <= 1;
     nextPageBtn.disabled = currentPage >= totalPages;
   }
+
+ approveBookingBtn.addEventListener('click', () => {
+
+  if (confirm('Adakah anda pasti mahu meluluskan tempahan ini?')) {
+
+    actionBookingStatus.value = 'approved';
+
+    adminCommentInput.value = 'Tempahan diterima';
+
+    bookingActionForm.submit();
+
+  }
+
+});
+
+rejectBookingBtn.addEventListener('click', () => {
+
+  rejectModal.classList.add('active');
+
+});
+
+confirmRejectBtn.addEventListener('click', () => {
+
+  const reason = rejectReason.value.trim();
+
+  if (reason === '') {
+    alert('Sila masukkan sebab penolakan.');
+    return;
+  }
+
+  actionBookingStatus.value = 'rejected';
+
+  adminCommentInput.value = reason;
+
+  bookingActionForm.submit();
+
+});
+
+cancelRejectBtn.addEventListener('click', () => {
+  rejectModal.classList.remove('active');
+  rejectReason.value = '';
+});
 
   function applyFilters() {
     currentPage = 1;

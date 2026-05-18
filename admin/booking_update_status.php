@@ -14,11 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $booking_id = isset($_POST['booking_id']) ? (int) $_POST['booking_id'] : 0;
-$action = $_POST['action'] ?? '';
+$action = strtolower($_POST['action'] ?? '');
 
-$allowedActions = ['approved', 'cancelled'];
+$allowedActions = ['approved', 'accepted', 'rejected'];
 
-if ($booking_id <= 0 || !in_array($action, $allowedActions)) {
+if ($booking_id <= 0 || !in_array($action, $allowedActions, true)) {
     header("Location: tempahan.php?error=invalid_request");
     exit;
 }
@@ -38,15 +38,21 @@ if (!$checkResult || mysqli_num_rows($checkResult) === 0) {
 }
 
 $booking = mysqli_fetch_assoc($checkResult);
-
-if ($booking['booking_status'] !== 'pending') {
+$currentStatus = strtolower(trim((string) $booking['booking_status']));
+if ($currentStatus !== '' && $currentStatus !== 'pending') {
     header("Location: tempahan.php?error=already_processed");
     exit;
 }
 
+$admin_comment = mysqli_real_escape_string(
+    $conn,
+    $_POST['admin_comment'] ?? ''
+);
+$action = mysqli_real_escape_string($conn, $action);
+
 $updateQuery = "
     UPDATE bookings
-    SET booking_status = '$action'
+    SET booking_status = '$action', admin_comment = '$admin_comment'
     WHERE booking_id = $booking_id
 ";
 
