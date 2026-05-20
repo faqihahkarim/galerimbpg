@@ -205,6 +205,8 @@
 
   font-size: 18px;
   cursor: pointer;
+
+  
 }
 
     @media (max-width: 768px) {
@@ -241,4 +243,62 @@
     font-size: 16px;
     cursor: pointer;
     z-index: 5;
+}
+
+/* ==========================================================================
+   PAGINATION FOOTER STYLING
+   ========================================================================== */
+
+.pagination {
+    display: flex;
+    justify-content: right;
+    align-items: flex-end;
+    gap: 6px;
+    margin-top: 24px;
+    padding: 10px 0;
+}
+
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    background-color: none;
+    color:inherit;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.page-btn:hover {
+    background-color: rgba(211, 211, 211, 0.892);
+    color: var(--primary-dark);
+    border-color: #fff;
+}
+
+/* Style for the active/current page selection */
+.page-btn.active-page {
+    background-color: none;
+    color: inherit;
+    border-color: #fff;
+    cursor: default;
+}
+
+/* Style wrapper for the ellipsis (...) text separator */
+.page-dots {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    font-size: 14px;
+    font-weight: 600;
+    user-select: none;
 }

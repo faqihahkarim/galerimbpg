@@ -133,13 +133,15 @@ if (isset($_GET['error'])) {
 
     <section class="booking-panel">
 
-        <div class="table-wrap">
-            <!-- Action Buttons -->
-            <div class="rule-actions">
-              <button type="button" class="blue-btn" id="openRuleModal">
+    <div class="rule-actions">
+              <button type="button" class="red-btn" id="openRuleModal">
                 <i class="fa-solid fa-plus"></i> Tambah Peraturan
               </button>
             </div>
+
+        <div class="table-wrap">
+            <!-- Action Buttons -->
+            
             <table>
                 <thead>
                     <tr>

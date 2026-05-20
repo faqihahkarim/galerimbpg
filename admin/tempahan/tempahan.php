@@ -241,7 +241,7 @@ unset($booking);
             Export <i class="fa-solid fa-download"></i>
         </button>
         <br>
-        <p id="bookingNoteText"><i class="fa-solid fa-info-circle"></i> Klik pada ID Tempahan untuk melihat butiran dan mengurus tempahan</p>
+        <p id="bookingNoteText"><i class="fa-solid fa-info-circle" style="margin-top: 20px;"></i> Klik pada ID Tempahan untuk melihat butiran dan mengurus tempahan</p>
 
         </div>
 

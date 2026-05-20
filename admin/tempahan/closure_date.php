@@ -97,13 +97,15 @@ if (isset($_GET['error'])) {
 
     <section class="booking-panel">
 
-        <div class="table-wrap">
-            <!-- Action Buttons -->
-            <div class="rule-actions">
-                <button type="button" class="blue-btn" id="openClosureModal">
+        <div class="rule-actions">
+                <button type="button" class="red-btn" id="openClosureModal">
                     <i class="fa-solid fa-plus"></i> Tambah Tarikh Tutup
                 </button>
             </div>
+
+        <div class="table-wrap">
+            <!-- Action Buttons -->
+            
 
             <table>
                 <thead>
@@ -156,16 +158,35 @@ if (isset($_GET['error'])) {
                     </a>
                 <?php endif; ?>
 
-                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <?php
+                // CONFIGURATION: Set how many pages to show around the active page item
+                $adjacents = 2; 
 
-                    <a 
-                        href="?page=<?= $i ?>" 
-                        class="page-btn <?= $page == $i ? 'active-page' : '' ?>"
-                    >
-                        <?= $i ?>
-                    </a>
+                // Always show Page 1
+                if ($page > ($adjacents + 1)) {
+                    echo '<a href="?page=1" class="page-btn">1</a>';
+                    if ($page > ($adjacents + 2)) {
+                        echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                    }
+                }
 
-                <?php endfor; ?>
+                // Calculate dynamic sliding range window positions
+                $startLoop = max(1, $page - $adjacents);
+                $endLoop   = min($totalPages, $page + $adjacents);
+
+                for ($i = $startLoop; $i <= $endLoop; $i++) {
+                    $activeClass = ($page == $i) ? 'active-page' : '';
+                    echo '<a href="?page=' . $i . '" class="page-btn ' . $activeClass . '">' . $i . '</a>';
+                }
+
+                // Always show the Last Page boundary 
+                if ($page < ($totalPages - $adjacents)) {
+                    if ($page < ($totalPages - $adjacents - 1)) {
+                        echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                    }
+                    echo '<a href="?page=' . $totalPages . '" class="page-btn">' . $totalPages . '</a>';
+                }
+                ?>
 
                 <?php if ($page < $totalPages): ?>
                     <a href="?page=<?= $page + 1 ?>" class="page-btn">
@@ -205,7 +226,7 @@ if (isset($_GET['error'])) {
   </div>
 </div>
 
-<script src="js/sidebar.js"></script>
+<script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
 
 <!-- SCRIPT POP UP -->
  <script>

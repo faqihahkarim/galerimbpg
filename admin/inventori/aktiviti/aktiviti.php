@@ -15,7 +15,7 @@ $productQuery = "
         ON a.activity_id = ai.activity_id
         AND ai.is_main = 1
     WHERE a.status = 'active'
-    ORDER BY a.activity_id DESC
+    ORDER BY a.activity_id ASC
 ";
 
 $activityResult = mysqli_query($conn, $productQuery);
@@ -112,7 +112,7 @@ if (isset($_GET['error'])) {
                         <tr>
                             <th>ID</th>
                             <th>Nama Aktiviti</th>
-                            <th>Deskripsi</th>
+                            <th>Penerangan</th>
                             <th>Harga (RM)</th>
                             <th>Peserta Target</th>
                             <th>Tempoh Masa</th>
