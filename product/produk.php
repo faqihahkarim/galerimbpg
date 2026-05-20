@@ -169,12 +169,12 @@ function getStockStatus($stock) {
               if ($stock == 0) {
                 $stockClass = "red";
                 $stockText = "Tiada Stok";
-              } elseif ($stock < 10) {
+              } elseif ($stock <= 10) {
                 $stockClass = "yellow";
                 $stockText = "Stok Rendah";
               } else {
                 $stockClass = "green";
-                $stockText = "Ada Stok";
+                $stockText = "Stok Tersedia";
               }
               ?>
 

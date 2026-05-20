@@ -132,7 +132,7 @@
 }
 
 .table-wrap th {
-  background: #f3e8df;
+  background: #ffffff;
   color: #3b1f12;
   font-size: 14px;
   font-weight: 700;
@@ -147,9 +147,7 @@
   font-size: 14px;
 }
 
-.table-wrap tr:nth-child(even) {
-  background: #fcfaf8;
-}
+
 
 .table-wrap tr:hover {
   background: #f7eee8;

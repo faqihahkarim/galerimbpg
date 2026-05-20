@@ -168,6 +168,7 @@ if (isset($_GET['error'])) {
                         <td><?= htmlspecialchars($rule['status']) ?></td>
                         <td>
                         <button type="button" class="edit-rule-btn" 
+                          style="background: none; border: none; color: #1565c0; cursor: pointer; font-family: inherit; font-weight: bold;" 
                           data-id="<?= $rule['rule_id'] ?>" 
                           data-package="<?= $rule['package_id'] ?>" 
                           data-day="<?= htmlspecialchars($rule['day_of_week']) ?>" 
@@ -178,7 +179,10 @@ if (isset($_GET['error'])) {
                         >Edit</button>
                         </td>
                         <td>
-                            <a href="delete_rule.php?id=<?= $rule['rule_id'] ?>" onclick="return confirm('Padam peraturan ini?')">Delete</a>
+                            <button class="delete-product-btn" onclick="return confirm('Padam peraturan ini?')" 
+                                    style="background: none; border: none; color: #c62828; cursor: pointer; font-family: inherit; font-weight: bold;">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                     <?php endwhile; ?>

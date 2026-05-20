@@ -39,11 +39,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             menus.forEach(item => {
                 if (item !== menu) {
-                    item.classList.remove("active");
+                    item.classList.remove("open");
                 }
             });
 
-            menu.classList.toggle("active");
+            menu.classList.toggle("open");
         });
     });
 

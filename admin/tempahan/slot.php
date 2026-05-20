@@ -137,6 +137,8 @@ if (isset($_GET['error'])) {
                         <td><?= htmlspecialchars($slot['slot_status'] ?? '') ?></td>
                         <td>
                             <button type="button" class="edit-slot-btn"
+                              style="background: none; border: none; color: #1565c0; cursor: pointer; font-family: inherit; font-weight: bold;" 
+
                               data-id="<?= $slot['slot_id'] ?>"
                               data-package="<?= $slot['package_id'] ?>"
                               data-date="<?= $slot['slot_date'] ?>"
@@ -146,7 +148,10 @@ if (isset($_GET['error'])) {
                             >Edit</button>
                          </td>
                         <td>
-                            <a href="delete_slot.php?id=<?= $slot['slot_id'] ?>" onclick="return confirm('Padam slot ini?')">Delete</a>
+                            <button class="delete-product-btn" onclick="return confirm('Padam slot ini?')" 
+                                    style="background: none; border: none; color: #c62828; cursor: pointer; font-family: inherit; font-weight: bold;">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                     <?php endwhile; ?>

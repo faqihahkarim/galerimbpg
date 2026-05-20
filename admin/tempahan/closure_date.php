@@ -127,14 +127,20 @@ if (isset($_GET['error'])) {
                         <td><?= htmlspecialchars($c['status']) ?></td>
                         <td>
                             <button type="button" class="edit-closure-btn"
-                              data-id="<?= $c['closure_id'] ?>"
-                              data-date="<?= $c['closure_date'] ?>"
-                              data-name="<?= htmlspecialchars($c['closure_name']) ?>"
-                              data-status="<?= htmlspecialchars($c['status']) ?>"
-                            >Edit</button>
+                                style="background: none; border: none; color: #1565c0; cursor: pointer; font-family: inherit; font-weight: bold;"
+                                
+                                data-id="<?= $c['closure_id'] ?>"
+                                data-date="<?= $c['closure_date'] ?>"
+                                data-name="<?= htmlspecialchars($c['closure_name']) ?>"
+                                data-status="<?= htmlspecialchars($c['status']) ?>"
+                                >Edit
+                            </button>
                         </td>
                          <td>
-                            <a href="delete_closure.php?id=<?= $c['closure_id'] ?>" onclick="return confirm('Padam tarikh tutup ini?')">Delete</a>
+                            <button class="delete-product-btn" onclick="return confirm('Padam tarikh tutup ini?')" 
+                                    style="background: none; border: none; color: #c62828; cursor: pointer; font-family: inherit; font-weight: bold;">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                     <?php endwhile; ?>
