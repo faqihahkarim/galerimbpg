@@ -24,14 +24,12 @@ $action = $_POST['action'] ?? '';
 if ($action === 'add') {
 
     $activityName = trim($_POST['activity_name']);
+    $description = isset($_POST['description']) ? $_POST['description'] : '';
     $activityPrice = $_POST['activity_price'];
     $target = trim($_POST['target']);
     $duration = trim($_POST['duration']);
     $defaultCapacity = $_POST['default_capacity'] !== '' ? $_POST['default_capacity'] : null;
-    $productDiameter = $_POST['product_diameter'] !== '' ? $_POST['product_diameter'] : null;
-    $productPrice = $_POST['product_price'];
-    $productStock = intval($_POST['product_stock']);
-    $stockStatus = getStockStatus($productStock);
+    
 
     if (
         !isset($_FILES['activity_images']) ||
@@ -69,7 +67,7 @@ if ($action === 'add') {
         INSERT INTO activities (
             activity_name,
             description,
-            activity_price,
+            price,
             target,
             duration,
             default_capacity
@@ -80,7 +78,7 @@ if ($action === 'add') {
 
     mysqli_stmt_bind_param(
         $stmt,
-        "ssdssd",
+        "ssdssi",
         $activityName,
         $description,
         $activityPrice,
@@ -300,8 +298,8 @@ if ($action === 'edit') {
     }
 
     // Upload gambar baru
-    $uploadDir = "../../../assets/images/products/";
-    $dbImagePath = "assets/images/products/";
+    $uploadDir = "../../../assets/images/activities/";
+    $dbImagePath = "assets/images/activities/";
 
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
@@ -412,7 +410,8 @@ if ($action === 'delete') {
     ";
 
     $stmt = mysqli_prepare($conn, $deleteQuery);
-    mysqli_stmt_bind_param($stmt, "i", $activityId, $parentId, $parentId);
+    mysqli_stmt_bind_param($stmt, "i", $activityId);
+    mysqli_stmt_execute($stmt);
 
     if (mysqli_stmt_execute($stmt)) {
         mysqli_stmt_close($stmt);

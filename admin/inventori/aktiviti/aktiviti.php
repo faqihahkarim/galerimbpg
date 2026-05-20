@@ -222,7 +222,7 @@ if (isset($_GET['error'])) {
                         </div>
 
                         <div class="form-group full-width">
-                            <label>Deskripsi</label>
+                            <label>Penerangan</label>
                             <textarea name="description" id="description" rows="3"></textarea>
                         </div>
 
