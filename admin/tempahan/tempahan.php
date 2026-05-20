@@ -684,6 +684,7 @@ cancelRejectBtn.addEventListener('click', () => {
   applyFilters();
 </script>
 
-<script src="js/sidebar.js"></script>
+<script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
+
 
 </body>

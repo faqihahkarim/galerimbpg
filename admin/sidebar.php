@@ -48,7 +48,7 @@ $galleryPages = [
 
     <div class="nav-item has-submenu <?= in_array($current, $bookingPages) ? 'active' : '' ?>">
 
-      <a href="#" class="submenu-toggle">
+      <a href="javascript:void(0)" class="submenu-toggle">
         <i class="fa-regular fa-calendar-check"></i>
 
         <span>Pengurusan Tempahan</span>
@@ -95,7 +95,7 @@ $galleryPages = [
 
     <div class="nav-item has-submenu <?= in_array($current, $galleryPages) ? 'active' : '' ?>">
 
-      <a href="#" class="submenu-toggle">
+      <a href="javascript:void(0)" class="submenu-toggle">
         <i class="fa-solid fa-palette"></i>
 
         <span>Pengurusan Galeri</span>
@@ -141,7 +141,7 @@ $galleryPages = [
     ========================== -->
 
     <a 
-      href="<?= $base ?>/laporan.php"
+      href="<?= $base ?>/laporan/laporan.php"
       class="<?= ($current == 'laporan.php') ? 'active' : '' ?>"
     >
       <i class="fa-solid fa-chart-column"></i>

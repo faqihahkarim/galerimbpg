@@ -282,7 +282,7 @@ if (isset($_GET['error'])) {
     </main>
 </div>
 
-<script src="../../js/sidebar.js"></script>
+<script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
 
 <script>
 // =====================================================
