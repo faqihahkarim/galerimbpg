@@ -11,67 +11,56 @@ if (!isset($_SESSION['admin_login'])) {
     exit();
 }
 
-include '../../../db.php';
+include '../../../db.php'; 
 
 if (!isset($_GET['id'])) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Product ID not found'
+        'message' => 'Material ID not found'
     ]);
     exit();
 }
 
-$productId = intval($_GET['id']);
+$materialId = intval($_GET['id']);
 
-$productQuery = "
+$materialQuery = "
     SELECT *
-    FROM products
-    WHERE product_id = ?
+    FROM materials
+    WHERE material_id = ?
     AND status = 'active'
     LIMIT 1
 ";
 
-$stmt = mysqli_prepare($conn, $productQuery);
-mysqli_stmt_bind_param($stmt, "i", $productId);
+$stmt = mysqli_prepare($conn, $materialQuery);
+mysqli_stmt_bind_param($stmt, "i", $materialId);
 mysqli_stmt_execute($stmt);
 
-$productResult = mysqli_stmt_get_result($stmt);
-$product = mysqli_fetch_assoc($productResult);
+$materialResult = mysqli_stmt_get_result($stmt);
+$material = mysqli_fetch_assoc($materialResult);
 
-if (!$product) {
+if (!$material) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Product not found'
+        'message' => 'Material not found'
     ]);
     exit();
 }
 
-$imageQuery = "
-    SELECT image_id, image_url, is_main
-    FROM product_images
-    WHERE product_id = ?
-    ORDER BY image_id ASC
-";
-
-$imageStmt = mysqli_prepare($conn, $imageQuery);
-mysqli_stmt_bind_param($imageStmt, "i", $productId);
-mysqli_stmt_execute($imageStmt);
-
-$imageResult = mysqli_stmt_get_result($imageStmt);
 
 $images = [];
-
-while ($image = mysqli_fetch_assoc($imageResult)) {
-    $images[] = $image;
+if (!empty($material['material_image'])) {
+    $images[] = [
+        'image_id' => $material['material_id'],
+        'image_url' => $material['material_image'] 
+    ];
 }
 
 echo json_encode([
     'status' => 'success',
-    'product' => $product,
+    'material' => $material,
     'images' => $images
 ]);
 
 mysqli_stmt_close($stmt);
-mysqli_stmt_close($imageStmt);
 mysqli_close($conn);
 ?>
