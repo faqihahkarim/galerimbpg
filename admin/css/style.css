@@ -34,9 +34,9 @@ body {
   min-height: 100vh;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* ==========================================================================
+   SIDEBAR & SUBMENU SYSTEM (CLEANED & UNIFIED)
+   ========================================================================== */
 
 .sidebar {
   width: 250px;
@@ -47,10 +47,67 @@ body {
   inset: 0 auto 0 0;
   z-index: 1000;
   overflow-y: auto;
-
   display: flex;
   flex-direction: column;
 }
+
+/* Base state for dropdown containers */
+.sidebar .submenu {
+  display: none;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding-left: 22px;
+}
+
+/* Displays submenu when active via PHP OR clicked via JavaScript */
+.sidebar .nav-item.active .submenu,
+.sidebar .nav-item.open .submenu {
+  display: block !important;
+  max-height: 300px !important;
+}
+
+/* Submenu toggle buttons alignment */
+.has-submenu .submenu{
+  display:none;
+}
+
+.has-submenu.active .submenu,
+.has-submenu.open .submenu {
+    display: block;
+}
+
+.has-submenu > .submenu-toggle {
+  justify-content: flex-start;
+}
+
+.has-submenu > .submenu-toggle .arrow {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+/* Rotates the arrow indicators smoothly */
+.sidebar .nav-item.active .arrow,
+.sidebar .nav-item.open .arrow {
+  transform: rotate(180deg);
+  display: inline-block;
+}
+
+/* Inner submenu interactive link listing styling */
+.submenu a {
+  padding: 8px 14px;
+  margin-bottom: 4px;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+.submenu a.active {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ==========================================================================
+   OTHER LAYOUT COMPONENTS
+   ========================================================================== */
 
 .logo {
   display: flex;
@@ -99,10 +156,6 @@ body {
   color: #d8ccc7;
 }
 
-/* =========================
-   NAVIGATION
-========================= */
-
 .nav {
   flex: 1;
   padding-bottom: 20px;
@@ -131,24 +184,6 @@ body {
   color: #fff;
 }
 
-/* =========================
-   SUBMENU
-========================= */
-
-.submenu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-}
-
-.has-submenu.active .submenu {
-  max-height: 200px;
-}
-
-/* =========================
-   SIDEBAR FOOTER
-========================= */
-
 .sidebar-footer {
   position: static;
   margin-top: auto;
@@ -159,10 +194,6 @@ body {
   color: #ededed;
   font-size: 13px;
 }
-
-/* =========================
-   MAIN CONTENT
-========================= */
 
 .main {
   margin-left: 250px;
@@ -188,10 +219,6 @@ body {
   font-size: 14px;
 }
 
-/* =========================
-   MENU TOGGLE
-========================= */
-
 .menu-toggle {
   border: none !important;
   background: transparent !important;
@@ -204,10 +231,6 @@ body {
   display: none;
 }
 
-/* =========================
-   GLOBAL BUTTON
-========================= */
-
 .btn,
 select {
   border: 1px solid var(--border);
@@ -217,10 +240,6 @@ select {
   font-family: inherit;
   color: var(--text-main);
 }
-
-/* =========================
-   OVERLAY
-========================= */
 
 .overlay {
   position: fixed;
@@ -237,47 +256,9 @@ select {
   visibility: visible;
 }
 
-
-/* =========================
-   SUBMENU
-========================= */
-
-
-.has-submenu > .submenu-toggle {
-  justify-content: flex-start;
-}
-
-.has-submenu > .submenu-toggle .arrow {
-  margin-left: auto;
-}
-
-.submenu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  padding-left: 22px;
-}
-
-.has-submenu.active .submenu {
-  max-height: 260px;
-}
-
-.submenu a {
-  padding: 8px 14px;
-  margin-bottom: 4px;
-  font-size: 15px;
-  border-radius: 10px;
-}
-
-.submenu a.active {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* ==========================================================================
+   RESPONSIVE DESIGN Breakpoints
+   ========================================================================== */
 
 @media (max-width: 1100px) {
   .sidebar {

@@ -247,7 +247,8 @@ if (isset($_GET['error'])) {
   </div>
 </div>
 
-<script src="js/sidebar.js"></script>
+<script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
+
 
 <!-- SCRIPT POP UP -->
  <script>
