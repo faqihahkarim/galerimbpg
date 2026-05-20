@@ -106,28 +106,28 @@ $galleryPages = [
       <div class="submenu">
 
         <a 
-          href="<?= $base ?>/inventori/produk.php"
+          href="<?= $base ?>/inventori/produk/produk.php"
           class="<?= ($current == 'produk.php') ? 'active' : '' ?>"
         >
           Produk
         </a>
 
         <a 
-          href="<?= $base ?>/inventori/bahan.php"
+          href="<?= $base ?>/inventori/bahan/bahan.php"
           class="<?= ($current == 'bahan.php') ? 'active' : '' ?>"
         >
           Bahan
         </a>
 
         <a 
-          href="<?= $base ?>/inventori/aktiviti.php"
+          href="<?= $base ?>/inventori/aktiviti/aktiviti.php"
           class="<?= ($current == 'aktiviti.php') ? 'active' : '' ?>"
         >
           Aktiviti
         </a>
 
         <a 
-          href="<?= $base ?>/inventori/pakej.php"
+          href="<?= $base ?>/inventori/pakej/pakej.php"
           class="<?= ($current == 'pakej.php') ? 'active' : '' ?>"
         >
           Pakej
