@@ -26,7 +26,7 @@ $packageQuery = "
             WHERE pa.package_id = p.package_id) as activity_ids
     FROM packages p
     WHERE p.status = 'active'
-    ORDER BY p.package_id DESC
+    ORDER BY p.package_id ASC
 ";
 $packageResult = mysqli_query($conn, $packageQuery);
 
@@ -52,6 +52,15 @@ if (isset($_GET['error'])) {
         default: $flashMessage = 'Ralat berlaku. Sila cuba lagi.'; break;
     }
 }
+
+$limit = 10;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
+$countResult = mysqli_query($conn, "SELECT COUNT(*) AS total FROM packages");
+$totalRules = $countResult ? (int) mysqli_fetch_assoc($countResult)['total'] : 0;
+$totalPages = max(1, (int) ceil($totalRules / $limit));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $limit;
 ?>
 
 <!DOCTYPE html>
@@ -109,6 +118,7 @@ if (isset($_GET['error'])) {
                         <tr>
                             <th>ID</th>
                             <th>Nama Pakej</th>
+                            <th>Penerangan</th>
                             <th>Kapasiti (Pax)</th>
                             <th>Dengan Aktiviti</th>
                             <th>Aktiviti Pilihan (ID)</th>
@@ -131,6 +141,7 @@ if (isset($_GET['error'])) {
                             <tr>
                                 <td><?= htmlspecialchars($package['package_id']) ?></td>
                                 <td><strong><?= htmlspecialchars($package['package_name']) ?></strong></td>
+                                <td><?= htmlspecialchars($package['description']) ?></td>
                                 <td><?= htmlspecialchars($package['capacity']) ?> Pax</td>
                                 <td>
                                     <span class="badge <?= $hasActivity ? 'status-confirm' : 'status-pending' ?>">
@@ -160,6 +171,54 @@ if (isset($_GET['error'])) {
                 </table>
             </div>
 
+                <!--pagination-->
+                <div class="pagination" style="margin-top: 20px; display: flex; justify-content: right; align-items: flex-end; gap: 8px; color: inherit; text-decoration:none;">
+
+                <?php if ($page > 1): ?>
+                    <a href="?page=<?= $page - 1 ?>" class="page-btn">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                <?php endif; ?>
+
+                <?php
+                // CONFIGURATION: Set how many pages to show around the active page item
+                $adjacents = 2; 
+
+                // Always show Page 1
+                if ($page > ($adjacents + 1)) {
+                    echo '<a href="?page=1" class="page-btn">1</a>';
+                    if ($page > ($adjacents + 2)) {
+                        echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                    }
+                }
+
+                // Calculate dynamic sliding range window positions
+                $startLoop = max(1, $page - $adjacents);
+                $endLoop   = min($totalPages, $page + $adjacents);
+
+                for ($i = $startLoop; $i <= $endLoop; $i++) {
+                    $activeClass = ($page == $i) ? 'active-page' : '';
+                    echo '<a href="?page=' . $i . '" class="page-btn ' . $activeClass . '">' . $i . '</a>';
+                }
+
+                // Always show the Last Page boundary 
+                if ($page < ($totalPages - $adjacents)) {
+                    if ($page < ($totalPages - $adjacents - 1)) {
+                        echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                    }
+                    echo '<a href="?page=' . $totalPages . '" class="page-btn">' . $totalPages . '</a>';
+                }
+                ?>
+
+                <?php if ($page < $totalPages): ?>
+                    <a href="?page=<?= $page + 1 ?>" class="page-btn">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                <?php endif; ?>
+
+            </div>
+        
+
         </section>
 
         <div class="activity-modal" id="packageModal">
@@ -178,6 +237,11 @@ if (isset($_GET['error'])) {
                         <div class="form-group">
                             <label>Nama Pakej</label>
                             <input type="text" name="package_name" id="packageName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Penerangan</label>
+                            <input type="text" name="package_description" id="packageDescription" required>
                         </div>
 
                         <div class="form-group">

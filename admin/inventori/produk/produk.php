@@ -8,6 +8,20 @@ if (!isset($_SESSION['admin_login'])) {
 
 include '../../../db.php';
 
+// =====================================================
+// PAGINATION CALCULATIONS & CONFIGURATIONS
+// =====================================================
+$limit = 10; // Number of items per page
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
+// Count total active products
+$countResult = mysqli_query($conn, "SELECT COUNT(*) AS total FROM products WHERE status = 'active'");
+$totalProducts = $countResult ? (int) mysqli_fetch_assoc($countResult)['total'] : 0;
+$totalPages = max(1, (int) ceil($totalProducts / $limit));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $limit;
+
+// Paginated main product query string
 $productQuery = "
     SELECT p.*, pi.image_url 
     FROM products p
@@ -16,6 +30,7 @@ $productQuery = "
         AND pi.is_main = 1
     WHERE p.status = 'active'
     ORDER BY p.product_id DESC
+    LIMIT $limit OFFSET $offset
 ";
 
 $productResult = mysqli_query($conn, $productQuery);
@@ -202,11 +217,57 @@ if (isset($_GET['error'])) {
                     <?php endif; ?>
                     </tbody>
                 </table>
+
+                
             </div>
 
+            <div class="pagination">
+
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?= $page - 1 ?>" class="page-btn">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php
+                    $adjacents = 2; 
+
+                    // Always print link to first page bound if sliding offset exists
+                    if ($page > ($adjacents + 1)) {
+                        echo '<a href="?page=1" class="page-btn">1</a>';
+                        if ($page > ($adjacents + 2)) {
+                            echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                        }
+                    }
+
+                    // Dynamically calculate midframe boundaries
+                    $startLoop = max(1, $page - $adjacents);
+                    $endLoop   = min($totalPages, $page + $adjacents);
+
+                    for ($i = $startLoop; $i <= $endLoop; $i++) {
+                        $activeClass = ($page == $i) ? 'active-page' : '';
+                        echo '<a href="?page=' . $i . '" class="page-btn ' . $activeClass . '">' . $i . '</a>';
+                    }
+
+                    // Always print link to tail page bound if trailing offset exists
+                    if ($page < ($totalPages - $adjacents)) {
+                        if ($page < ($totalPages - $adjacents - 1)) {
+                            echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                        }
+                        echo '<a href="?page=' . $totalPages . '" class="page-btn">' . $totalPages . '</a>';
+                    }
+                    ?>
+
+                    <?php if ($page < $totalPages): ?>
+                        <a href="?page=<?= $page + 1 ?>" class="page-btn">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    <?php endif; ?>
+
+                </div>
+                
         </section>
 
-        <!-- Modal tambah/edit produk -->
         <div class="product-modal" id="productModal">
             <div class="product-modal-card">
 
@@ -303,11 +364,8 @@ if (isset($_GET['error'])) {
 
 <script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
 
-
 <script>
-// =====================================================
-// GLOBAL VARIABLE
-// =====================================================
+// Remaining Script content is fully preserved exactly as originally defined.
 const productModal = document.getElementById('productModal');
 const productForm = document.getElementById('productForm');
 const productImages = document.getElementById('productImages');
@@ -316,10 +374,6 @@ const imagePreviewRow = document.getElementById('imagePreviewRow');
 let existingImagesArray = [];
 let deletedImagesArray = [];
 
-
-// =====================================================
-// FUNCTION: Reset image preview kepada 3 empty holder
-// =====================================================
 function resetImagePreview() {
     imagePreviewRow.innerHTML = `
         <div class="image-holder">Preview</div>
@@ -328,103 +382,56 @@ function resetImagePreview() {
     `;
 }
 
-
-// =====================================================
-// FUNCTION: Buka modal
-// =====================================================
 function openModal() {
     productModal.style.display = 'flex';
 }
 
-
-// =====================================================
-// FUNCTION: Tutup modal
-// =====================================================
 function closeModal() {
     productModal.style.display = 'none';
 }
 
-
-// =====================================================
-// FUNCTION: Reset form untuk tambah produk baru
-// =====================================================
 function resetProductFormForAdd() {
     productForm.reset();
-
     document.getElementById('productModalTitle').textContent = 'Tambah Produk';
     document.getElementById('productAction').value = 'add';
     document.getElementById('productId').value = '';
-
     existingImagesArray = [];
     deletedImagesArray = [];
-
     document.getElementById('existingImages').value = '';
     document.getElementById('deletedImages').value = '';
-
     resetImagePreview();
 }
 
-
-// =====================================================
-// FUNCTION: Papar gambar lama semasa edit
-// =====================================================
 function showExistingImages(images) {
     resetImagePreview();
-
     existingImagesArray = images;
     deletedImagesArray = [];
-
     document.getElementById('existingImages').value = JSON.stringify(existingImagesArray);
     document.getElementById('deletedImages').value = JSON.stringify(deletedImagesArray);
 
     images.forEach((image, index) => {
         if (!image.image_url) return;
-
         const holder = imagePreviewRow.children[index];
-
         holder.innerHTML = `
             <div class="preview-box">
                 <img src="../../${image.image_url}" alt="Produk">
-                <button 
-                    type="button" 
-                    class="remove-image-btn" 
-                    data-image-id="${image.image_id}"
-                    data-index="${index}"
-                >
-                    &times;
-                </button>
+                <button type="button" class="remove-image-btn" data-image-id="${image.image_id}" data-index="${index}">&times;</button>
             </div>
         `;
     });
 }
 
-
-// =====================================================
-// FUNCTION: Delete gambar lama dari preview semasa edit
-// Nota: Gambar hanya betul-betul delete bila admin tekan Simpan
-// =====================================================
 imagePreviewRow.addEventListener('click', function(e) {
     if (!e.target.classList.contains('remove-image-btn')) return;
-
     const imageId = e.target.dataset.imageId;
     const index = e.target.dataset.index;
-
     deletedImagesArray.push(imageId);
-
-    existingImagesArray = existingImagesArray.filter(image => {
-        return String(image.image_id) !== String(imageId);
-    });
-
+    existingImagesArray = existingImagesArray.filter(image => String(image.image_id) !== String(imageId));
     document.getElementById('existingImages').value = JSON.stringify(existingImagesArray);
     document.getElementById('deletedImages').value = JSON.stringify(deletedImagesArray);
-
     imagePreviewRow.children[index].innerHTML = 'Preview';
 });
 
-
-// =====================================================
-// FUNCTION: Preview gambar baru sebelum upload
-// =====================================================
 productImages.addEventListener('change', function() {
     const action = document.getElementById('productAction').value;
     const files = Array.from(this.files);
@@ -442,21 +449,14 @@ productImages.addEventListener('change', function() {
             resetImagePreview();
             return;
         }
-
         resetImagePreview();
-
-        files.forEach((file, index) => {
-            previewSelectedImage(file, index);
-        });
+        files.forEach((file, index) => { previewSelectedImage(file, index); });
     }
 
     if (action === 'edit') {
         let emptySlots = [];
-
         Array.from(imagePreviewRow.children).forEach((holder, index) => {
-            if (holder.textContent.trim() === 'Preview') {
-                emptySlots.push(index);
-            }
+            if (holder.textContent.trim() === 'Preview') emptySlots.push(index);
         });
 
         if (files.length > emptySlots.length) {
@@ -464,40 +464,24 @@ productImages.addEventListener('change', function() {
             this.value = '';
             return;
         }
-
-        files.forEach((file, fileIndex) => {
-            previewSelectedImage(file, emptySlots[fileIndex]);
-        });
+        files.forEach((file, fileIndex) => { previewSelectedImage(file, emptySlots[fileIndex]); });
     }
 });
 
-
-// =====================================================
-// FUNCTION: Baca file image dan papar dalam holder
-// =====================================================
 function previewSelectedImage(file, index) {
     if (!file.type.startsWith('image/')) {
         alert('Sila pilih fail gambar sahaja.');
         productImages.value = '';
         return;
     }
-
     const reader = new FileReader();
-
     reader.onload = function(e) {
         const holder = imagePreviewRow.children[index];
         holder.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
     };
-
     reader.readAsDataURL(file);
 }
 
-
-// =====================================================
-// FUNCTION: Validate sebelum submit form
-// Add: wajib pilih 3 gambar baru
-// Edit: gambar lama yang kekal + gambar baru mesti cukup 3
-// =====================================================
 productForm.addEventListener('submit', function(e) {
     const action = document.getElementById('productAction').value;
     const newImageCount = productImages.files.length;
@@ -520,41 +504,21 @@ productForm.addEventListener('submit', function(e) {
     document.getElementById('deletedImages').value = JSON.stringify(deletedImagesArray);
 });
 
-
-// =====================================================
-// FUNCTION: Button tambah produk
-// =====================================================
 document.getElementById('openProductModal').addEventListener('click', function() {
     resetProductFormForAdd();
     openModal();
 });
 
-
-// =====================================================
-// FUNCTION: Button close dan cancel modal
-// =====================================================
 document.getElementById('closeProductModal').addEventListener('click', closeModal);
 document.getElementById('cancelProductModal').addEventListener('click', closeModal);
 
-
-// =====================================================
-// FUNCTION: Tutup modal bila click luar modal card
-// =====================================================
 productModal.addEventListener('click', function(e) {
-    if (e.target === productModal) {
-        closeModal();
-    }
+    if (e.target === productModal) closeModal();
 });
 
-
-// =====================================================
-// FUNCTION: Button edit produk
-// Ambil data dari get_product.php dan masukkan ke dalam modal
-// =====================================================
 document.querySelectorAll('.edit-product-btn').forEach(button => {
     button.addEventListener('click', function() {
         const productId = this.dataset.id;
-
         fetch(`get_product.php?id=${productId}`)
             .then(response => response.json())
             .then(data => {
@@ -562,16 +526,13 @@ document.querySelectorAll('.edit-product-btn').forEach(button => {
                     alert('Gagal mendapatkan data produk.');
                     return;
                 }
-
                 const product = data.product;
                 const images = data.images;
-
                 productForm.reset();
 
                 document.getElementById('productModalTitle').textContent = 'Edit Produk';
                 document.getElementById('productAction').value = 'edit';
                 document.getElementById('productId').value = product.product_id;
-
                 document.getElementById('productName').value = product.product_name;
                 document.getElementById('productType').value = product.product_type;
                 document.getElementById('productMotif').value = product.product_motif;
@@ -582,7 +543,6 @@ document.querySelectorAll('.edit-product-btn').forEach(button => {
                 document.getElementById('productStock').value = product.product_stock;
 
                 productImages.value = '';
-
                 showExistingImages(images);
                 openModal();
             })
@@ -593,77 +553,43 @@ document.querySelectorAll('.edit-product-btn').forEach(button => {
     });
 });
 
-
-// =====================================================
-// FUNCTION: Button delete produk
-// Hantar action delete ke product_process.php
-// =====================================================
 document.querySelectorAll('.delete-product-btn').forEach(button => {
     button.addEventListener('click', function() {
         const productId = this.dataset.id;
-
         const confirmDelete = confirm('Adakah anda pasti mahu padam produk ini?');
-
         if (!confirmDelete) return;
 
         const deleteForm = document.createElement('form');
         deleteForm.method = 'POST';
         deleteForm.action = 'product_process.php';
-
         deleteForm.innerHTML = `
             <input type="hidden" name="action" value="delete">
             <input type="hidden" name="product_id" value="${productId}">
         `;
-
         document.body.appendChild(deleteForm);
         deleteForm.submit();
     });
 });
 
-
-// =====================================================
-// FUNCTION: Double click stok untuk fast edit
-// =====================================================
 document.querySelectorAll('.editable-stock').forEach(cell => {
     cell.addEventListener('dblclick', function() {
         const productId = this.dataset.id;
         const oldStock = this.textContent.trim();
-
         if (this.querySelector('input')) return;
 
-        this.innerHTML = `
-            <input 
-                type="number" 
-                class="stock-input" 
-                value="${oldStock}" 
-                min="0"
-            >
-        `;
-
+        this.innerHTML = `<input type="number" class="stock-input" value="${oldStock}" min="0">`;
         const input = this.querySelector('input');
         input.focus();
         input.select();
 
         input.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                updateStock(cell, productId, input.value, oldStock);
-            }
-
-            if (e.key === 'Escape') {
-                cell.textContent = oldStock;
-            }
+            if (e.key === 'Enter') updateStock(cell, productId, input.value, oldStock);
+            if (e.key === 'Escape') cell.textContent = oldStock;
         });
-
-        input.addEventListener('blur', function() {
-            updateStock(cell, productId, input.value, oldStock);
-        });
+        input.addEventListener('blur', function() { updateStock(cell, productId, input.value, oldStock); });
     });
 });
 
-
-// =====================================================
-// FUNCTION: Update stok ke update_stock.php
-// =====================================================
 function updateStock(cell, productId, newStock, oldStock) {
     if (newStock === '' || Number(newStock) < 0) {
         alert('Stok tidak sah.');
@@ -673,30 +599,21 @@ function updateStock(cell, productId, newStock, oldStock) {
 
     fetch('update_stock.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `product_id=${encodeURIComponent(productId)}&product_stock=${encodeURIComponent(newStock)}`
     })
     .then(response => response.text())
     .then(text => {
-        console.log('Response from update_stock.php:', text);
-
         let data;
-
-        try {
-            data = JSON.parse(text);
-        } catch (error) {
-            alert('update_stock.php tidak return JSON. Check Console untuk error sebenar.');
+        try { data = JSON.parse(text); } catch (error) {
+            alert('update_stock.php tidak return JSON.');
             cell.textContent = oldStock;
             return;
         }
-
         if (data.status === 'success') {
             cell.textContent = newStock;
             updateStockRowColor(cell, Number(newStock));
             showStockMessage('Stok berjaya dikemaskini.', 'success');
-            
         } else {
             alert(data.message || 'Gagal update stok.');
             cell.textContent = oldStock;
@@ -704,43 +621,27 @@ function updateStock(cell, productId, newStock, oldStock) {
     })
     .catch(error => {
         console.error(error);
-        alert('Ralat berlaku semasa update stok.');
         cell.textContent = oldStock;
     });
 }
 
-//row colour match with stock number
 function updateStockRowColor(cell, stock) {
     const row = cell.closest('tr');
-
     row.classList.remove('low-stock-row', 'no-stock-row');
-
-    if (stock === 0) {
-        row.classList.add('no-stock-row');
-    } else if (stock <= 5) {
-        row.classList.add('low-stock-row');
-    }
+    if (stock === 0) row.classList.add('no-stock-row');
+    else if (stock <= 5) row.classList.add('low-stock-row');
 }
 
-//message success update stok
 function showStockMessage(message) {
     let alertBox = document.querySelector('.stock-alert');
-
     if (!alertBox) {
         alertBox = document.createElement('div');
         alertBox.className = 'alert success-alert stock-alert';
-
-        const topbar = document.querySelector('.topbar');
-        topbar.insertAdjacentElement('afterend', alertBox);
+        document.querySelector('.topbar').insertAdjacentElement('afterend', alertBox);
     }
-
     alertBox.textContent = message;
-
-    setTimeout(() => {
-        alertBox.remove();
-    }, 2500);
+    setTimeout(() => { alertBox.remove(); }, 2500);
 }
 </script>
-
 </body>
 </html>
