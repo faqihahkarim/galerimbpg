@@ -23,21 +23,21 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-if (!isset($_POST['product_id']) || !isset($_POST['product_stock'])) {
+if (!isset($_POST['material_id']) || !isset($_POST['material_stock'])) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Missing product data'
+        'message' => 'Missing material data'
     ]);
     exit();
 }
 
-$productId = intval($_POST['product_id']);
-$productStock = intval($_POST['product_stock']);
+$materialId = intval($_POST['material_id']);
+$materialStock = intval($_POST['material_stock']);
 
-if ($productId <= 0 || $productStock < 0) {
+if ($materialId <= 0 || $materialStock < 0) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Invalid product data'
+        'message' => 'Invalid material data'
     ]);
     exit();
 }
@@ -50,20 +50,20 @@ if ($productId <= 0 || $productStock < 0) {
     1-5 = Stok Rendah
     6 ke atas = Ada Stok
 */
-if ($productStock == 0) {
+if ($materialStock == 0) {
     $stockStatus = 'Tiada Stok';
-} elseif ($productStock <= 10) {
+} elseif ($materialStock <= 10) {
     $stockStatus = 'Stok Rendah';
 } else {
     $stockStatus = 'Stok Tersedia';
 }
 
 $updateQuery = "
-    UPDATE products
+    UPDATE materials
     SET 
-        product_stock = ?,
+        material_stock = ?,
         stock_status = ?
-    WHERE product_id = ?
+    WHERE material_id = ?
     AND status = 'active'
 ";
 
@@ -77,13 +77,13 @@ if (!$stmt) {
     exit();
 }
 
-mysqli_stmt_bind_param($stmt, "isi", $productStock, $stockStatus, $productId);
+mysqli_stmt_bind_param($stmt, "isi", $materialStock, $stockStatus, $materialId);
 
 if (mysqli_stmt_execute($stmt)) {
     echo json_encode([
         'status' => 'success',
         'message' => 'Stock updated successfully',
-        'new_stock' => $productStock,
+        'new_stock' => $materialStock,
         'stock_status' => $stockStatus
     ]);
 } else {

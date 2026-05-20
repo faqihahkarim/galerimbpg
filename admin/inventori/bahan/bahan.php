@@ -8,13 +8,13 @@ if (!isset($_SESSION['admin_login'])) {
 
 include '../../../db.php';
 
-$productQuery = "
+$materialQuery = "
     SELECT * FROM materials
     WHERE status = 'active'
     ORDER BY material_id DESC
 ";
 
-$productResult = mysqli_query($conn, $productQuery);
+$materialResult = mysqli_query($conn, $materialQuery);
 
 // Flash message
 $flashMessage = '';
@@ -23,12 +23,12 @@ $flashClass = '';
 if (isset($_GET['success'])) {
     $flashClass = 'success-alert';
 
-    if ($_GET['success'] === 'product_added') {
-        $flashMessage = 'Produk berjaya ditambah.';
-    } elseif ($_GET['success'] === 'product_updated') {
-        $flashMessage = 'Produk berjaya dikemaskini.';
-    } elseif ($_GET['success'] === 'product_deleted') {
-        $flashMessage = 'Produk berjaya dipadam.';
+    if ($_GET['success'] === 'material_added') {
+        $flashMessage = 'Bahan berjaya ditambah.';
+    } elseif ($_GET['success'] === 'material_updated') {
+        $flashMessage = 'Bahan berjaya dikemaskini.';
+    } elseif ($_GET['success'] === 'material_deleted') {
+        $flashMessage = 'Bahan berjaya dipadam.';
     } elseif ($_GET['success'] === 'stock_updated') {
         $flashMessage = 'Stok berjaya dikemaskini.';
     }
@@ -38,8 +38,8 @@ if (isset($_GET['error'])) {
     $flashClass = 'error-alert';
 
     switch ($_GET['error']) {
-        case 'need_3_images':
-            $flashMessage = 'Sila masukkan tepat 3 gambar produk.';
+        case 'need_images':
+            $flashMessage = 'Sila masukkan tepat gambar bahan.';
             break;
         case 'invalid_image_type':
             $flashMessage = 'Jenis gambar tidak sah. Gunakan JPG, JPEG, PNG atau WEBP.';
@@ -59,7 +59,7 @@ if (isset($_GET['error'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengurusan Produk</title>
+    <title>Pengurusan Bahan</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -67,6 +67,7 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/inventory.css">
     <link rel="stylesheet" href="../../css/tempahan.css">
+    <link rel="stylesheet" href="../../css/bahan.css">
 </head>
 
 <body>
@@ -85,7 +86,7 @@ if (isset($_GET['error'])) {
 
             <div>
                 <h1>Pengurusan Galeri</h1>
-                <p>Produk</p>
+                <p>Bahan</p>
             </div>
         </header>
 
@@ -97,7 +98,7 @@ if (isset($_GET['error'])) {
 
         <section class="booking-panel">
 
-            <div class="product-actions">
+            <div class="material-actions">
                 <div class="legend">
                     <span>Stok Rendah</span>
                     <span class="legend-box low"></span>
@@ -106,8 +107,8 @@ if (isset($_GET['error'])) {
                     <span class="legend-box empty"></span>
                 </div>
 
-                <button type="button" id="openProductModal" class="add-product-btn">
-                    <i class="fa-solid fa-plus"></i> Tambah Produk
+                <button type="button" id="openmaterialModal" class="add-material-btn">
+                    <i class="fa-solid fa-plus"></i> Tambah Bahan
                 </button>
             </div>
 
@@ -116,10 +117,10 @@ if (isset($_GET['error'])) {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nama Produk</th>
+                            <th>Nama Bahan</th>
+                            <th>Jenama</th>
                             <th>Harga</th>
                             <th>Stok</th>
-                            <th>Kategori</th>
                             <th>Gambar</th>
                             <th>Edit</th>
                             <th>Delete</th>
@@ -127,52 +128,51 @@ if (isset($_GET['error'])) {
                     </thead>
 
                     <tbody>
-                    <?php if ($productResult && mysqli_num_rows($productResult) > 0): ?>
+                    <?php if ($materialResult && mysqli_num_rows($materialResult) > 0): ?>
 
-                        <?php while ($product = mysqli_fetch_assoc($productResult)): ?>
+                        <?php while ($material = mysqli_fetch_assoc($materialResult)): ?>
 
                             <?php
                                 $rowClass = '';
 
-                                if ($product['stock_status'] === 'Stok Rendah') {
+                                if ($material['stock_status'] === 'Stok Rendah') {
                                     $rowClass = 'low-stock-row';
-                                } elseif ($product['stock_status'] === 'Tiada Stok') {
+                                } elseif ($material['stock_status'] === 'Tiada Stok') {
                                     $rowClass = 'no-stock-row';
                                 }
 
-                                $imagePath = !empty($product['image_url'])
-                                    ? "../../../" . $product['image_url']
-                                    : "../../../assets/images/no-image.png";
+                                $imagePath = !empty($material['material_image'])
+                                    ? "../../../" . $material['material_image']
+                                    : "../../../assets/images/materials/no-image.png";
                             ?>
 
                             <tr class="<?= htmlspecialchars($rowClass) ?>">
-                                <td><?= htmlspecialchars($product['product_id']) ?></td>
-                                <td><?= htmlspecialchars($product['product_name']) ?></td>
-                                <td>RM <?= number_format((float)$product['product_price'], 2) ?></td>
+                                <td><?= htmlspecialchars($material['material_id']) ?></td>
+                                <td><?= htmlspecialchars($material['material_name']) ?></td>
+                                <td><?= htmlspecialchars($material['material_brand']) ?></td>
+                                <td>RM <?= number_format((float)$material['material_price'], 2) ?></td>
 
                                 <td 
                                     class="editable-stock"
-                                    data-id="<?= htmlspecialchars($product['product_id']) ?>"
+                                    data-id="<?= htmlspecialchars($material['material_id']) ?>"
                                     title="Double click untuk edit stok"
                                 >
-                                    <?= htmlspecialchars($product['product_stock'] ?? '0') ?>
+                                    <?= htmlspecialchars($material['material_stock'] ?? '0') ?>
                                 </td>
-
-                                <td><?= htmlspecialchars($product['product_type']) ?></td>
 
                                 <td>
                                     <img 
                                         src="<?= htmlspecialchars($imagePath) ?>" 
-                                        class="product-img" 
-                                        alt="Produk"
+                                        class="material-img" 
+                                        alt="Bahan"
                                     >
                                 </td>
 
                                 <td>
                                     <button 
                                         type="button"
-                                        class="edit-product-btn"
-                                        data-id="<?= htmlspecialchars($product['product_id']) ?>"
+                                        class="edit-material-btn"
+                                        data-id="<?= htmlspecialchars($material['material_id']) ?>"
                                     >
                                         Edit
                                     </button>
@@ -181,8 +181,8 @@ if (isset($_GET['error'])) {
                                 <td>
                                     <button 
                                         type="button"
-                                        class="delete-product-btn"
-                                        data-id="<?= htmlspecialchars($product['product_id']) ?>"
+                                        class="delete-material-btn"
+                                        data-id="<?= htmlspecialchars($material['material_id']) ?>"
                                     >
                                         Delete
                                     </button>
@@ -193,7 +193,7 @@ if (isset($_GET['error'])) {
 
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" class="text-center">Tidak ada produk yang ditemukan.</td>
+                            <td colspan="8" class="text-center">Tidak ada bahan yang ditemukan.</td>
                         </tr>
                     <?php endif; ?>
                     </tbody>
@@ -202,23 +202,22 @@ if (isset($_GET['error'])) {
 
         </section>
 
-        <!-- Modal tambah/edit produk -->
-        <div class="product-modal" id="productModal">
-            <div class="product-modal-card">
+        <div class="material-modal" id="materialModal">
+            <div class="material-modal-card">
 
                 <div class="modal-header">
-                    <h2 id="productModalTitle">Tambah Produk</h2>
-                    <button type="button" id="closeProductModal">&times;</button>
+                    <h2 id="materialModalTitle">Tambah Bahan</h2>
+                    <button type="button" id="closeMaterialModal">&times;</button>
                 </div>
 
                 <form 
-                    action="product_process.php" 
+                    action="bahan_process.php" 
                     method="POST" 
                     enctype="multipart/form-data"
-                    id="productForm"
+                    id="materialForm"
                 >
-                    <input type="hidden" name="action" id="productAction" value="add">
-                    <input type="hidden" name="product_id" id="productId">
+                    <input type="hidden" name="action" id="materialAction" value="add">
+                    <input type="hidden" name="material_id" id="materialId">
 
                     <input type="hidden" name="existing_images" id="existingImages">
                     <input type="hidden" name="deleted_images" id="deletedImages">
@@ -226,67 +225,44 @@ if (isset($_GET['error'])) {
                     <div class="form-grid two">
 
                         <div class="form-group">
-                            <label>Nama Produk</label>
-                            <input type="text" name="product_name" id="productName" required>
+                            <label>Nama Bahan</label>
+                            <input type="text" name="material_name" id="materialName" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Jenis Produk</label>
-                            <input type="text" name="product_type" id="productType" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Motif Produk</label>
-                            <input type="text" name="product_motif" id="productMotif" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Berat</label>
-                            <input type="number" step="0.01" name="product_weight" id="productWeight">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Tinggi</label>
-                            <input type="number" step="0.01" name="product_height" id="productHeight">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Diameter</label>
-                            <input type="number" step="0.01" name="product_diameter" id="productDiameter">
+                            <label>Jenama Bahan</label>
+                            <input type="text" name="material_brand" id="materialBrand" required>
                         </div>
 
                         <div class="form-group">
                             <label>Harga</label>
-                            <input type="number" step="0.01" name="product_price" id="productPrice" min="0" required>
+                            <input type="number" step="0.01" name="material_price" id="materialPrice" min="0" required>
                         </div>
 
                         <div class="form-group">
                             <label>Stok</label>
-                            <input type="number" name="product_stock" id="productStock" min="0" required>
+                            <input type="number" name="material_stock" id="materialStock" min="0" required>
                         </div>
 
                     </div>
 
                     <br>
 
-                    <label><strong>Masukkan Gambar Produk</strong></label>
+                    <label><strong>Masukkan Gambar bahan</strong></label>
                     <input 
                         type="file" 
-                        name="product_images[]" 
-                        id="productImages" 
-                        multiple 
+                        name="material_images[]" 
+                        id="materialImages" 
                         accept="image/*"
                     >
 
                     <div class="image-preview-row" id="imagePreviewRow">
                         <div class="image-holder">Preview</div>
-                        <div class="image-holder">Preview</div>
-                        <div class="image-holder">Preview</div>
                     </div>
 
                     <div class="modal-actions">
-                        <button type="submit" class="save-btn" id="productSaveBtn">Simpan</button>
-                        <button type="button" class="cancel-btn" id="cancelProductModal">Batal</button>
+                        <button type="submit" class="save-btn" id="materialSaveBtn">Simpan</button>
+                        <button type="button" class="cancel-btn" id="cancelmaterialModal">Batal</button>
                     </div>
 
                 </form>
@@ -303,9 +279,9 @@ if (isset($_GET['error'])) {
 // =====================================================
 // GLOBAL VARIABLE
 // =====================================================
-const productModal = document.getElementById('productModal');
-const productForm = document.getElementById('productForm');
-const productImages = document.getElementById('productImages');
+const materialModal = document.getElementById('materialModal');
+const materialForm = document.getElementById('materialForm');
+const materialImages = document.getElementById('materialImages');
 const imagePreviewRow = document.getElementById('imagePreviewRow');
 
 let existingImagesArray = [];
@@ -313,12 +289,10 @@ let deletedImagesArray = [];
 
 
 // =====================================================
-// FUNCTION: Reset image preview kepada 3 empty holder
+// FUNCTION: Reset image preview kepada empty holder
 // =====================================================
 function resetImagePreview() {
     imagePreviewRow.innerHTML = `
-        <div class="image-holder">Preview</div>
-        <div class="image-holder">Preview</div>
         <div class="image-holder">Preview</div>
     `;
 }
@@ -328,7 +302,7 @@ function resetImagePreview() {
 // FUNCTION: Buka modal
 // =====================================================
 function openModal() {
-    productModal.style.display = 'flex';
+    materialModal.style.display = 'flex';
 }
 
 
@@ -336,19 +310,19 @@ function openModal() {
 // FUNCTION: Tutup modal
 // =====================================================
 function closeModal() {
-    productModal.style.display = 'none';
+    materialModal.style.display = 'none';
 }
 
 
 // =====================================================
-// FUNCTION: Reset form untuk tambah produk baru
+// FUNCTION: Reset form untuk tambah bahan baru
 // =====================================================
-function resetProductFormForAdd() {
-    productForm.reset();
+function resetmaterialFormForAdd() {
+    materialForm.reset();
 
-    document.getElementById('productModalTitle').textContent = 'Tambah Produk';
-    document.getElementById('productAction').value = 'add';
-    document.getElementById('productId').value = '';
+    document.getElementById('materialModalTitle').textContent = 'Tambah Bahan';
+    document.getElementById('materialAction').value = 'add';
+    document.getElementById('materialId').value = '';
 
     existingImagesArray = [];
     deletedImagesArray = [];
@@ -361,10 +335,11 @@ function resetProductFormForAdd() {
 
 
 // =====================================================
-// FUNCTION: Papar gambar lama semasa edit
+// FUNCTION: Papar gambar lama semasa edit (UPDATED FOR SINGLE IMAGE)
 // =====================================================
 function showExistingImages(images) {
-    resetImagePreview();
+    // 1. Reset container
+    imagePreviewRow.innerHTML = '';
 
     existingImagesArray = images;
     deletedImagesArray = [];
@@ -372,31 +347,33 @@ function showExistingImages(images) {
     document.getElementById('existingImages').value = JSON.stringify(existingImagesArray);
     document.getElementById('deletedImages').value = JSON.stringify(deletedImagesArray);
 
-    images.forEach((image, index) => {
-        if (!image.image_url) return;
-
-        const holder = imagePreviewRow.children[index];
-
-        holder.innerHTML = `
+    // 2. Jika ada data gambar, terus render element img tunggal tanpa bergantung pada array grid index
+    if (images && images.length > 0 && images[0].image_url) {
+        const image = images[0];
+        
+        imagePreviewRow.innerHTML = `
             <div class="preview-box">
-                <img src="../../${image.image_url}" alt="Produk">
+                <img src="../../../${image.image_url}" alt="Bahan" style="max-width: 150px; max-height: 150px; object-fit: cover;">
                 <button 
                     type="button" 
                     class="remove-image-btn" 
                     data-image-id="${image.image_id}"
-                    data-index="${index}"
+                    data-index="0"
+                    style="position: absolute; background: red; color: white; border: none; cursor: pointer;"
                 >
                     &times;
                 </button>
             </div>
         `;
-    });
+    } else {
+        // Jika tiada gambar langsung, tunjuk balik placeholder default
+        resetImagePreview();
+    }
 }
 
 
 // =====================================================
 // FUNCTION: Delete gambar lama dari preview semasa edit
-// Nota: Gambar hanya betul-betul delete bila admin tekan Simpan
 // =====================================================
 imagePreviewRow.addEventListener('click', function(e) {
     if (!e.target.classList.contains('remove-image-btn')) return;
@@ -413,26 +390,28 @@ imagePreviewRow.addEventListener('click', function(e) {
     document.getElementById('existingImages').value = JSON.stringify(existingImagesArray);
     document.getElementById('deletedImages').value = JSON.stringify(deletedImagesArray);
 
-    imagePreviewRow.children[index].innerHTML = 'Preview';
+    if(imagePreviewRow.children[index]) {
+        imagePreviewRow.children[index].innerHTML = 'Preview';
+    }
 });
 
 
 // =====================================================
 // FUNCTION: Preview gambar baru sebelum upload
 // =====================================================
-productImages.addEventListener('change', function() {
-    const action = document.getElementById('productAction').value;
+materialImages.addEventListener('change', function() {
+    const action = document.getElementById('materialAction').value;
     const files = Array.from(this.files);
 
-    if (files.length > 3) {
-        alert('Maksimum 3 gambar sahaja.');
+    if (files.length > 1) {
+        alert('Maksimum 1 gambar sahaja.');
         this.value = '';
         return;
     }
 
     if (action === 'add') {
-        if (files.length !== 3) {
-            alert('Sila masukkan tepat 3 gambar produk.');
+        if (files.length !== 1) { 
+            alert('Sila masukkan gambar bahan.');
             this.value = '';
             resetImagePreview();
             return;
@@ -473,7 +452,7 @@ productImages.addEventListener('change', function() {
 function previewSelectedImage(file, index) {
     if (!file.type.startsWith('image/')) {
         alert('Sila pilih fail gambar sahaja.');
-        productImages.value = '';
+        materialImages.value = '';
         return;
     }
 
@@ -481,7 +460,9 @@ function previewSelectedImage(file, index) {
 
     reader.onload = function(e) {
         const holder = imagePreviewRow.children[index];
-        holder.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+        if (holder) {
+            holder.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+        }
     };
 
     reader.readAsDataURL(file);
@@ -490,24 +471,22 @@ function previewSelectedImage(file, index) {
 
 // =====================================================
 // FUNCTION: Validate sebelum submit form
-// Add: wajib pilih 3 gambar baru
-// Edit: gambar lama yang kekal + gambar baru mesti cukup 3
 // =====================================================
-productForm.addEventListener('submit', function(e) {
-    const action = document.getElementById('productAction').value;
-    const newImageCount = productImages.files.length;
+materialForm.addEventListener('submit', function(e) {
+    const action = document.getElementById('materialAction').value;
+    const newImageCount = materialImages.files.length;
     const existingImageCount = existingImagesArray.length;
     const totalImages = existingImageCount + newImageCount;
 
-    if (action === 'add' && newImageCount !== 3) {
+    if (action === 'add' && newImageCount !== 1) {
         e.preventDefault();
-        alert('Sila masukkan tepat 3 gambar produk sebelum simpan.');
+        alert('Sila masukkan gambar bahan sebelum simpan.');
         return;
     }
 
-    if (action === 'edit' && totalImages !== 3) {
+    if (action === 'edit' && totalImages !== 1) {
         e.preventDefault();
-        alert('Setiap produk mesti mempunyai tepat 3 gambar.');
+        alert('Setiap bahan mesti mempunyai tepat 1 gambar.');
         return;
     }
 
@@ -517,97 +496,90 @@ productForm.addEventListener('submit', function(e) {
 
 
 // =====================================================
-// FUNCTION: Button tambah produk
+// FUNCTION: Button tambah bahan
 // =====================================================
-document.getElementById('openProductModal').addEventListener('click', function() {
-    resetProductFormForAdd();
+document.getElementById('openmaterialModal').addEventListener('click', function() {
+    resetmaterialFormForAdd();
     openModal();
 });
 
 
 // =====================================================
-// FUNCTION: Button close dan cancel modal
+// FUNCTION: Button close dan cancel modal (FIXED ID CASE)
 // =====================================================
-document.getElementById('closeProductModal').addEventListener('click', closeModal);
-document.getElementById('cancelProductModal').addEventListener('click', closeModal);
+document.getElementById('closeMaterialModal').addEventListener('click', closeModal);
+document.getElementById('cancelmaterialModal').addEventListener('click', closeModal);
 
 
 // =====================================================
 // FUNCTION: Tutup modal bila click luar modal card
 // =====================================================
-productModal.addEventListener('click', function(e) {
-    if (e.target === productModal) {
+materialModal.addEventListener('click', function(e) {
+    if (e.target === materialModal) {
         closeModal();
     }
 });
 
 
 // =====================================================
-// FUNCTION: Button edit produk
-// Ambil data dari get_product.php dan masukkan ke dalam modal
+// FUNCTION: Button edit bahan (FIXED EXTRANEOUS FIELDS)
 // =====================================================
-document.querySelectorAll('.edit-product-btn').forEach(button => {
+document.querySelectorAll('.edit-material-btn').forEach(button => {
     button.addEventListener('click', function() {
-        const productId = this.dataset.id;
+        const materialId = this.dataset.id;
 
-        fetch(`get_product.php?id=${productId}`)
+        fetch(`get_bahan.php?id=${materialId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status !== 'success') {
-                    alert('Gagal mendapatkan data produk.');
+                    alert('Gagal mendapatkan data bahan.');
                     return;
                 }
 
-                const product = data.product;
+                const material = data.material;
                 const images = data.images;
 
-                productForm.reset();
+                materialForm.reset();
 
-                document.getElementById('productModalTitle').textContent = 'Edit Produk';
-                document.getElementById('productAction').value = 'edit';
-                document.getElementById('productId').value = product.product_id;
+                document.getElementById('materialModalTitle').textContent = 'Edit bahan';
+                document.getElementById('materialAction').value = 'edit';
+                document.getElementById('materialId').value = material.material_id;
 
-                document.getElementById('productName').value = product.product_name;
-                document.getElementById('productType').value = product.product_type;
-                document.getElementById('productMotif').value = product.product_motif;
-                document.getElementById('productWeight').value = product.product_weight ?? '';
-                document.getElementById('productHeight').value = product.product_height ?? '';
-                document.getElementById('productDiameter').value = product.product_diameter ?? '';
-                document.getElementById('productPrice').value = product.product_price;
-                document.getElementById('productStock').value = product.product_stock;
+                document.getElementById('materialName').value = material.material_name;
+                document.getElementById('materialBrand').value = material.material_brand;
+                document.getElementById('materialPrice').value = material.material_price;
+                document.getElementById('materialStock').value = material.material_stock;
 
-                productImages.value = '';
+                materialImages.value = '';
 
                 showExistingImages(images);
                 openModal();
             })
             .catch(error => {
                 console.error(error);
-                alert('Ralat berlaku semasa membuka data produk.');
+                alert('Ralat berlaku semasa membuka data bahan.');
             });
     });
 });
 
 
 // =====================================================
-// FUNCTION: Button delete produk
-// Hantar action delete ke product_process.php
+// FUNCTION: Button delete bahan
 // =====================================================
-document.querySelectorAll('.delete-product-btn').forEach(button => {
+document.querySelectorAll('.delete-material-btn').forEach(button => {
     button.addEventListener('click', function() {
-        const productId = this.dataset.id;
-
-        const confirmDelete = confirm('Adakah anda pasti mahu padam produk ini?');
+        const materialId = this.dataset.id;
+        const confirmDelete = confirm('Adakah anda pasti mahu padam bahan ini?');
 
         if (!confirmDelete) return;
 
         const deleteForm = document.createElement('form');
         deleteForm.method = 'POST';
-        deleteForm.action = 'product_process.php';
+        deleteForm.action = 'bahan_process.php';
 
         deleteForm.innerHTML = `
             <input type="hidden" name="action" value="delete">
-            <input type="hidden" name="product_id" value="${productId}">
+            <input type="hidden" name="material_id" value="${materialId}">
         `;
 
         document.body.appendChild(deleteForm);
@@ -621,7 +593,7 @@ document.querySelectorAll('.delete-product-btn').forEach(button => {
 // =====================================================
 document.querySelectorAll('.editable-stock').forEach(cell => {
     cell.addEventListener('dblclick', function() {
-        const productId = this.dataset.id;
+        const materialId = this.dataset.id;
         const oldStock = this.textContent.trim();
 
         if (this.querySelector('input')) return;
@@ -641,7 +613,7 @@ document.querySelectorAll('.editable-stock').forEach(cell => {
 
         input.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
-                updateStock(cell, productId, input.value, oldStock);
+                updateStock(cell, materialId, input.value, oldStock);
             }
 
             if (e.key === 'Escape') {
@@ -650,7 +622,7 @@ document.querySelectorAll('.editable-stock').forEach(cell => {
         });
 
         input.addEventListener('blur', function() {
-            updateStock(cell, productId, input.value, oldStock);
+            updateStock(cell, materialId, input.value, oldStock);
         });
     });
 });
@@ -659,7 +631,7 @@ document.querySelectorAll('.editable-stock').forEach(cell => {
 // =====================================================
 // FUNCTION: Update stok ke update_stock.php
 // =====================================================
-function updateStock(cell, productId, newStock, oldStock) {
+function updateStock(cell, materialId, newStock, oldStock) {
     if (newStock === '' || Number(newStock) < 0) {
         alert('Stok tidak sah.');
         cell.textContent = oldStock;
@@ -671,14 +643,13 @@ function updateStock(cell, productId, newStock, oldStock) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `product_id=${encodeURIComponent(productId)}&product_stock=${encodeURIComponent(newStock)}`
+        body: `material_id=${encodeURIComponent(materialId)}&material_stock=${encodeURIComponent(newStock)}`
     })
     .then(response => response.text())
     .then(text => {
         console.log('Response from update_stock.php:', text);
 
         let data;
-
         try {
             data = JSON.parse(text);
         } catch (error) {
@@ -691,7 +662,6 @@ function updateStock(cell, productId, newStock, oldStock) {
             cell.textContent = newStock;
             updateStockRowColor(cell, Number(newStock));
             showStockMessage('Stok berjaya dikemaskini.', 'success');
-            
         } else {
             alert(data.message || 'Gagal update stok.');
             cell.textContent = oldStock;
@@ -704,10 +674,8 @@ function updateStock(cell, productId, newStock, oldStock) {
     });
 }
 
-//row colour match with stock number
 function updateStockRowColor(cell, stock) {
     const row = cell.closest('tr');
-
     row.classList.remove('low-stock-row', 'no-stock-row');
 
     if (stock === 0) {
@@ -717,7 +685,6 @@ function updateStockRowColor(cell, stock) {
     }
 }
 
-//message success update stok
 function showStockMessage(message) {
     let alertBox = document.querySelector('.stock-alert');
 
