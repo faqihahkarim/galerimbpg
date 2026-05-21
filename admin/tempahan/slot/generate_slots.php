@@ -1,14 +1,14 @@
 <?php
 session_start();
-include '../../db.php';
+include '../../../db.php';
 
 if (!isset($_SESSION['admin_login'])) {
-    header("Location: ../login.php");
+    header("Location: ../../login.php");
     exit;
 }
 
 if (!isset($_POST['generate_month'])) {
-    header("Location: peraturan.php?error=no_month");
+    header("Location:../peraturan.php?error=no_month");
     exit;
 }
 

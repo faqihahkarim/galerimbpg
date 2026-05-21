@@ -2,11 +2,11 @@
 session_start();
 
 if (!isset($_SESSION['admin_login'])) {
-    header("Location: ../login.php");
+    header("Location: ../../login.php");
     exit;
 }
 
-include '../../db.php';
+include '../../../db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: tempahan.php");
