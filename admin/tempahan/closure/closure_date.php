@@ -2,55 +2,49 @@
 session_start();
 
 if (!isset($_SESSION['admin_login'])) {
-    header("Location: ../login.php");
+    header("Location: ../../login.php");
     exit;
 }
 
-include '../../db.php';
+include '../../../db.php';
 
 $limit = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
 
-$countResult = mysqli_query($conn, "SELECT COUNT(*) AS total FROM booking_slots");
+$countResult = mysqli_query($conn, "SELECT COUNT(*) AS total FROM closure_dates");
 $totalRules = $countResult ? (int) mysqli_fetch_assoc($countResult)['total'] : 0;
 $totalPages = max(1, (int) ceil($totalRules / $limit));
 $page = min($page, $totalPages);
 $offset = ($page - 1) * $limit;
 
-$slotsQuery = "
-    SELECT bs.slot_id, bs.package_id, p.package_name, bs.slot_date, bs.start_time, bs.end_time, bs.slot_status, cd.closure_name
-    FROM booking_slots bs
-    LEFT JOIN packages p ON bs.package_id = p.package_id
-    LEFT JOIN closure_dates cd ON bs.slot_date = cd.closure_date
-    ORDER BY bs.slot_date DESC, bs.start_time DESC
+$closureQuery = "
+    SELECT closure_id, closure_date, closure_name, status
+    FROM closure_dates
+    ORDER BY closure_date DESC
     LIMIT $limit
     OFFSET $offset
 ";
 
-$slotsResult = mysqli_query($conn, $slotsQuery);
-
-$packagesResult = mysqli_query($conn, "SELECT package_id, package_name FROM packages");
+$closureResult = mysqli_query($conn, $closureQuery);
 
 $flashMessage = '';
 $flashClass = '';
 if (isset($_GET['success'])) {
     switch ($_GET['success']) {
-        case 'slot_updated':
-            $flashMessage = 'Slot berjaya dikemaskini.';
+        case 'closure_updated':
+            $flashMessage = 'Tarikh tutup berjaya dikemaskini.';
             $flashClass = 'success-alert';
             break;
-        case 'slots_generated':
-            $count = isset($_GET['count']) ? (int) $_GET['count'] : 0;
-            $flashMessage = $count . ' slot berjaya dijana.';
+        case 'closure_added':
+            $flashMessage = 'Tarikh tutup baru berjaya disimpan.';
             $flashClass = 'success-alert';
-
             break;
     }
 }
 if (isset($_GET['error'])) {
     switch ($_GET['error']) {
         case 'invalid_id':
-            $flashMessage = 'ID slot tidak sah.';
+            $flashMessage = 'ID tarikh tutup tidak sah.';
             $flashClass = 'error-alert';
             break;
         default:
@@ -66,13 +60,13 @@ if (isset($_GET['error'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Slot - MBPG</title>
+  <title>Tarikh Tutup - MBPG</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/tempahan.css">
-  <link rel="stylesheet" href="../css/rule.css">
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/tempahan.css">
+  <link rel="stylesheet" href="../../css/rule.css">
 </head>
 
 <body>
@@ -80,7 +74,7 @@ if (isset($_GET['error'])) {
 
 <div class="admin-layout">
 
-    <?php include '../sidebar.php'; ?>
+    <?php include '../../sidebar.php'; ?>
 
     <main class="main">
 
@@ -90,8 +84,8 @@ if (isset($_GET['error'])) {
         </button>
 
         <div>
-            <h1>Pengurusan Slot</h1>
-            <p>Senarai Slot Tempahan</p>
+            <h1>Tarikh Tutup</h1>
+            <p>Urus Tarikh Tutup</p>
         </div>
     </header>
 
@@ -103,9 +97,9 @@ if (isset($_GET['error'])) {
 
     <section class="booking-panel">
 
-          <div class="rule-actions">
-                <button type="button" class="red-btn" id="openGenerateModal">
-                    <i class="fa-solid fa-gear"></i> Jana Slot Baru
+        <div class="rule-actions">
+                <button type="button" class="red-btn" id="openClosureModal">
+                    <i class="fa-solid fa-plus"></i> Tambah Tarikh Tutup
                 </button>
             </div>
 
@@ -117,10 +111,8 @@ if (isset($_GET['error'])) {
                 <thead>
                     <tr>
                     <th>No.</th>
-                    <th>Pakej</th>
-                    <th>Tarikh</th>
-                    <th>Masa Mula</th>
-                    <th>Masa Akhir</th>
+                    <th>Tarikh Tutup</th>
+                    <th>Sebab</th>
                     <th>Status</th>
                     <th>Action</th>
                     <th>Action</th>
@@ -129,28 +121,25 @@ if (isset($_GET['error'])) {
 
                 <tbody>
                     <?php $no = $offset + 1; ?>
-                    <?php while ($slot = mysqli_fetch_assoc($slotsResult)): ?>
+                    <?php while ($c = mysqli_fetch_assoc($closureResult)): ?>
                     <tr>
                         <td><?= $no++ ?></td>
-                        <td><?= htmlspecialchars($slot['package_name'] ?? '') ?></td>
-                        <td><?= date('j M Y', strtotime($slot['slot_date'])) ?></td>
-                        <td><?= date('g:iA', strtotime($slot['start_time'])) ?></td>
-                        <td><?= date('g:iA', strtotime($slot['end_time'])) ?></td>
-                        <td><?= htmlspecialchars($slot['slot_status'] ?? '') ?></td>
+                        <td><?= date('j M Y', strtotime($c['closure_date'])) ?></td>
+                        <td><?= htmlspecialchars($c['closure_name']) ?></td>
+                        <td><?= htmlspecialchars($c['status']) ?></td>
                         <td>
-                            <button type="button" class="edit-slot-btn"
-                              style="background: none; border: none; color: #1565c0; cursor: pointer; font-family: inherit; font-weight: bold;" 
-
-                              data-id="<?= $slot['slot_id'] ?>"
-                              data-package="<?= $slot['package_id'] ?>"
-                              data-date="<?= $slot['slot_date'] ?>"
-                              data-start="<?= $slot['start_time'] ?>"
-                              data-end="<?= $slot['end_time'] ?>"
-                              data-status="<?= htmlspecialchars($slot['slot_status'] ?? '') ?>"
-                            >Edit</button>
-                         </td>
-                        <td>
-                            <button class="delete-product-btn" onclick="return confirm('Padam slot ini?')" 
+                            <button type="button" class="edit-closure-btn"
+                                style="background: none; border: none; color: #1565c0; cursor: pointer; font-family: inherit; font-weight: bold;"
+                                
+                                data-id="<?= $c['closure_id'] ?>"
+                                data-date="<?= $c['closure_date'] ?>"
+                                data-name="<?= htmlspecialchars($c['closure_name']) ?>"
+                                data-status="<?= htmlspecialchars($c['status']) ?>"
+                                >Edit
+                            </button>
+                        </td>
+                         <td>
+                            <button class="delete-product-btn" onclick="return confirm('Padam tarikh tutup ini?')" 
                                     style="background: none; border: none; color: #c62828; cursor: pointer; font-family: inherit; font-weight: bold;">
                                 Delete
                             </button>
@@ -210,54 +199,23 @@ if (isset($_GET['error'])) {
 
     </section>
 
-<!-- POP UP JANA SLOT -->
-<div class="popup-modal" id="generateModal">
+<!-- POP UP TARIKH TUTUP -->
+<div class="popup-modal" id="closureModal">
   <div class="popup-card">
-    <h2>Jana Slot Tempahan</h2>
+    <h2>Tambah Tarikh Tutup</h2>
 
-    <form action="generate_slots.php" method="POST">
-      <p>Proses ini akan menjana slot tempahan berdasarkan peraturan yang telah ditetapkan. Pastikan semua peraturan sudah dikemaskini sebelum menjana slot.</p>
-      <label>Pilih Bulan</label>
-      <input type="month" name="generate_month" required>
+    <form id="closureForm" action="add_closure.php" method="POST">
+      <input type="hidden" name="closure_id" id="closure_id" value="">
+      <label>Tarikh Tutup</label>
+      <input id="closureDate" type="date" name="closure_date" required>
 
-      <div class="popup-actions">
-        <button type="button" class="cancel-btn close-popup">Batal</button>
-        <button type="submit" class="save-btn">Jana Slot</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- EDIT SLOT MODAL -->
-<div class="popup-modal" id="editSlotModal">
-  <div class="popup-card">
-    <h2>Edit Slot</h2>
-
-    <form id="slotForm" action="edit_slot.php" method="POST">
-      <input type="hidden" name="slot_id" id="slot_id" value="">
-      <label>Pakej</label>
-      <select id="slotPackage" name="package_id" required>
-        <option value="">Pilih Pakej</option>
-        <?php mysqli_data_seek($packagesResult, 0); ?>
-        <?php while ($package = mysqli_fetch_assoc($packagesResult)): ?>
-          <option value="<?= $package['package_id'] ?>"><?= htmlspecialchars($package['package_name']) ?></option>
-        <?php endwhile; ?>
-      </select>
-
-      <label>Tarikh</label>
-      <input id="slotDate" type="date" name="slot_date" required>
-
-      <label>Masa Mula</label>
-      <input id="slotStart" type="time" name="start_time" required>
-
-      <label>Masa Akhir</label>
-      <input id="slotEnd" type="time" name="end_time" required>
+      <label>Sebab Tutup</label>
+      <input id="closureName" type="text" name="closure_name" placeholder="Contoh: Hari Wesak" required>
 
       <label>Status</label>
-      <select id="slotStatus" name="slot_status" required>
-        <option value="available">available</option>
-        <option value="closed">closed</option>
-        <option value="booked">booked</option>
+      <select id="closureStatus" name="status" required>
+        <option value="active">Aktif</option>
+        <option value="inactive">Tidak Aktif</option>
       </select>
 
       <div class="popup-actions">
@@ -270,28 +228,33 @@ if (isset($_GET['error'])) {
 
 <script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
 
-
 <!-- SCRIPT POP UP -->
  <script>
-const openGenerateModal = document.getElementById('openGenerateModal');
-const generateModal = document.getElementById('generateModal');
-const editSlotModal = document.getElementById('editSlotModal');
+const openClosureModal = document.getElementById('openClosureModal');
+const closureModal = document.getElementById('closureModal');
 
-openGenerateModal.addEventListener('click', () => {
-  generateModal.classList.add('active');
+openClosureModal.addEventListener('click', () => {
+  // prepare form for add
+  const form = document.getElementById('closureForm');
+  form.action = 'add_closure.php';
+  document.getElementById('closure_id').value = '';
+  document.getElementById('closureDate').value = '';
+  document.getElementById('closureName').value = '';
+  document.getElementById('closureStatus').value = 'active';
+  closureModal.classList.add('active');
 });
 
-// edit slot buttons
-document.querySelectorAll('.edit-slot-btn').forEach(btn => {
+// edit buttons
+document.querySelectorAll('.edit-closure-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const id = btn.dataset.id;
-    document.getElementById('slot_id').value = id;
-    document.getElementById('slotPackage').value = btn.dataset.package || '';
-    document.getElementById('slotDate').value = btn.dataset.date || '';
-    document.getElementById('slotStart').value = btn.dataset.start || '';
-    document.getElementById('slotEnd').value = btn.dataset.end || '';
-    document.getElementById('slotStatus').value = btn.dataset.status || '';
-    editSlotModal.classList.add('active');
+    const form = document.getElementById('closureForm');
+    form.action = 'edit_closure.php';
+    document.getElementById('closure_id').value = id;
+    document.getElementById('closureDate').value = btn.dataset.date || '';
+    document.getElementById('closureName').value = btn.dataset.name || '';
+    document.getElementById('closureStatus').value = btn.dataset.status || 'active';
+    closureModal.classList.add('active');
   });
 });
 

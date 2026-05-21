@@ -59,28 +59,28 @@ $galleryPages = [
       <div class="submenu">
 
         <a 
-          href="<?= $base ?>/tempahan/tempahan.php"
+          href="<?= $base ?>/tempahan/list_tempahan/tempahan.php"
           class="<?= ($current == 'tempahan.php') ? 'active' : '' ?>"
         >
           Tempahan
         </a>
 
         <a 
-          href="<?= $base ?>/tempahan/peraturan.php"
+          href="<?= $base ?>/tempahan/rule/peraturan.php"
           class="<?= ($current == 'peraturan.php') ? 'active' : '' ?>"
         >
           Peraturan Tempahan
         </a>
 
         <a 
-          href="<?= $base ?>/tempahan/slot.php"
+          href="<?= $base ?>/tempahan/slot/slot.php"
           class="<?= ($current == 'slot.php') ? 'active' : '' ?>"
         >
           Slot Tempahan
         </a>
 
         <a 
-          href="<?= $base ?>/tempahan/closure_date.php"
+          href="<?= $base ?>/tempahan/closure/closure_date.php"
           class="<?= ($current == 'closure_date.php') ? 'active' : '' ?>"
         >
           Tarikh Tutup
