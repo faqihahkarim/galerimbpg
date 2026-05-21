@@ -14,6 +14,28 @@ $materialQuery = "
     ORDER BY material_id DESC
 ";
 
+
+// =====================================================
+// PAGINATION CALCULATIONS & CONFIGURATIONS
+// =====================================================
+$limit = 10; // Number of items per page
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
+// Count total active materials for pagination
+$countResult = mysqli_query($conn, "SELECT COUNT(*) AS total FROM materials WHERE status = 'active'");
+$totalMaterials = $countResult ? (int) mysqli_fetch_assoc($countResult)['total'] : 0;
+$totalPages = max(1, (int) ceil($totalMaterials / $limit));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $limit;
+
+// Paginated main material query string
+$materialQuery = "
+    SELECT * FROM materials
+    WHERE status = 'active'
+    ORDER BY material_id DESC
+    LIMIT $limit OFFSET $offset
+";
+
 $materialResult = mysqli_query($conn, $materialQuery);
 
 // Flash message
@@ -198,6 +220,51 @@ if (isset($_GET['error'])) {
                     <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="pagination">
+
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?= $page - 1 ?>" class="page-btn">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php
+                    $adjacents = 2; 
+
+                    // Always print link to first page bound if sliding offset exists
+                    if ($page > ($adjacents + 1)) {
+                        echo '<a href="?page=1" class="page-btn">1</a>';
+                        if ($page > ($adjacents + 2)) {
+                            echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                        }
+                    }
+
+                    // Dynamically calculate midframe boundaries
+                    $startLoop = max(1, $page - $adjacents);
+                    $endLoop   = min($totalPages, $page + $adjacents);
+
+                    for ($i = $startLoop; $i <= $endLoop; $i++) {
+                        $activeClass = ($page == $i) ? 'active-page' : '';
+                        echo '<a href="?page=' . $i . '" class="page-btn ' . $activeClass . '">' . $i . '</a>';
+                    }
+
+                    // Always print link to tail page bound if trailing offset exists
+                    if ($page < ($totalPages - $adjacents)) {
+                        if ($page < ($totalPages - $adjacents - 1)) {
+                            echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                        }
+                        echo '<a href="?page=' . $totalPages . '" class="page-btn">' . $totalPages . '</a>';
+                    }
+                    ?>
+
+                    <?php if ($page < $totalPages): ?>
+                        <a href="?page=<?= $page + 1 ?>" class="page-btn">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    <?php endif; ?>
+
             </div>
 
         </section>

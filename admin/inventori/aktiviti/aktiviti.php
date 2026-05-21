@@ -8,7 +8,21 @@ if (!isset($_SESSION['admin_login'])) {
 
 include '../../../db.php';
 
-$productQuery = "
+
+// =====================================================
+// PAGINATION CALCULATIONS & CONFIGURATIONS
+// =====================================================
+$limit = 10; // Number of items per page
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+
+// Count total active activitys for pagination
+$countResult = mysqli_query($conn, "SELECT COUNT(*) AS total FROM activities WHERE status = 'active'");
+$totalActivities = $countResult ? (int) mysqli_fetch_assoc($countResult)['total'] : 0;
+$totalPages = max(1, (int) ceil($totalActivities / $limit));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $limit;
+
+$activityQuery = "
     SELECT a.*, ai.image_url 
     FROM activities a
     LEFT JOIN activity_images ai 
@@ -18,7 +32,7 @@ $productQuery = "
     ORDER BY a.activity_id ASC
 ";
 
-$activityResult = mysqli_query($conn, $productQuery);
+$activityResult = mysqli_query($conn, $activityQuery);
 
 // Flash message
 $flashMessage = '';
@@ -184,6 +198,51 @@ if (isset($_GET['error'])) {
                     <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="pagination">
+
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?= $page - 1 ?>" class="page-btn">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php
+                    $adjacents = 2; 
+
+                    // Always print link to first page bound if sliding offset exists
+                    if ($page > ($adjacents + 1)) {
+                        echo '<a href="?page=1" class="page-btn">1</a>';
+                        if ($page > ($adjacents + 2)) {
+                            echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                        }
+                    }
+
+                    // Dynamically calculate midframe boundaries
+                    $startLoop = max(1, $page - $adjacents);
+                    $endLoop   = min($totalPages, $page + $adjacents);
+
+                    for ($i = $startLoop; $i <= $endLoop; $i++) {
+                        $activeClass = ($page == $i) ? 'active-page' : '';
+                        echo '<a href="?page=' . $i . '" class="page-btn ' . $activeClass . '">' . $i . '</a>';
+                    }
+
+                    // Always print link to tail page bound if trailing offset exists
+                    if ($page < ($totalPages - $adjacents)) {
+                        if ($page < ($totalPages - $adjacents - 1)) {
+                            echo '<span class="page-dots" style="padding: 8px 12px; color: var(--text-soft);">...</span>';
+                        }
+                        echo '<a href="?page=' . $totalPages . '" class="page-btn">' . $totalPages . '</a>';
+                    }
+                    ?>
+
+                    <?php if ($page < $totalPages): ?>
+                        <a href="?page=<?= $page + 1 ?>" class="page-btn">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    <?php endif; ?>
+
             </div>
 
         </section>

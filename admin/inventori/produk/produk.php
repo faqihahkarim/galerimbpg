@@ -29,7 +29,7 @@ $productQuery = "
         ON p.product_id = pi.product_id
         AND pi.is_main = 1
     WHERE p.status = 'active'
-    ORDER BY p.product_id DESC
+    ORDER BY p.product_id ASC
     LIMIT $limit OFFSET $offset
 ";
 
@@ -217,8 +217,6 @@ if (isset($_GET['error'])) {
                     <?php endif; ?>
                     </tbody>
                 </table>
-
-                
             </div>
 
             <div class="pagination">
@@ -264,7 +262,7 @@ if (isset($_GET['error'])) {
                         </a>
                     <?php endif; ?>
 
-                </div>
+            </div>
                 
         </section>
 
