@@ -60,6 +60,7 @@ $rulesResult = mysqli_query($conn, $rulesQuery);
 $packagesResult = mysqli_query($conn, "
     SELECT package_id, package_name 
     FROM packages
+    WHERE status = 'active'
 ");
 
 $flashMessage = '';
@@ -242,13 +243,13 @@ if (isset($_GET['error'])) {
 
       <label>Hari</label>
       <select id="ruleDay" name="day_of_week" required>
-        <option value="Isnin">Isnin</option>
-        <option value="Selasa">Selasa</option>
-        <option value="Rabu">Rabu</option>
-        <option value="Khamis">Khamis</option>
-        <option value="Jumaat">Jumaat</option>
-        <option value="Sabtu">Sabtu</option>
-        <option value="Ahad">Ahad</option>
+        <option value="Monday">Isnin</option>
+        <option value="Tuesday">Selasa</option>
+        <option value="Wednesday">Rabu</option>
+        <option value="Thursday">Khamis</option>
+        <option value="Friday">Jumaat</option>
+        <option value="Saturday">Sabtu</option>
+        <option value="Sunday">Ahad</option>
       </select>
 
       <label>Masa Mula</label>
@@ -262,8 +263,8 @@ if (isset($_GET['error'])) {
 
       <label>Status</label>
       <select id="ruleStatus" name="status" required>
-        <option value="Aktif">Aktif</option>
-        <option value="Tidak Aktif">Tidak Aktif</option>
+        <option value="active">Aktif</option>
+        <option value="inactive">Tidak Aktif</option>
       </select>
 
       <div class="popup-actions">
