@@ -46,17 +46,14 @@
     
             <div class="h-40 rounded-t-full border border-[#f5d38b]/30 shadow-xl flex items-end p-4 text-xs text-white bg-cover bg-center"
                 style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('assets/images/banner2.jpg');">
-                Vase
             </div>
 
             <div class="h-52 rounded-t-full border border-[#f5d38b]/30 shadow-xl flex items-end p-4 text-xs text-white bg-cover bg-center"
                 style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('assets/images/galeri.jpg');">
-                Porcelain
             </div>
 
             <div class="h-36 rounded-t-full border border-[#f5d38b]/30 shadow-xl flex items-end p-4 text-xs text-white bg-cover bg-center"
                 style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('assets/images/lawatan.jpg');">
-                Terracotta
             </div>
 
         </div>
@@ -69,7 +66,7 @@
 
             <div class="mb-8 text-center">
                 <div class="w-20 h-20 mx-auto rounded-full border border-[#caa466]/60 bg-[#120f0b] flex items-center justify-center mb-5 shadow-lg overflow-hidden p-2">
-                    <img src="assets/images/mbpg.png" alt="Logo MBPG" class="w-full h-full object-contain rounded-full">
+                    <img src="assets/images/logombpg.png" alt="Logo MBPG" class="w-full h-full object-contain rounded-full">
                 </div>
                 <h2 class="serif text-4xl text-[#f8ead1]">Selamat Datang</h2>
                 <p class="text-stone-400 mt-2">Log Masuk ke Halaman Admin</p>
