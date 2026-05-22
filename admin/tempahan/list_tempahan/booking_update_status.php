@@ -8,9 +8,9 @@ header('Content-Type: application/json');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../../PHPMailer/src/Exception.php';
-require '../../PHPMailer/src/PHPMailer.php';
-require '../../PHPMailer/src/SMTP.php';
+require '../../../PHPMailer/src/Exception.php';
+require '../../../PHPMailer/src/PHPMailer.php';
+require '../../../PHPMailer/src/SMTP.php';
 
 if (!isset($_SESSION['admin_login'])) {
     echo json_encode([
@@ -59,7 +59,7 @@ $bookingQuery = "
         s.end_time,
         p.package_name
     FROM bookings b
-    LEFT JOIN slots s ON b.slot_id = s.slot_id
+    LEFT JOIN booking_slots s ON b.slot_id = s.slot_id
     LEFT JOIN packages p ON b.package_id = p.package_id
     WHERE b.booking_id = $booking_id
     LIMIT 1
@@ -178,7 +178,7 @@ try {
     $mail->SMTPAuth = true;
 
     // CHANGE THIS
-    $mailConfig = require '../../config/mail_config.php';
+    $mailConfig = require '../../../config/config_mail.php';
     $mail->Username = $mailConfig['email'];
 
     // CHANGE THIS - use Google App Password, not normal Gmail password

@@ -433,10 +433,11 @@ unset($booking);
 </div>
 
 <script>
+
 const bookingData = <?= json_encode(array_values($bookings), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
 
 const modal = document.getElementById('bookingModal');
-const modalClose = modal.querySelector('.booking-modal-close');
+const modalClose = document.querySelector('.booking-modal-close');
 
 const modalBookingRef = document.getElementById('modalBookingRef');
 const modalBookingStatus = document.getElementById('modalBookingStatus');
@@ -451,7 +452,6 @@ const modalRemark = document.getElementById('modalRemark');
 
 const actionBookingId = document.getElementById('actionBookingId');
 const actionBookingStatus = document.getElementById('actionBookingStatus');
-const bookingActionForm = document.getElementById('bookingActionForm');
 
 const approveBookingBtn = document.getElementById('approveBookingBtn');
 const rejectBookingBtn = document.getElementById('rejectBookingBtn');
@@ -461,7 +461,6 @@ const rejectModal = document.getElementById('rejectModal');
 const rejectReason = document.getElementById('rejectReason');
 const confirmRejectBtn = document.getElementById('confirmRejectBtn');
 const cancelRejectBtn = document.getElementById('cancelRejectBtn');
-const adminCommentInput = document.getElementById('adminCommentInput');
 
 const bookingSearch = document.getElementById('bookingSearch');
 const bookingTypeFilter = document.getElementById('bookingTypeFilter');
@@ -476,7 +475,7 @@ const nextPageBtn = document.getElementById('nextPageBtn');
 
 let currentPage = 1;
 const pageSize = 10;
-const allRows = Array.from(bookingTableBody.querySelectorAll('tr'));
+const allRows = bookingTableBody ? Array.from(bookingTableBody.querySelectorAll('tr')) : [];
 
 function findBooking(bookingId) {
   return bookingData.find(item => String(item.booking_id) === String(bookingId));
@@ -488,7 +487,7 @@ function setStatusLabel(statusClass, label) {
 }
 
 function formatWhatsappPhone(phone) {
-  let cleanPhone = String(phone).replace(/\D/g, '');
+  let cleanPhone = String(phone || '').replace(/\D/g, '');
 
   if (cleanPhone.startsWith('0')) {
     cleanPhone = '6' + cleanPhone;
@@ -505,9 +504,9 @@ function createWhatsappLink(booking) {
   if (booking.booking_status === 'approved') {
     message = `Assalamualaikum / Salam Sejahtera. Tempahan anda di Galeri Seramik MBPG telah DILULUSKAN.
 
-No. Tempahan: ${booking.display_id}
-Tarikh & Masa: ${booking.slot_display}
-Pakej: ${booking.package_name}
+No. Tempahan: ${booking.display_id || '-'}
+Tarikh & Masa: ${booking.slot_display || '-'}
+Pakej: ${booking.package_name || '-'}
 
 Terima kasih.`;
   }
@@ -515,7 +514,7 @@ Terima kasih.`;
   if (booking.booking_status === 'rejected') {
     message = `Assalamualaikum / Salam Sejahtera. Dukacita dimaklumkan bahawa tempahan anda di Galeri Seramik MBPG telah DITOLAK.
 
-No. Tempahan: ${booking.display_id}
+No. Tempahan: ${booking.display_id || '-'}
 Sebab: ${booking.admin_remark || '-'}
 
 Terima kasih.`;
@@ -526,7 +525,7 @@ Terima kasih.`;
 
 function showBookingModal(booking) {
   modalBookingRef.textContent = booking.display_id || '-';
-  setStatusLabel(booking.status_class, booking.status_label);
+  setStatusLabel(booking.status_class || 'pending', booking.status_label || '-');
 
   modalOrganization.textContent = booking.organization_name || '-';
   modalPhone.textContent = booking.phone_number || '-';
@@ -535,12 +534,12 @@ function showBookingModal(booking) {
   modalPackage.textContent = booking.package_name || '-';
   modalActivities.textContent = booking.activity_list || 'Tiada';
   modalParticipants.textContent = booking.total_participants || '-';
-  modalRemark.textContent = booking.admin_remark || '-';
+  modalRemark.textContent = booking.admin_comment || booking.admin_remark || '-';
 
-  actionBookingId.value = booking.booking_id;
-  actionBookingStatus.value = booking.booking_status;
+  actionBookingId.value = booking.booking_id || '';
+  actionBookingStatus.value = booking.booking_status || '';
 
-  if (booking.status_class === 'pending') {
+  if (booking.booking_status === 'pending' || booking.status_class === 'pending') {
     approveBookingBtn.style.display = 'inline-block';
     rejectBookingBtn.style.display = 'inline-block';
     whatsappBookingBtn.style.display = 'none';
@@ -561,22 +560,42 @@ function showBookingModal(booking) {
   modal.classList.add('active');
 }
 
-approveBookingBtn.addEventListener('click', function (event) {
-  event.preventDefault();
-
-  const formData = new FormData();
-  formData.append('booking_id', actionBookingId.value);
-  formData.append('action', 'approved');
-  formData.append('admin_comment', '');
-
-  fetch('booking_update_status.php', {
+async function sendBookingStatus(formData) {
+  const response = await fetch('booking_update_status.php', {
     method: 'POST',
     body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
+  });
+
+  const text = await response.text();
+
+  console.log('PHP RESPONSE START');
+  console.log(text);
+  console.log('PHP RESPONSE END');
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    console.error('JSON PARSE ERROR:', error);
+    return {
+      success: false,
+      message: 'PHP tidak return JSON. Semak Console untuk PHP RESPONSE.'
+    };
+  }
+}
+
+if (approveBookingBtn) {
+  approveBookingBtn.addEventListener('click', async function (event) {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append('booking_id', actionBookingId.value);
+    formData.append('action', 'approved');
+    formData.append('admin_comment', '');
+
+    const data = await sendBookingStatus(formData);
+
     if (data.success) {
-      alert('Tempahan berjaya diluluskan.');
+      alert(data.message || 'Tempahan berjaya diluluskan.');
 
       modalBookingStatus.textContent = 'Diluluskan';
       modalBookingStatus.className = 'status approved';
@@ -596,42 +615,37 @@ approveBookingBtn.addEventListener('click', function (event) {
     } else {
       alert(data.message || 'Gagal mengemaskini tempahan.');
     }
-  })
-  .catch(error => {
-    console.error(error);
-    alert('Ralat sistem. Sila semak booking_update_status.php.');
   });
-});
+}
 
-rejectBookingBtn.addEventListener('click', function (event) {
-  event.preventDefault();
-  rejectReason.value = '';
-  rejectModal.classList.add('active');
-});
+if (rejectBookingBtn) {
+  rejectBookingBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+    rejectReason.value = '';
+    rejectModal.classList.add('active');
+  });
+}
 
-confirmRejectBtn.addEventListener('click', function (event) {
-  event.preventDefault();
+if (confirmRejectBtn) {
+  confirmRejectBtn.addEventListener('click', async function (event) {
+    event.preventDefault();
 
-  const reason = rejectReason.value.trim();
+    const reason = rejectReason.value.trim();
 
-  if (reason === '') {
-    alert('Sila masukkan sebab penolakan.');
-    return;
-  }
+    if (reason === '') {
+      alert('Sila masukkan sebab penolakan.');
+      return;
+    }
 
-  const formData = new FormData();
-  formData.append('booking_id', actionBookingId.value);
-  formData.append('action', 'rejected');
-  formData.append('admin_comment', reason);
+    const formData = new FormData();
+    formData.append('booking_id', actionBookingId.value);
+    formData.append('action', 'rejected');
+    formData.append('admin_comment', reason);
 
-  fetch('booking_update_status.php', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
+    const data = await sendBookingStatus(formData);
+
     if (data.success) {
-      alert('Tempahan berjaya ditolak.');
+      alert(data.message || 'Tempahan berjaya ditolak.');
 
       modalBookingStatus.textContent = 'Ditolak';
       modalBookingStatus.className = 'status rejected';
@@ -654,20 +668,18 @@ confirmRejectBtn.addEventListener('click', function (event) {
     } else {
       alert(data.message || 'Gagal mengemaskini tempahan.');
     }
-  })
-  .catch(error => {
-    console.error(error);
-    alert('Ralat sistem. Sila semak booking_update_status.php.');
   });
-});
+}
 
-cancelRejectBtn.addEventListener('click', function () {
-  rejectModal.classList.remove('active');
-  rejectReason.value = '';
-});
+if (cancelRejectBtn) {
+  cancelRejectBtn.addEventListener('click', function () {
+    rejectModal.classList.remove('active');
+    rejectReason.value = '';
+  });
+}
 
 function normalizeText(text) {
-  return text.trim().toLowerCase();
+  return String(text || '').trim().toLowerCase();
 }
 
 function rowMatchesFilters(row, searchTerm, typeFilter, statusFilter) {
@@ -691,9 +703,9 @@ function rowMatchesFilters(row, searchTerm, typeFilter, statusFilter) {
 }
 
 function getFilteredRows() {
-  const searchTerm = normalizeText(bookingSearch.value || '');
-  const typeFilter = normalizeText(bookingTypeFilter.value || 'all');
-  const statusFilter = normalizeText(bookingStatusFilter.value || 'all');
+  const searchTerm = normalizeText(bookingSearch?.value || '');
+  const typeFilter = normalizeText(bookingTypeFilter?.value || 'all');
+  const statusFilter = normalizeText(bookingStatusFilter?.value || 'all');
 
   return allRows.filter(row => rowMatchesFilters(row, searchTerm, typeFilter, statusFilter));
 }
@@ -723,11 +735,21 @@ function updateFooter() {
   const first = total === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const last = total === 0 ? 0 : Math.min(currentPage * pageSize, total);
 
-  bookingFooterText.textContent = `Showing ${first} to ${last} out of ${total} entries`;
-  bookingPaginationInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  if (bookingFooterText) {
+    bookingFooterText.textContent = `Showing ${first} to ${last} out of ${total} entries`;
+  }
 
-  prevPageBtn.disabled = currentPage <= 1;
-  nextPageBtn.disabled = currentPage >= totalPages;
+  if (bookingPaginationInfo) {
+    bookingPaginationInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  }
+
+  if (prevPageBtn) {
+    prevPageBtn.disabled = currentPage <= 1;
+  }
+
+  if (nextPageBtn) {
+    nextPageBtn.disabled = currentPage >= totalPages;
+  }
 }
 
 function applyFilters() {
@@ -747,9 +769,9 @@ function changePage(offset) {
 }
 
 function resetFilters() {
-  bookingSearch.value = '';
-  bookingTypeFilter.value = 'all';
-  bookingStatusFilter.value = 'all';
+  if (bookingSearch) bookingSearch.value = '';
+  if (bookingTypeFilter) bookingTypeFilter.value = 'all';
+  if (bookingStatusFilter) bookingStatusFilter.value = 'all';
   applyFilters();
 }
 
@@ -803,24 +825,35 @@ document.querySelectorAll('.booking-detail-link').forEach(link => {
   });
 });
 
-bookingSearch.addEventListener('input', applyFilters);
-bookingTypeFilter.addEventListener('change', applyFilters);
-bookingStatusFilter.addEventListener('change', applyFilters);
-bookingResetBtn.addEventListener('click', resetFilters);
-bookingExportBtn.addEventListener('click', exportVisibleRows);
-prevPageBtn.addEventListener('click', () => changePage(-1));
-nextPageBtn.addEventListener('click', () => changePage(1));
+if (bookingSearch) bookingSearch.addEventListener('input', applyFilters);
+if (bookingTypeFilter) bookingTypeFilter.addEventListener('change', applyFilters);
+if (bookingStatusFilter) bookingStatusFilter.addEventListener('change', applyFilters);
+if (bookingResetBtn) bookingResetBtn.addEventListener('click', resetFilters);
+if (bookingExportBtn) bookingExportBtn.addEventListener('click', exportVisibleRows);
+if (prevPageBtn) prevPageBtn.addEventListener('click', () => changePage(-1));
+if (nextPageBtn) nextPageBtn.addEventListener('click', () => changePage(1));
 
-modalClose.addEventListener('click', () => modal.classList.remove('active'));
+if (modalClose) {
+  modalClose.addEventListener('click', () => modal.classList.remove('active'));
+}
 
-modal.addEventListener('click', function (event) {
-  if (event.target === modal) {
-    modal.classList.remove('active');
-  }
-});
+if (modal) {
+  modal.addEventListener('click', function (event) {
+    if (event.target === modal) {
+      modal.classList.remove('active');
+    }
+  });
+}
+
+if (rejectModal) {
+  rejectModal.addEventListener('click', function (event) {
+    if (event.target === rejectModal) {
+      rejectModal.classList.remove('active');
+    }
+  });
+}
 
 applyFilters();
-
 
 </script>
 
