@@ -105,7 +105,7 @@ if (isset($_GET['error'])) {
 
           <div class="rule-actions">
                 <button type="button" class="red-btn" id="openGenerateModal">
-                    <i class="fa-solid fa-gear"></i> Jana Slot Baru
+                    <i class="fa-solid fa-plus"></i> Jana Slot Baru
                 </button>
             </div>
 

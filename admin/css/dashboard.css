@@ -368,7 +368,7 @@ body {
   border-radius: 10px;
   display: grid;
   place-items: center;
-  background: var(--primary-light);
+  ;
   color: var(--primary-dark);
 }
 

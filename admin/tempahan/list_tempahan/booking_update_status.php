@@ -123,6 +123,29 @@ $endTime = !empty($booking['end_time'])
     ? date('g:i A', strtotime($booking['end_time']))
     : '-';
 
+$activityText = "Tiada aktiviti dipilih";
+
+$activityQuery = "
+    SELECT 
+        a.activity_name,
+        ba.participant_count
+    FROM booking_activities ba
+    LEFT JOIN activities a ON ba.activity_id = a.activity_id
+    WHERE ba.booking_id = $booking_id
+";
+
+$activityResult = mysqli_query($conn, $activityQuery);
+
+if ($activityResult && mysqli_num_rows($activityResult) > 0) {
+    $activityLines = [];
+
+    while ($activity = mysqli_fetch_assoc($activityResult)) {
+        $activityLines[] = "- " . $activity['activity_name'] . " (" . $activity['participant_count'] . " peserta)";
+    }
+
+    $activityText = implode("\n", $activityLines);
+}
+
 if ($action === 'approved') {
     $message = "
 Assalamualaikum / Salam Sejahtera,
@@ -133,6 +156,8 @@ Maklumat tempahan:
 Nama Organisasi: {$booking['organization_name']}
 Nama Wakil: {$booking['contact_person']}
 Pakej: {$booking['package_name']}
+Aktiviti yang dipilih: 
+{$activityText}
 Tarikh: {$slotDate}
 Masa: {$startTime} - {$endTime}
 Jumlah Peserta: {$booking['total_participants']}
@@ -206,8 +231,8 @@ echo json_encode([
     'success' => true,
     'email_sent' => $emailSent,
     'message' => $emailSent
-        ? 'Booking status updated and email sent.'
-        : 'Booking status updated, but email failed to send.',
+        ? 'Status tempahan berjaya dikemaskini. Emel berjaya dihantar.'
+        : 'Status tempahan berjaya dikemaskini, namun emel gagal dihantar.',
     'email_error' => $emailError
 ]);
 

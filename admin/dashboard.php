@@ -272,6 +272,7 @@ $approvedTrend = compareTrend($approvedBookings, $prevApprovedBookings);
 $totalProducts = getCount($conn, "
   SELECT COUNT(*) AS total
   FROM products
+  WHERE status = 'active'
 ");
 
 $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
@@ -448,7 +449,6 @@ $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
             <p>Tempahan baru oleh SK Taman Rinting</p>
             <small>10 May 2025, 10:00 AM</small>
             </div>
-            <span class="badge">Baru</span>
         </div>
 
         <div class="activity-item">
@@ -457,7 +457,6 @@ $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
             <p>Permohonan diluluskan oleh PIBG SMK Pasir Gudang</p>
             <small>11 May 2025, 09:15 AM</small>
             </div>
-            <span class="badge">Lulus</span>
         </div>
 
         <div class="activity-item">
@@ -466,7 +465,6 @@ $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
             <p>Tempahan menunggu kelulusan</p>
             <small>12 May 2025, 02:30 PM</small>
             </div>
-            <span class="badge">Pending</span>
         </div>
 
         <div class="activity-item">
@@ -475,7 +473,6 @@ $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
             <p>Slot ditutup (Cuti Umum)</p>
             <small>17 May 2025</small>
             </div>
-            <span class="badge">Ditutup</span>
         </div>
         </div>
       </section>

@@ -381,7 +381,8 @@ unset($booking);
             <input type="hidden" name="admin_comment" id="adminCommentInput">
 
             <button type="button" class="approve-booking-btn" id="approveBookingBtn">
-                Terima
+                <span class="btn-text">Terima</span>
+                <span class="btn-loader"></span>
             </button>
 
             <button type="button" class="reject-booking-btn" id="rejectBookingBtn">
@@ -419,7 +420,8 @@ unset($booking);
           </button>
 
           <button type="button" id="confirmRejectBtn">
-            Hantar
+            <span class="btn-text">Hantar</span>
+            <span class="btn-loader"></span>
           </button>
 
         </div>
@@ -592,7 +594,15 @@ if (approveBookingBtn) {
     formData.append('action', 'approved');
     formData.append('admin_comment', '');
 
+    approveBookingBtn.classList.add('loading');
+    approveBookingBtn.disabled = true;
+    rejectBookingBtn.disabled = true;
+
     const data = await sendBookingStatus(formData);
+
+    approveBookingBtn.classList.remove('loading');
+    approveBookingBtn.disabled = false;
+    rejectBookingBtn.disabled = false;
 
     if (data.success) {
       alert(data.message || 'Tempahan berjaya diluluskan.');
@@ -618,6 +628,7 @@ if (approveBookingBtn) {
   });
 }
 
+
 if (rejectBookingBtn) {
   rejectBookingBtn.addEventListener('click', function (event) {
     event.preventDefault();
@@ -642,7 +653,15 @@ if (confirmRejectBtn) {
     formData.append('action', 'rejected');
     formData.append('admin_comment', reason);
 
+    confirmRejectBtn.classList.add('loading');
+    confirmRejectBtn.disabled = true;
+    cancelRejectBtn.disabled = true;
+
     const data = await sendBookingStatus(formData);
+
+    confirmRejectBtn.classList.remove('loading');
+    confirmRejectBtn.disabled = false;
+    cancelRejectBtn.disabled = false;
 
     if (data.success) {
       alert(data.message || 'Tempahan berjaya ditolak.');
