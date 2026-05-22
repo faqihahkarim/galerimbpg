@@ -178,15 +178,15 @@ try {
     $mail->SMTPAuth = true;
 
     // CHANGE THIS
-    $mail->Username = 'galeriseramikpg@gmail.com';
+    $mail->Username = $mailConfig['email'];
 
     // CHANGE THIS - use Google App Password, not normal Gmail password
-    $mail->Password = 'rtij lbmw vevr npnh';
+    $mail->Password = $mailConfig['app_password'];
 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
 
-    $mail->setFrom('galeriseramikpg@gmail.com', 'Galeri Seramik MBPG');
+    $mail->setFrom($mailConfig['email'], 'Galeri Seramik MBPG');
     $mail->addAddress($to);
 
     $mail->isHTML(false);
