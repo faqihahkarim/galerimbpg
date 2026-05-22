@@ -178,6 +178,7 @@ try {
     $mail->SMTPAuth = true;
 
     // CHANGE THIS
+    $mailConfig = require '../../config/mail_config.php';
     $mail->Username = $mailConfig['email'];
 
     // CHANGE THIS - use Google App Password, not normal Gmail password
