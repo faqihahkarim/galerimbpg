@@ -29,6 +29,7 @@ if ($action === 'add') {
     $target = trim($_POST['target']);
     $duration = trim($_POST['duration']);
     $defaultCapacity = $_POST['default_capacity'] !== '' ? $_POST['default_capacity'] : null;
+    $adminId = $_SESSION['admin_id'];
     
 
     if (
@@ -70,21 +71,23 @@ if ($action === 'add') {
             price,
             target,
             duration,
-            default_capacity
-        ) VALUES (?, ?, ?, ?, ?, ?)
+            default_capacity,
+            created_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
     ";
 
     $stmt = mysqli_prepare($conn, $insertActivityQuery);
 
     mysqli_stmt_bind_param(
         $stmt,
-        "ssdssi",
+        "ssdssii",
         $activityName,
         $description,
         $activityPrice,
         $target,
         $duration,
-        $defaultCapacity
+        $defaultCapacity,
+        $adminId
     );
 
     if (!mysqli_stmt_execute($stmt)) {
@@ -230,7 +233,8 @@ if ($action === 'edit') {
             price = ?,
             target = ?,
             duration = ?,
-            default_capacity = ?
+            default_capacity = ?,   
+            updated_by = ?,  
         WHERE activity_id = ?
         AND status = 'active'
     ";
@@ -239,14 +243,16 @@ if ($action === 'edit') {
 
     mysqli_stmt_bind_param(
         $stmt,
-        "ssdssii",
+        "ssdssiii",
         $activityName,
         $description,
         $activityPrice,
         $target,
         $duration,
         $defaultCapacity,
+        $adminId,
         $activityId
+
     );
 
     if (!mysqli_stmt_execute($stmt)) {
