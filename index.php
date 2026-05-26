@@ -29,7 +29,7 @@ $packageResult = mysqli_query($conn, $packageQuery);
 
 $base = "/web/galeriseramikmbpg/";
 $pageType = "home";
-include 'components/navbar.php'; 
+
 ?>
 
 <!DOCTYPE html>
@@ -49,10 +49,12 @@ include 'components/navbar.php';
   <link rel="stylesheet" href="assets/css/index.css">
 
   <!-- Favicon -->
-  <link rel="icon" href="assets/images/logogaleri.png" type="image/png" style="width: 32px; height: 32px;">
+  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
+
 </head>
 
 <body>
+  <?php include 'components/navbar.php'; ?>
 
   <!-- NEWS BANNER-->
   <section class="hero">

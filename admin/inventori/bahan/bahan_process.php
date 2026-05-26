@@ -40,6 +40,7 @@ if ($action === 'add') {
     $materialPrice = $_POST['material_price'];
     $materialStock = intval($_POST['material_stock']);
     $stockStatus = getStockStatus($materialStock);
+    $adminId = $_SESSION['admin_login'];
 
    
     if (!isset($_FILES['material_images']) || empty($_FILES['material_images']['name'][0])) {
@@ -78,19 +79,21 @@ if ($action === 'add') {
             material_brand,
             material_price,
             material_stock,
-            stock_status
-        ) VALUES (?, ?, ?, ?, ?)
+            stock_status,
+            created_by
+        ) VALUES (?, ?, ?, ?, ?, ?)
     ";
 
     $stmt = mysqli_prepare($conn, $insertMaterialQuery);
     mysqli_stmt_bind_param(
         $stmt,
-        "ssdis", 
+        "ssdisi", 
         $materialName,
         $materialBrand,
         $materialPrice,
         $materialStock,
-        $stockStatus
+        $stockStatus,
+        $adminId
     );
 
     if (!mysqli_stmt_execute($stmt)) {
@@ -152,6 +155,7 @@ if ($action === 'edit') {
     $materialPrice = $_POST['material_price'];
     $materialStock = intval($_POST['material_stock']);
     $stockStatus = getStockStatus($materialStock);
+    $adminId = $_SESSION['admin_id'];
 
     // Check jika admin upload gambar baru untuk gantikan gambar lama
     $hasNewImage = isset($_FILES['material_images']) && !empty($_FILES['material_images']['name'][0]);
@@ -214,7 +218,8 @@ if ($action === 'edit') {
             material_brand = ?,
             material_price = ?,
             material_stock = ?,
-            stock_status = ?
+            stock_status = ?,
+            updated_by = ?
         WHERE material_id = ?
         AND status = 'active'
     ";
@@ -222,12 +227,13 @@ if ($action === 'edit') {
     $stmt = mysqli_prepare($conn, $updateMaterialQuery);
     mysqli_stmt_bind_param(
         $stmt,
-        "ssdisi", // s, s, d, i, s, i
+        "ssdisii", 
         $materialName,
         $materialBrand,
         $materialPrice,
         $materialStock,
         $stockStatus,
+        $adminId,
         $materialId
     );
 

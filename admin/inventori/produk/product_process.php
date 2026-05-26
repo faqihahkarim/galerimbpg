@@ -6,7 +6,7 @@ if (!isset($_SESSION['admin_login'])) {
     exit();
 }
 
-include '../../db.php';
+include '../../../db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: produk.php");
@@ -44,6 +44,7 @@ if ($action === 'add') {
     $productPrice = $_POST['product_price'];
     $productStock = intval($_POST['product_stock']);
     $stockStatus = getStockStatus($productStock);
+    $adminId = $_SESSION['admin_login'];
 
     if (
         !isset($_FILES['product_images']) ||
@@ -88,15 +89,16 @@ if ($action === 'add') {
             product_price,
             product_stock,
             stock_status,
-            status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')
+            status,
+            created_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)
     ";
 
     $stmt = mysqli_prepare($conn, $insertProductQuery);
 
     mysqli_stmt_bind_param(
         $stmt,
-        "sssddddis",
+        "sssddddisii",
         $productName,
         $productType,
         $productMotif,
@@ -105,8 +107,10 @@ if ($action === 'add') {
         $productDiameter,
         $productPrice,
         $productStock,
-        $stockStatus
-    );
+        $stockStatus,
+        $adminId,
+        $productId
+        );
 
     if (!mysqli_stmt_execute($stmt)) {
         header("Location: produk.php?error=insert_failed");
@@ -188,6 +192,7 @@ if ($action === 'edit') {
     $productPrice = $_POST['product_price'];
     $productStock = intval($_POST['product_stock']);
     $stockStatus = getStockStatus($productStock);
+    $adminId = $_SESSION['admin_id'];
 
     $existingImages = json_decode($_POST['existing_images'] ?? '[]', true);
     $deletedImages = json_decode($_POST['deleted_images'] ?? '[]', true);
@@ -258,7 +263,8 @@ if ($action === 'edit') {
             product_diameter = ?,
             product_price = ?,
             product_stock = ?,
-            stock_status = ?
+            stock_status = ?,
+            updated_by = ?
         WHERE product_id = ?
         AND status = 'active'
     ";
@@ -267,7 +273,7 @@ if ($action === 'edit') {
 
     mysqli_stmt_bind_param(
         $stmt,
-        "sssddddisi",
+        "sssddddisii",
         $productName,
         $productType,
         $productMotif,
@@ -277,6 +283,7 @@ if ($action === 'edit') {
         $productPrice,
         $productStock,
         $stockStatus,
+        $adminId,
         $productId
     );
 
@@ -306,7 +313,7 @@ if ($action === 'edit') {
             $imageData = mysqli_fetch_assoc($imageResult);
 
             if ($imageData) {
-                $filePath = "../../" . $imageData['image_url'];
+                $filePath = "../../../" . $imageData['image_url'];
 
                 if (file_exists($filePath)) {
                     unlink($filePath);

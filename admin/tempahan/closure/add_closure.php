@@ -10,16 +10,19 @@ if (!isset($_SESSION['admin_login'])) {
 $closure_date = mysqli_real_escape_string($conn, $_POST['closure_date']);
 $closure_name = mysqli_real_escape_string($conn, $_POST['closure_name']);
 $status = mysqli_real_escape_string($conn, $_POST['status']);
+$adminId = $_SESSION['admin_login'];
 
 $sql = "
     INSERT INTO closure_dates (
         closure_date,
         closure_name,
-        status
+        status,
+        created_by
     ) VALUES (
         '$closure_date',
         '$closure_name',
-        '$status'
+        '$status',
+        '$adminId'
     )
 ";
 

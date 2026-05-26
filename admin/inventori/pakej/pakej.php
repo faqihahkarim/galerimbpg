@@ -118,7 +118,6 @@ $offset = ($page - 1) * $limit;
                         <tr>
                             <th>ID</th>
                             <th>Nama Pakej</th>
-                            <th>Penerangan</th>
                             <th>Kapasiti (Pax)</th>
                             <th>Dengan Aktiviti</th>
                             <th>Aktiviti Pilihan (ID)</th>
@@ -141,8 +140,8 @@ $offset = ($page - 1) * $limit;
                             <tr>
                                 <td><?= htmlspecialchars($package['package_id']) ?></td>
                                 <td><strong><?= htmlspecialchars($package['package_name']) ?></strong></td>
-                                <td><?= htmlspecialchars($package['description']) ?></td>
                                 <td><?= htmlspecialchars($package['capacity']) ?> Pax</td>
+                                <td><?= htmlspecialchars($package['description']) ?></td>
                                 <td>
                                     <span class="badge <?= $hasActivity ? 'status-confirm' : 'status-pending' ?>">
                                         <?= $hasActivity ? 'Ya' : 'Tidak' ?>
@@ -240,19 +239,16 @@ $offset = ($page - 1) * $limit;
                         </div>
 
                         <div class="form-group">
-                            <label>Penerangan</label>
-                            <input type="text" name="package_description" id="packageDescription" required>
-                        </div>
-
-                        <div class="form-group">
                             <label>Kapasiti Max (Pax)</label>
                             <input type="number" name="capacity" id="packageCapacity" min="1" required>
                         </div>
-                        
+
                         <div class="form-group full-width">
-                            <label>Deskripsi Pakej</label>
-                            <textarea name="description" id="packageDescription" rows="3"></textarea>
+                            <label>Penerangan</label>
+                            <textarea name="package_description" id="packageDescription" rows="3" required></textarea>
                         </div>
+                        
+                    
                     </div>
 
                     <div class="form-group conditional-block">

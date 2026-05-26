@@ -169,6 +169,7 @@ if ($action === 'edit') {
     $defaultCapacity = (isset($_POST['default_capacity']) && $_POST['default_capacity'] !== '') ? intval($_POST['default_capacity']) : 0;
     $existingImages = json_decode($_POST['existing_images'] ?? '[]', true);
     $deletedImages = json_decode($_POST['deleted_images'] ?? '[]', true);
+    $adminId = $_SESSION['admin_id'];
 
     if (!is_array($existingImages)) {
         $existingImages = [];
@@ -234,7 +235,7 @@ if ($action === 'edit') {
             target = ?,
             duration = ?,
             default_capacity = ?,   
-            updated_by = ?,  
+            updated_by = ?
         WHERE activity_id = ?
         AND status = 'active'
     ";

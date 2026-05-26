@@ -412,7 +412,7 @@ function showExistingImages(images) {
         const holder = imagePreviewRow.children[index];
         holder.innerHTML = `
             <div class="preview-box">
-                <img src="../../${image.image_url}" alt="Produk">
+                <img src="../../../${image.image_url}" alt="Produk">
                 <button type="button" class="remove-image-btn" data-image-id="${image.image_id}" data-index="${index}">&times;</button>
             </div>
         `;

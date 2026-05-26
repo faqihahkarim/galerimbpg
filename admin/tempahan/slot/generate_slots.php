@@ -17,6 +17,7 @@ $generateMonth = $_POST['generate_month']; // format: 2026-06
 $year = date('Y', strtotime($generateMonth . '-01'));
 $month = date('m', strtotime($generateMonth . '-01'));
 $daysInMonth = date('t', strtotime($generateMonth . '-01'));
+$adminId = $_SESSION['admin_login'];
 
 
 
@@ -76,14 +77,16 @@ for ($day = 1; $day <= $daysInMonth; $day++) {
                     start_time,
                     end_time,
                     slot_status,
-                    closure_id
+                    closure_id,
+                    created_by
                 ) VALUES (
                     $package_id,
                     '$slotDate',
                     '$start_time',
                     '$end_time',
                     '$slotStatus',
-                    $closureId
+                    $closureId,
+                    '$adminId'
                 )
             ";
 
