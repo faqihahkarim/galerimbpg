@@ -5,7 +5,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const overlay = document.querySelector(".overlay");
     const menus = document.querySelectorAll(".has-submenu");
 
-    // TOGGLE SIDEBAR
+    // =====================================================
+    // MOBILE SIDEBAR TOGGLE MECHANICS
+    // =====================================================
     if (toggleBtn && sidebar && overlay) {
         toggleBtn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -14,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // CLICK ANYWHERE OUTSIDE CLOSE SIDEBAR
+    // CLOSE SIDEBAR ON OUTSIDE SELECTION CLICK 
     document.addEventListener("click", (e) => {
         if (
             sidebar &&
@@ -24,30 +26,34 @@ document.addEventListener("DOMContentLoaded", function () {
             !toggleBtn.contains(e.target)
         ) {
             sidebar.classList.remove("active");
-            overlay.classList.remove("active");
+            if (overlay) overlay.classList.remove("active");
         }
     });
 
-    // SUBMENU
+    /// =====================================================
+    // SUBMENU DROPDOWN
+    // =====================================================
     menus.forEach(menu => {
-        const link = menu.querySelector(":scope > a");
+
+        const link = menu.querySelector(".submenu-toggle");
 
         if (!link) return;
 
         link.addEventListener("click", function (e) {
+
             e.preventDefault();
+            e.stopPropagation();
 
-            menus.forEach(item => {
-                if (item !== menu) {
-                    item.classList.remove("active");
-                }
-            });
+            // Toggle ONLY current menu
+            menu.classList.toggle("open");
 
-            menu.classList.toggle("active");
         });
+
     });
 
-    // BOOKING MODAL OPEN
+    // =====================================================
+    // GENERIC BOOKING MODAL HANDLERS
+    // =====================================================
     document.querySelectorAll(".booking-detail-link").forEach(link => {
         link.addEventListener("click", function (e) {
             e.preventDefault();
@@ -62,15 +68,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // BOOKING MODAL CLOSE BUTTON
     document.querySelectorAll(".booking-modal-close").forEach(button => {
         button.addEventListener("click", function (e) {
             e.stopPropagation();
-            this.closest(".booking-modal").classList.remove("active");
+            const closestModal = this.closest(".booking-modal");
+            if (closestModal) closestModal.classList.remove("active");
         });
     });
 
-    // CLICK OUTSIDE MODAL CARD TO CLOSE
     document.querySelectorAll(".booking-modal").forEach(modal => {
         modal.addEventListener("click", function (e) {
             if (e.target === modal) {

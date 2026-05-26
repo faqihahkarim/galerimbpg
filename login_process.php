@@ -14,7 +14,7 @@ $admin = mysqli_fetch_assoc($result);
 
 if ($admin && $password === $admin['password']) {
     $_SESSION['admin_login'] = true;
-    $_SESSION['admin_id'] = $admin['id'];
+    $_SESSION['admin_id'] = $admin['admin_id'];
     $_SESSION['admin_email'] = $admin['email'];
 
     header("Location: admin/dashboard.php");

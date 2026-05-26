@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<!-- saved from url=(0083)https://labclient.labondemand.com/Instructions/fc167695-4f4a-415a-b4de-9be587b418c1 -->
+<html lang="en-US" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Modify DAX filter context in Power BI</title>
+    <link rel="shortcut icon" href="https://labclient.labondemand.com/images/favicon-32x32.png">
+    <script async="" src="./datadog-logs.js.download"></script><script src="./jquery.min(1).js.download"></script>
+    <script src="./jquery-ui.min(1).js.download"></script>
+    <script src="./showdown.min.js.download"></script>
+    <link rel="stylesheet" type="text/css" href="./prettify.css">
+    <script src="./yaml.min.js.download"></script>
+    <script src="./jquery.timepicker.min.js.download"></script>
+    <link rel="stylesheet" type="text/css" href="./jquery.timepicker.css">
+    <script src="./LocalizeTo(1)" type="text/javascript"></script>
+<script src="./CustomerSupportApp.js.download" type="text/javascript" script-src="" 'self'="" http:="" *="" https:="" 'unsafe-inline'="" 'unsafe-eval'=""></script><script src="./LocalizeTo(2)" type="text/javascript"></script>    <script src="./string-functions.js.download"></script>
+    <script src="./LocalizeTo(3)" type="text/javascript"></script>
+    <link href="./jquery-ui.css" rel="stylesheet">
+    <link href="./lab-client-layout-v2.css" rel="stylesheet" type="text/css">
+    <link id="themeStylesheet" href="./styles-v2" rel="stylesheet" type="text/css">
+
+
+        <script src="./lab-client-api.js.download"></script>
+</head>
+<body class="instructions-client childClient integrated-layout">
+    <div id="labClient" style="">
+        <div class="lab-client-header" role="banner">
+
+            <div class="header-left">
+                <div class="theme-logo"></div>
+                <div id="labName" class="lab-name" role="heading" aria-level="1">
+                    <span id="instanceName" title="Modify DAX filter context in Power BI">Modify DAX filter context in Power BI</span>
+                </div>
+            </div>
+
+                    <a href="https://labclient.labondemand.com/Instructions/fc167695-4f4a-415a-b4de-9be587b418c1#" id="exit" class="exit-button cancel-button icon-link" role="button" aria-label="End">End</a>
+                <div id="exitMenu" class="menu" role="menu" aria-label="Exit Menu" aria-haspopup="true" aria-expanded="false">
+                        <div id="exit" class="menu-item cancel-button icon-link" tabindex="0" role="menuitem" aria-label="End Lab">End Lab</div>
+                </div>
+        </div>
+
+        <div class="tab-headings primary-color-low-opacity-border" role="navigation">
+            <div id="tabHolder" class="tab-holder">
+                    <a tabindex="0" class="tabHeading tab-heading primary-color-border selected" aria-selected="true" role="tab" aria-label="Instructions" data-target="instructionsTab" data-id="0">Instructions</a>
+                    <a tabindex="0" class="tabHeading tab-heading primary-color-border " aria-selected="false" role="tab" aria-label="Resources" data-target="resourcesTab" data-id="1">Resources</a>
+            </div>
+            <div class="icon-holder">
+                <a tabindex="0" id="notificationsButton" data-target="notifications-menu" class="notifications-button modal-menu-button icon primary-color-icon " role="button" aria-label="Notifications" title="Notifications"></a>
+                    <a tabindex="0" data-target="help-menu" class="help-button modal-menu-button icon primary-color-icon" role="button" aria-label="Help" title="Help"></a>
+                <a tabindex="0" data-target="settings-menu" class="settings-button modal-menu-button icon primary-color-icon" role="button" aria-label="Settings" title="Settings"></a>
+            </div>
+        </div>
+
+        <div class="tabs" role="main">
+            <div id="instructionsTab" class="tab selected">
+                <div id="instructionsContent" class="tab-content withFooter instructions withNavigation" aria-label="Lab Instructions">
+                    <div class="zoomable" id="pages"><div class="page" id="page0"><include src="https://raw.githubusercontent.com/LODSContent/All-MOC/master/MOC/en/MSLearningDisclaimer.md" data-name=""><p></p><details>
+  <summary style="font-size:16px"> <strong>Disclaimer</strong> <em>Click to show or hide</em> </summary><p></p>
+<h1 id="disclaimer">Disclaimer</h1>
+<p>This lab content is presented as designed by Microsoft and has been adapted to Skillable's platform for your use. If lab issues are identified that do not pertain directly to Skillable's platform, please escalate these to your instructor for proper escalation.
+</p></details><p></p></include>
+<include src="https://raw.githubusercontent.com/LODSContent/All-MOC/master/MOC/en/GenericLabSetup.md" data-name=""><h1 id="required-lab-setup">Required Lab Setup</h1>
+<h2 id="login">Login</h2>
+<ol class="taskList">
+<li class="task-list-item" id="taskIndex35"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex35"><span></span></label>Hello Nurul Faqihah, on <a href="https://labclient.labondemand.com/Instructions/fc167695-4f4a-415a-b4de-9be587b418c1#" class="selectMachineLink icon-link special-action-link" data-data="310703">PL-300-VM-Win11</a> click <a href="https://labclient.labondemand.com/Instructions/fc167695-4f4a-415a-b4de-9be587b418c1#" class="ctrlAltDeleteLink icon-link special-action-link">Ctrl+Alt+Delete</a> to activate the Ctrl + Alt + Delete sequence and bring up the logon page.</p>
+<blockquote class="knowledge">
+  <p>Any links like the one above will send Ctrl+Alt+Delete to the selected machine. This can also be done by the <strong>Keyboard</strong> menu in the upper-left hand corner of the screen.</p>
+</blockquote><div class="moreKnowledge"><a href="https://labclient.labondemand.com/Instructions/fc167695-4f4a-415a-b4de-9be587b418c1#" class="moreKnowledgeLink" style="display: none;">more...</a></div></li>
+<li class="task-list-item" id="taskIndex36"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex36"><span></span></label>Sign in as <span class="typeText" title="Type Text" tabindex="0" role="button">Student</span> with the password <span class="typeText" title="Type Text" tabindex="0" role="button">Pa55w.rd</span>.</p></li>
+</ol>
+<p>Click <strong>Next</strong> to proceed to the lab.</p></include>
+<p></p></div><div class="page selected" id="page1">
+
+<include src="https://raw.githubusercontent.com/LODSContent/All-MOC/master/MOC/en/ESM_RedirectClipboardHint.md" data-name=""><blockquote class="hint">
+  <p>This lab supports the <strong>Redirect Clipboard</strong> and <span class="typeText" title="Type Text" tabindex="0" role="button">TypeText</span> functions.</p>
+  <p>With <strong>Redirect Clipboard</strong>, you can easily copy and paste blocks of code and other strings from the instructions and from other locations on the VM from your local clipboard directly to the VM.  You may need to click <strong>Allow</strong> in your browser to allow access to your local clipboard.</p>
+  <p>Due to an issue in Azure Cloudshell, you need to use the right-click and paste mouse command instead of CTRL+V when you're in the VM.  This method allows you to copy text from the VM and from your local machine.</p>
+</blockquote></include><p></p>
+<include src="https://raw.githubusercontent.com/MicrosoftLearning/PL-300-Microsoft-Power-BI-Data-Analyst/refs/heads/Main/Instructions/Labs/05-modify-dax-filter-context.md" data-name=""><h1 id="modify-dax-filter-context-in-power-bi">Modify DAX filter context in Power BI</h1>
+<h2 id="lab-story">Lab story</h2>
+<p>In this lab, you'll create measures with DAX expressions that involve filter context manipulation.</p>
+<p>You learn how to:</p>
+<ul>
+<li>Use the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">CALCULATE</span></code> function to manipulate filter context.</li>
+</ul>
+<p><strong>This lab should take approximately 30 minutes.</strong></p>
+<h2 id="get-started">Get started</h2>
+<blockquote>
+  <p>Select the button below to download the files needed for this lab in order to bypass the download steps below.</p>
+  <div class="activity" data-alias="DownloadFromGit" data-index="0"><div><input type="button" class="evaluate primary" value="Download Lab Files"><span class="loading loadingAnimation-medium" style="display: none;"></span></div><div class="feedbackHolder" id="feedbackHolderDownloadFromGit" role="status"><div class="feedback positive" style="" aria-label="Correct"><div class="textResponse"><p>SUCCESS! The Lab Files have been downloaded.</p></div></div></div></div>
+</blockquote>
+<blockquote class="alert" role="alert">
+  <p>If you used the Download Lab Files button above, skip the download steps below. The files will be in the designated folder.</p>
+</blockquote>
+<p>To complete this exercise, first open a web browser and enter the following URL to download the zip file:</p>
+<p><code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">https</span><span class="pun">:</span><span class="com">//github.com/MicrosoftLearning/PL-300-Microsoft-Power-BI-Data-Analyst/raw/Main/Allfiles/Labs/05-modify-dax-filter-context/05-modify-dax-filter-context.zip</span></code></p>
+<p>Extract the file to the <strong>C:\Users\Student\Downloads\05-modify-dax-filter-context</strong> folder.</p>
+<p>Open the <strong>05-Starter-Sales Analysis.pbix</strong> file.</p>
+<blockquote>
+  <p><em><strong>Note</strong>: You may see a sign-in dialog as the file loads. Select <strong>Cancel</strong> to dismiss the sign-in dialog. Close any other informational windows. Select <strong>Apply Later</strong>, if prompted to apply changes.</em></p>
+</blockquote>
+<h2 id="create-a-matrix-visual">Create a matrix visual</h2>
+<p>In this task, you'll create a matrix visual to support testing your new measures.</p>
+<ol class="taskList">
+<li class="task-list-item" id="taskIndex0"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex0"><span></span></label>In Power BI Desktop, create a new report page.</p></li>
+<li class="task-list-item" id="taskIndex1"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex1"><span></span></label>On <strong>Page 3</strong>, add a matrix visual.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image23.png" alt="Picture 1"></p></li>
+<li class="task-list-item" id="taskIndex2"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex2"><span></span></label>Resize the matrix visual to fill the entire page.</p></li>
+<li class="task-list-item" id="taskIndex3"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex3"><span></span></label>To configure the matrix visual fields, from the <strong>Data</strong> pane, drag the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Region</span><span class="pln"> </span><span class="pun">|</span><span class="pln"> </span><span class="typ">Regions</span></code> hierarchy, and drop it inside the visual.</p>
+<blockquote>
+  <p>The labs use a shorthand notation to reference a field or hierarchy. It will look like this: <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Region</span><span class="pln"> </span><span class="pun">|</span><span class="pln"> </span><span class="typ">Regions</span></code>. In this example, <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Region</span></code> is the table name and <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Regions</span></code> is the hierarchy name._</p>
+</blockquote></li>
+<li class="task-list-item" id="taskIndex4"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex4"><span></span></label>Add the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">|</span><span class="pln"> </span><span class="typ">Sales</span></code> field to the <strong>Values</strong> well.</p></li>
+<li class="task-list-item" id="taskIndex5"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex5"><span></span></label>To expand the entire hierarchy, at the top-right of the matrix visual, select the forked-double arrow icon twice.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image11.png" alt="Picture 2"></p></li>
+<li class="task-list-item" id="taskIndex6"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex6"><span></span></label>To format the visual, in the <strong>Visualizations</strong> pane, select the <strong>Format</strong> pane.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image12.png" alt="Picture 3"></p></li>
+<li class="task-list-item" id="taskIndex7"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex7"><span></span></label>In the <strong>Search</strong> box, enter <em>Layout</em>.</p></li>
+<li class="task-list-item" id="taskIndex8"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex8"><span></span></label>Set the <strong>Layout</strong> property to <em>Tabular</em>.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image14.png" alt="Picture 4"></p></li>
+<li class="task-list-item" id="taskIndex9"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex9"><span></span></label>Verify that the matrix visual now has 4 column headers.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image15.png" alt="Picture 5"></p>
+<blockquote>
+  <p><em>At Adventure Works, the sales regions are organized into groups, countries, and regions. All countries—except the United States—have just one region, which is named after the country. As the United States is such a large sales territory, it's divided into five sales regions.</em></p>
+</blockquote></li>
+</ol>
+<p>You'll create various measures in this exercise, and then test them by adding them to the matrix visual.</p>
+<h2 id="manipulate-filter-context">Manipulate filter context</h2>
+<p>In this task, you'll create several measures with DAX expressions that use the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">CALCULATE</span></code> function to manipulate filter context.</p>
+<blockquote>
+  <p><em>The <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">CALCULATE</span></code> function is a powerful function you can use to manipulate the filter context. The first argument takes an expression or a measure (a measure is just a named expression). Subsequent arguments allow modifying the filter context.</em></p>
+</blockquote>
+<ol class="taskList">
+<li class="task-list-item" id="taskIndex10"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex10"><span></span></label>Add a measure to the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span></code> table, based on the following expression:</p>
+<blockquote>
+  <p><em><strong>Note</strong>: For your convenience, all DAX definitions in this lab can be copied from the <strong>C:\Users\Student\Downloads\05-modify-dax-filter-context\Snippets.txt</strong> file.</em></p>
+</blockquote>
+<pre><div class="codeTitle"><span class="title">dax</span><span class="title"><span class="type-code-block">Type</span><span class="copy-code-block">Copy</span></span></div><code class="dax language-dax prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="typ">All</span><span class="pln"> </span><span class="typ">Region</span><span class="pln"> </span><span class="pun">=</span><span class="pln">
+CALCULATE</span><span class="pun">(</span><span class="pln">
+    SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+    REMOVEFILTERS</span><span class="pun">(</span><span class="typ">Region</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">)</span></code></pre>
+<blockquote>
+  <p><em>The <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">REMOVEFILTERS</span></code> function removes active filters. It can take either no arguments, or a table, a column, or multiple columns as its argument.</em></p>
+  <p><em>In this formula, the measure evaluates the sum of the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span></code> column in a modified filter context, which removes any filters applied to the columns of the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Region</span></code> table.</em></p>
+</blockquote></li>
+<li class="task-list-item" id="taskIndex11"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex11"><span></span></label>Add the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="typ">All</span><span class="pln"> </span><span class="typ">Region</span></code> measure to the matrix visual.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image16.png" alt="Picture 6"></p></li>
+<li class="task-list-item" id="taskIndex12"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex12"><span></span></label>Notice that the measure computes the total of all region sales for each region, country (subtotal) and group (subtotal).</p>
+<blockquote>
+  <p><em>The new measure is yet to deliver a useful result. When the sales for a group, country, or region is divided by this value it will produce a useful ratio known as "percent of grand total".</em></p>
+</blockquote></li>
+<li class="task-list-item" id="taskIndex13"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex13"><span></span></label>In the <strong>Data</strong> pane, ensure that the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="typ">All</span><span class="pln"> </span><span class="typ">Region</span></code> measure is selected (when selected, it will have a dark gray background), and then in the formula bar, replace the measure name and formula with the following formula:</p>
+<blockquote>
+  <p><em>Tip: To replace the existing formula, first copy the snippet. Then, select inside the formula bar and press <strong>Ctrl+A</strong> to select all text. Then, press <strong>Ctrl+V</strong> to paste the snippet to overwrite the selected text. Then press <strong>Enter</strong>.</em></p>
+</blockquote>
+<pre><div class="codeTitle"><span class="title">dax</span><span class="title"><span class="type-code-block">Type</span><span class="copy-code-block">Copy</span></span></div><code class="dax language-dax prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">All</span><span class="pln"> </span><span class="typ">Region</span><span class="pln"> </span><span class="pun">=</span><span class="pln">
+DIVIDE</span><span class="pun">(</span><span class="pln">
+    SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+    CALCULATE</span><span class="pun">(</span><span class="pln">
+        SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+        REMOVEFILTERS</span><span class="pun">(</span><span class="typ">Region</span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">)</span><span class="pln">
+</span><span class="pun">)</span></code></pre>
+<blockquote>
+  <p><em>The measure has been renamed to accurately reflect the updated formula. The <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">DIVIDE</span></code> function divides the sum of the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span></code> column (not modified by filter context) by the sum of the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span></code> column in a modified context, which removes any filters applied to the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Region</span></code> table.</em></p>
+</blockquote></li>
+<li class="task-list-item" id="taskIndex14"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex14"><span></span></label>In the matrix visual, notice that the measure has been renamed and that a different value now appears for each group, country, and region.</p></li>
+<li class="task-list-item" id="taskIndex15"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex15"><span></span></label>Format the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">All</span><span class="pln"> </span><span class="typ">Region</span></code> measure as a percentage with two decimal places.</p></li>
+<li class="task-list-item" id="taskIndex16"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex16"><span></span></label>In the matrix visual, review the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">All</span><span class="pln"> </span><span class="typ">Region</span></code> measure values.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image17.png" alt="Picture 7"></p></li>
+<li class="task-list-item" id="taskIndex17"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex17"><span></span></label>Add another measure to the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span></code> table, based on the following expression, and format as a percentage:</p>
+<pre><div class="codeTitle"><span class="title">dax</span><span class="title"><span class="type-code-block">Type</span><span class="copy-code-block">Copy</span></span></div><code class="dax language-dax prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Country</span><span class="pln"> </span><span class="pun">=</span><span class="pln">
+DIVIDE</span><span class="pun">(</span><span class="pln">
+    SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+    CALCULATE</span><span class="pun">(</span><span class="pln">
+        SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+        REMOVEFILTERS</span><span class="pun">(</span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Region</span><span class="pun">])</span><span class="pln">
+    </span><span class="pun">)</span><span class="pln">
+</span><span class="pun">)</span></code></pre></li>
+<li class="task-list-item" id="taskIndex18"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex18"><span></span></label>Notice that the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Country</span></code> measure formula differs slightly from the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">All</span><span class="pln"> </span><span class="typ">Region</span></code> measure formula.</p>
+<blockquote>
+  <p><em>The difference is that the denominator modifies the filter context by removing filters on the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Region</span></code> column of the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Region</span></code> table, not all columns of the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Region</span></code> table. That means that any filters applied to the group or country columns are preserved. It will achieve a result that represents the sales as a percentage of country.</em></p>
+</blockquote></li>
+<li class="task-list-item" id="taskIndex19"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex19"><span></span></label>Add the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Country</span></code> measure to the matrix visual.</p></li>
+<li class="task-list-item" id="taskIndex20"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex20"><span></span></label>Notice that only the regions of the United States produce a value that isn't 100 percent.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image18.png" alt="Picture 8"></p>
+<blockquote>
+  <p><em>You might recall that only the United States has multiple regions. All other countries comprise a single region, which explains why they're all 100 percent.</em></p>
+</blockquote></li>
+<li class="task-list-item" id="taskIndex21"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex21"><span></span></label>To improve the readability of this measure in visual, overwrite the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Country</span></code> measure with the following improved formula.</p>
+<pre><div class="codeTitle"><span class="title">dax</span><span class="title"><span class="type-code-block">Type</span><span class="copy-code-block">Copy</span></span></div><code class="dax language-dax prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Country</span><span class="pln"> </span><span class="pun">=</span><span class="pln">
+IF</span><span class="pun">(</span><span class="pln">
+    ISINSCOPE</span><span class="pun">(</span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Region</span><span class="pun">]),</span><span class="pln">
+    DIVIDE</span><span class="pun">(</span><span class="pln">
+        SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+        CALCULATE</span><span class="pun">(</span><span class="pln">
+            SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+            REMOVEFILTERS</span><span class="pun">(</span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Region</span><span class="pun">])</span><span class="pln">
+        </span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">)</span><span class="pln">
+</span><span class="pun">)</span></code></pre>
+<blockquote>
+  <p><em>The <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">IF</span></code> function uses the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">ISINSCOPE</span></code> function to test whether the region column is the level in a hierarchy of levels. When true, the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">DIVIDE</span></code> function is evaluated. When false, <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="pln">BLANK</span></code> is returned because the region column isn't in scope.</em></p>
+</blockquote></li>
+<li class="task-list-item" id="taskIndex22"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex22"><span></span></label>Notice that the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Country</span></code> measure now only returns a value when a region is in scope.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image19.png" alt="Picture 9"></p></li>
+<li class="task-list-item" id="taskIndex23"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex23"><span></span></label>Add another measure to the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span></code> table, based on the following expression, and format as a percentage:</p>
+<pre><div class="codeTitle"><span class="title">dax</span><span class="title"><span class="type-code-block">Type</span><span class="copy-code-block">Copy</span></span></div><code class="dax language-dax prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Group</span><span class="pln"> </span><span class="pun">=</span><span class="pln">
+DIVIDE</span><span class="pun">(</span><span class="pln">
+    SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+    CALCULATE</span><span class="pun">(</span><span class="pln">
+        SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+        REMOVEFILTERS</span><span class="pun">(</span><span class="pln">
+            </span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Region</span><span class="pun">],</span><span class="pln">
+            </span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Country</span><span class="pun">]</span><span class="pln">
+        </span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">)</span><span class="pln">
+</span><span class="pun">)</span></code></pre>
+<blockquote>
+  <p><em>To achieve sales as a percentage of group, two filters can be applied to effectively remove the filters on two columns.</em></p>
+</blockquote></li>
+<li class="task-list-item" id="taskIndex24"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex24"><span></span></label>Add the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Group</span></code> measure to the matrix visual.</p></li>
+<li class="task-list-item" id="taskIndex25"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex25"><span></span></label>To improve the readability of this measure in visual, overwrite the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Group</span></code> measure with the following formula.</p>
+<pre><div class="codeTitle"><span class="title">dax</span><span class="title"><span class="type-code-block">Type</span><span class="copy-code-block">Copy</span></span></div><code class="dax language-dax prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Group</span><span class="pln"> </span><span class="pun">=</span><span class="pln">
+IF</span><span class="pun">(</span><span class="pln">
+    ISINSCOPE</span><span class="pun">(</span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Region</span><span class="pun">])</span><span class="pln">
+        </span><span class="pun">||</span><span class="pln"> ISINSCOPE</span><span class="pun">(</span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Country</span><span class="pun">]),</span><span class="pln">
+    DIVIDE</span><span class="pun">(</span><span class="pln">
+        SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+        CALCULATE</span><span class="pun">(</span><span class="pln">
+            SUM</span><span class="pun">(</span><span class="typ">Sales</span><span class="pun">[</span><span class="typ">Sales</span><span class="pun">]),</span><span class="pln">
+            REMOVEFILTERS</span><span class="pun">(</span><span class="pln">
+                </span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Region</span><span class="pun">],</span><span class="pln">
+                </span><span class="typ">Region</span><span class="pun">[</span><span class="typ">Country</span><span class="pun">]</span><span class="pln">
+            </span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">)</span><span class="pln">
+</span><span class="pun">)</span></code></pre></li>
+<li class="task-list-item" id="taskIndex26"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex26"><span></span></label>Notice that the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="typ">Group</span></code> measure now only returns a value when a region or country is in scope.</p></li>
+<li class="task-list-item" id="taskIndex27"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex27"><span></span></label>In <strong>Model view</strong>, place the three new measures into a display folder named <em>Ratios</em>.</p>
+<p>
+<img src="./05-modify-dax-filter-context_image20.png" alt="Picture 10"></p></li>
+<li class="task-list-item" id="taskIndex28"><p><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex28"><span></span></label>Save the Power BI Desktop file.</p></li>
+</ol>
+<blockquote>
+  <p><em>The measures added to the <code class="prettyprint prettyprinted" tabindex="0" style=""><span class="typ">Sales</span></code> table have modified filter context to achieve hierarchical navigation. Notice that the pattern to achieve the calculation of a subtotal requires removing some columns from the filter context, and to arrive at a grand total, all columns must be removed.</em></p>
+</blockquote>
+<h2 id="lab-complete">Lab complete</h2>
+<p>You may choose to save your Power BI report, though it’s not necessary for this lab. In the next exercise, you’ll work with a pre-made starter file.</p>
+<ol class="taskList">
+<li class="task-list-item" id="taskIndex29"><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex29"><span></span></label>Navigate to the <strong>"File"</strong> menu in the top left corner and select <strong>"Save As"</strong>. </li>
+<li class="task-list-item" id="taskIndex30"><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex30"><span></span></label>Select <strong>Browse this device</strong>.</li>
+<li class="task-list-item" id="taskIndex31"><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex31"><span></span></label>Select the folder where you want to save the file and give it a descriptive name. </li>
+<li class="task-list-item" id="taskIndex32"><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex32"><span></span></label>Select the <strong>Save</strong> button to save your report as a .pbix file. </li>
+<li class="task-list-item" id="taskIndex33"><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex33"><span></span></label>If a dialog box appears prompting you to apply pending query changes, select <strong>Apply</strong>.</li>
+<li class="task-list-item" id="taskIndex34"><label class="checkbox"><input type="checkbox" aria-labelledby="taskIndex34"><span></span></label>Close Power BI Desktop.</li>
+</ol></include>
+<hr>
+<include src="https://raw.githubusercontent.com/LODSContent/All-MOC/master/MOC/en/CongratulationsEnd.md" data-name=""><h3 id="congratulations">Congratulations</h3>
+<p>You have successfully completed this lab. Click <strong>End</strong> to mark the lab as <strong>Complete</strong>.</p></include></div></div>
+                </div>
+                <div class="instructions-footer primary-color-low-opacity-border">
+                    <div id="instructionsNavigation" class="instructions-navigation" role="navigation" aria-label="Previous/Next">
+                        <button id="previous" class="previous-button icon noselect" title="Previous" tabindex="0">Previous</button>
+                        <button id="next" class="next-button icon noselect" title="End">End</button>
+                    </div>
+                    <div class="progress-and-timer-wrapper">
+                        <div id="taskProgressBar" class="lab-progress-bar primary-color-low-opacity-background" tabindex="0" title="Page 2/2 (100%)">
+                            <div id="taskProgress" class="lab-progress-fill primary-color-background" style="width: 100%;"></div>
+                        </div>
+                        <div id="timerWrapper" class="timer-wrapper">
+                            <span id="timer" class="timer primary-color" tabindex="0">1 Hr 44 Min Remaining</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="resourcesTab" class="tab  resources">
+                <div class="tab-content">
+                    <div class="zoomable">
+                        <div id="cloudCredentials"></div>
+                        <div id="refreshCredentials" style="display:none;">
+                            <input type="button" value="Refresh Credentials" aria-label="Refresh Credentials" id="refreshCredsBtn" class="primary">
+                            <span id="credentialsRefreshing" style="display:none;" class="loadingAnimation-medium"></span>
+                        </div>
+                        <div id="cloudResources"></div>
+                        <div id="resourcesExtensions"><div class="machine hoverColor selectedColor activeColor accent-background selected" role="button" tabindex="0" id="machine310703" aria-label="Select PL-300-VM-Win11 machine"><img alt="Thumbnail screenshot of virtual machineLab62068356-PL-300-VM-Win11" class="thumbnail" src="./saved_resource">
+            <div class="machineNameCenter">
+                <div class="machineName">PL-300-VM-Win11</div>
+            </div>
+            <div class="inputRelease">
+                To release mouse, press <strong>Ctrl+Alt+Left Arrow</strong>
+            </div>
+            <div class="machineInfo" style="">
+                <table class="credentials fields">
+                    <caption class="sr-only">Machine credentials</caption>
+                    <tbody><tr>
+                        <th scope="row" class="fieldName">Username</th>
+                        <td><span class="typeText username" title="Type Text" role="button" tabindex="0" aria-label="Type Username" aria-description="PL-300-VM-Win11 Type Text Username">Student</span></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="fieldName">Password</th>
+                        <td><span class="typeText password" title="Type Text" role="button" tabindex="0" aria-label="Type Password" aria-description="PL-300-VM-Win11 Type Text Password">Pa55w.rd</span></td>
+                    </tr>
+                </tbody></table>
+                <div class="floppyDrive" style="display: none;">
+                </div>
+                <div class="dvdDrive">
+                    <div class="dvdDriveInner" style="display:none;">
+                        <label for="dvdDriveSelect" class="selectHeading">DVD Drive</label>
+                        <select id="dvdDriveSelect" aria-label="PL-300-VM-Win11 DVD Drive">
+                            <option value="-2">No Media</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="networkAdapters"></div>
+                <div class="action-buttons">
+                    <input type="button" class="ctrlAltDel ctrl-alt-del-button" value="Ctrl+Alt+Delete" aria-label="Send Ctrl Alt Delete">
+                        <div>
+                            <a class="openInNewWindow open-in-new-window-link icon-link" href="https://labclient.labondemand.com/Instructions/fc167695-4f4a-415a-b4de-9be587b418c1#" aria-label="Open in New Window">Open in New Window</a>
+                        </div>
+                    <div class="open-multiple-display-window-wrapper" style="display:none;">
+                        <a class="open-multiple-display-window open-in-new-window-link icon-link" href="https://labclient.labondemand.com/Instructions/fc167695-4f4a-415a-b4de-9be587b418c1#" aria-label="Open Multiple Display Window">Open Multiple Display Window</a>
+                    </div>
+                </div>
+            </div>
+        </div></div>
+                        <div id="containers"></div>
+                        <div id="externalResources"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="help-menu" class="modal-menu page-background-color" role="dialog" aria-modal="true" aria-labelledby="help-menu-title">
+                <div class="modal-menu-title-bar primary-color-background">
+                    <h2 id="help-menu-title" class="modal-menu-title">Help</h2>
+                    <span><a class="close-modal-menu-button" tabindex="0" role="button" aria-label="Close" title="Close"></a></span>
+                </div>
+                <div class="modal-menu-content">
+                    <div class="support-information accent-background">
+                        <h3 class="title">
+                            Support Information
+                        </h3>
+                        <table class="fields">
+                            <tbody><tr>
+                                <th scope="row" class="fieldName">ID</th>
+                                <td>62068356</td>
+                            </tr>
+                                <tr>
+                                    <th scope="row" class="fieldName">Host</th>
+                                    <td>SGP-HV64</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="fieldName">Datacenter</th>
+                                    <td>APAC Southeast 2 (Singapore)</td>
+                                </tr>
+                        </tbody></table>
+                    </div>
+
+                    <div id="helpExtensions"></div>
+
+                        <h3>FAQs</h3>
+                        <a href="https://docs.skillable.com/docs/student-faq" target="_blank" class="external-link icon-link" aria-label="Frequently asked questions about the lab interface (opens a new window)">Frequently asked questions about the lab interface</a>
+
+                    <h3>Other Help Options</h3>
+
+                            <div class="link-list-item"><span id="supportTicketLink"><a class="cslink formsubmit topnav" href="javascript:void(0);" id="cslink_supportlink" target="_blank" aria-label="Help (opens a new window)">Help</a></span></div>
+
+
+
+                        <div class="skillable-branding-block">
+                            Powered by <a href="https://skillable.com/solutions" target="_blank" aria-label="Skillable (opens a new window)">Skillable</a>
+                            <span class="skillable-links-separator">•</span>
+                            <a target="_blank" href="https://www.g2.com/contributor/learnondemand-vs?secure%5Bpage_id%5D=Learnondemand-vs&amp;secure%5Brewards%5D=true&amp;secure%5Btoken%5D=839b2cb7a5a16a9e17bef29619706fee2de82770b3d2a6af507fee7a5ee54c7a" aria-label="Review Us (opens a new window)">Review Us</a>
+                        </div>
+                </div>
+            </div>
+            <div id="notifications-menu" class="modal-menu page-background-color" role="dialog" aria-modal="true" aria-labelledby="notifications-menu-title">
+                <div class="modal-menu-title-bar primary-color-background">
+                    <h2 id="notifications-menu-title" class="modal-menu-title">Notifications</h2>
+                    <span><a class="close-modal-menu-button" tabindex="0" role="button" aria-label="Close" title="Close"></a></span>
+                </div>     
+                <div class="modal-menu-content">
+
+                </div>
+            </div>
+            <div id="settings-menu" class="modal-menu page-background-color" role="dialog" aria-modal="true" aria-labelledby="settings-menu-title">
+                <div class="modal-menu-title-bar primary-color-background">
+                    <h2 id="settings-menu-title" class="modal-menu-title">Settings</h2>
+                    <span><a class="close-modal-menu-button" tabindex="0" role="button" aria-label="Close" title="Close"></a></span>
+                </div>
+                <div class="modal-menu-content">
+                    
+
+
+                    <h3 class="settings-heading primary-color">Text Size</h3>
+
+                    <div class="text-size-choice"><label><input type="radio" name="text-size" checked="" value="100"><span class="checkbox"></span>Standard</label></div>
+                    <div id="text-size-choice-large" class="text-size-choice"><label><input type="radio" name="text-size" value="150"><span class="checkbox"></span>Large Text</label></div>
+                    <div id="text-size-choice-extra-large" class="text-size-choice"><label><input type="radio" name="text-size" value="200"><span class="checkbox"></span>Extra Large Text</label></div>
+
+                    <hr>
+
+                        <h3 class="settings-heading primary-color"><label for="theme">Color Mode</label></h3>
+                        <div>
+                            <select id="theme">
+                                    <option value="5" data-name="green" data-style-sheet-url="/theme/styles-v2?themeId=0&amp;mode=light" selected="selected">Light</option>
+                                    <option value="20" data-name="dark" data-style-sheet-url="/theme/styles-v2?themeId=0&amp;mode=dark">Dark</option>
+                                    <option value="4" data-name="gray" data-style-sheet-url="/theme/styles-v2?themeId=0&amp;mode=highcontrast">High Contrast</option>
+                            </select>
+                        </div>
+                        <hr>
+
+                        <h3 class="settings-heading primary-color">Actions</h3>
+                        <div id="mainMenuExtensions"><div class="link-list-item"><a id="splitWindows" href="https://labclient.labondemand.com/Instructions/fc167695-4f4a-415a-b4de-9be587b418c1#" class="split-windows-link icon-link">Split Windows</a></div></div>                        
+
+                </div>
+            </div>
+        </div>
+        <div id="notificationContainer" role="region" aria-label="Notifications"></div>
+    </div>
+
+    <div id="fullScreenMessage" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="fullScreenMessageTitle" aria-describedby="fullScreenMessageText">
+        <div id="fullScreenMessageMask"></div>
+        <div id="fullScreenMessageIcon"></div>
+        <div id="fullScreenMessageCenter" class="baseColor">
+            <div id="fullScreenMessageTextWrapper">
+                <span id="fullScreenMessageLoadingIcon" class="loadingAnimation-large"></span>
+                <div id="fullScreenMessageTitle" role="heading" aria-level="1"></div>
+                <div id="fullScreenMessageText" role="status"></div>
+                <div id="fullScreenMessageButtonWrapper">
+                    <span id="fullScreenMessageButtons"></span>
+                    <input type="button" id="closeWindow" value="Close Window">
+                </div>
+                <div id="fullScreenProgressWrapper" style="display: none;">
+                    <div id="fullScreenProgressText"></div>
+                    <div id="fullScreenProgressBar" class="primary-color-low-opacity-background">
+                        <div id="fullScreenProgressFill" class="primary-color-background"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="examResultDetails" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="ExamResultDetailsTitle">
+        <div id="examResultDetailsHeader"></div>
+        <div id="examResultDetailsCenter" class="baseColor">
+            <div id="examResultDetailsWrapper">
+                <div id="examResultDetailsTitle"></div>
+                <div id="examResultDetailsText"></div>
+                <div id="examResultDetailsButtonWrapper">
+                    <span id="examResultDetailsButtons"></span>
+                    <input type="button" id="closeWindow" value="Close Window">
+                </div>
+                <div id="exResultDetailsProgressWrapper" style="display: none;">
+                    <div id="examResultDetailsProgressText"></div>
+                    <div id="examResultDetailsProgressBar">
+                        <div id="examResultDetailsProgressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <textarea id="copyInput" style="position: absolute; left: -10000px; top: -10000px; display: none;"></textarea>
+
+    <script>
+    var model = {
+        id: 62068356,
+        key: "fc167695-4f4a-415a-b4de-9be587b418c1",
+        labProfileId: "190776",
+        instructionsSetId: "298657",
+        layoutVersion: 2,
+        isPreview: false,
+        isThemePreview: false,
+previewKey: null,        helpTabLabel: "Help",
+        monitor: false,
+        takeControl: false,
+        allowUserTransferSaves: false,
+        userId: "8943262",
+        userFullName: "Nurul Faqihah Abdul Karim",
+        publishKey: "pub-c-4b0a6a73-e675-4561-b40f-cee58350bb9f",
+        subscribeKey: "sub-c-9c6a8086-0758-11eb-8c73-de77696b0464"
+    };
+        
+    </script>
+
+    
+    <script>
+      (function(h,o,u,n,d) {
+        h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
+        d=o.createElement(u);d.async=1;d.src=n
+        n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
+        })(window,document,'script','https://www.datadoghq-browser-agent.com/us3/v6/datadog-logs.js','DD_LOGS')
+      window.DD_LOGS.onReady(function() {
+          window.DD_LOGS.init({
+            clientToken: 'pub95df9c2772f25cae094492ee095d1bca',
+            site: 'us3.datadoghq.com',
+            env: 'prod',
+            service: 'lab-client-frontend',
+            forwardErrorsToLogs: true,
+            telemetrySampleRate: 100,
+            trackSessionAcrossSubdomains: true,
+            forwardConsoleLogs: ['error', 'warn'],
+          })
+        })
+    </script>
+
+    
+<script>
+    let iFrameDetectorModel = {
+        requireIFrame: false
+    };
+
+    function isInIFrame() {
+        return (window === window.parent) ? false : true;
+    }
+
+    $(function () {
+        if (iFrameDetectorModel.requireIFrame && !isInIFrame()) {
+            window.location.href = "/AccessDenied";
+        };
+    });
+
+</script>
+
+
+
+</body></html>

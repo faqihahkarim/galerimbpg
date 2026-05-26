@@ -46,11 +46,15 @@
   font-size: 16px;
   margin-bottom: 10px;
   color: #3b1f12;
+  margin-top: -30px;
+  text-align: center;
 }
 
 .booking-stats .stat-card strong {
-  font-size: 52px;
+  font-size: 60px;
   color: #5a2f1f;
+  margin-top: -30px;
+  text-align: center;
 }
 
 /* =========================
@@ -128,7 +132,7 @@
 }
 
 .table-wrap th {
-  background: #f3e8df;
+  background: #ffffff;
   color: #3b1f12;
   font-size: 14px;
   font-weight: 700;
@@ -143,19 +147,57 @@
   font-size: 14px;
 }
 
-.table-wrap tr:nth-child(even) {
-  background: #fcfaf8;
-}
+
 
 .table-wrap tr:hover {
   background: #f7eee8;
 }
 
-.table-wrap a {
+.table-wrap a,
+.table-wrap button.edit-rule-btn,
+.table-wrap button.edit-slot-btn,
+.table-wrap button.edit-closure-btn {
+  background: transparent;
+  border: none;
   color: #5a2f1f;
   font-weight: 700;
   text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: Amiri;
 }
+
+.btn-loader {
+  display: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: 8px;
+}
+
+button.loading {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+button.loading .btn-loader {
+  display: inline-block;
+}
+
+button.loading .btn-text {
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
 
 .table-wrap th:nth-child(5),
 .table-wrap td:nth-child(5),
@@ -189,6 +231,7 @@
   color: #1e7a45;
 }
 
+.status.rejected,
 .status.cancelled {
   background: #fde8e8;
   color: #b42318;
@@ -279,6 +322,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 18px;
+  font-family: inherit;
 }
 
 .booking-modal-header h2 {
@@ -451,14 +495,18 @@
 .stat-card {
   padding: 22px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   min-height: 145px;
+  text-align: center;
 }
 
 .stat-left {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
 .stat-icon {
@@ -471,13 +519,82 @@
 }
 
 .stat-card h3 {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-main);
   font-weight: 600;
 }
 
 .stat-card strong {
-  font-size: 32px;
+  font-size: 37px;
+}
+
+/*alert*/
+.alert {
+  padding: 14px 18px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+.success-alert {
+  background: #eaf8ee;
+  color: #1f7a3f;
+}
+
+.error-alert {
+  background: #ffecec;
+  color: #c62828;
+}
+
+/*rejcet modal*/
+.reject-modal {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.4);
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 2000;
+}
+
+.reject-modal.active {
+  display: flex;
+}
+
+.reject-modal-content {
+  width: 90%;
+  max-width: 500px;
+
+  background: white;
+
+  border-radius: 24px;
+
+  padding: 24px;
+}
+
+.reject-modal-content textarea {
+  width: 100%;
+  height: 140px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+
+  padding: 14px;
+
+  resize: none;
+
+  margin-top: 16px;
+}
+
+.reject-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+
+  margin-top: 20px;
 }
 
 /* =========================

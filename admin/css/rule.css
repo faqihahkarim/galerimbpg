@@ -1,0 +1,120 @@
+.rule-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.rule-actions button {
+  border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+    transition: 0.2s;
+margin-top: 10px;
+
+
+}
+
+.blue-btn { background: #1656db; }
+.red-btn { background: #c62828; }
+.gold-btn { background: #a99632; }
+
+.popup-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.popup-modal.active {
+  display: flex;
+}
+
+.popup-card {
+  width: 90%;
+  max-width: 520px;
+  background: white;
+  border-radius: 18px;
+  padding: 26px;
+}
+
+.popup-card form {
+  display: grid;
+  gap: 12px;
+}
+
+.popup-card input,
+.popup-card select {
+  padding: 11px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.cancel-btn {
+  background: #777;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+.save-btn {
+  background: #3b2a1d;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+}
+
+
+/*PAGINATION*/
+.pagination{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 20px;
+}
+
+.page-btn{
+  min-width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  text-decoration: none;
+  color: #3b2a1d;
+
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+.page-btn:hover{
+  background: #f3f4f6;
+}
+
+.active-page{
+  background: #e1c8b5;
+  color: white;
+  border-color: #3b2a1d;
+}
