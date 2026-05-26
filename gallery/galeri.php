@@ -15,6 +15,7 @@ $pageType = "inner";
 
   <link rel="stylesheet" href="../assets/css/navbar.css">
   <link rel="stylesheet" href="galeri.css">
+  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 
 </head>
 

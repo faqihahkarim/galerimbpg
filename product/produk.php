@@ -51,6 +51,7 @@ function getStockStatus($stock) {
   <link rel="stylesheet" href="../assets/css/navbar.css">
   <link rel="stylesheet" href="produk.css">
   <link rel="stylesheet" href="popup.css">
+  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 
   <style>
     .status-green {
@@ -109,10 +110,25 @@ function getStockStatus($stock) {
 
       <select id="categoryFilter">
         <option value="">Kategori</option>
-        <option value="Pasu">Pasu</option>
-        <option value="Pinggan">Pinggan</option>
-        <option value="Jubin">Jubin</option>
-      </select>
+
+        <?php
+        $typeQuery = "
+            SELECT DISTINCT product_type
+            FROM products
+            WHERE status = 'active'
+            ORDER BY product_type ASC
+        ";
+
+        $typeResult = mysqli_query($conn, $typeQuery);
+
+        while ($type = mysqli_fetch_assoc($typeResult)) :
+        ?>
+            <option value="<?= htmlspecialchars($type['product_type']) ?>">
+                <?= htmlspecialchars($type['product_type']) ?>
+            </option>
+        <?php endwhile; ?>
+
+    </select>
 
       <select id="priceFilter">
         <option value="">Harga</option>
@@ -169,12 +185,12 @@ function getStockStatus($stock) {
               if ($stock == 0) {
                 $stockClass = "red";
                 $stockText = "Tiada Stok";
-              } elseif ($stock < 10) {
+              } elseif ($stock <= 10) {
                 $stockClass = "yellow";
                 $stockText = "Stok Rendah";
               } else {
                 $stockClass = "green";
-                $stockText = "Ada Stok";
+                $stockText = "Stok Tersedia";
               }
               ?>
 
