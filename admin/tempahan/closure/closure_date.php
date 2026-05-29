@@ -1,5 +1,6 @@
 <?php
 session_start();
+$base="/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../../login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include '../../timeout.php';
 
 $limit = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
@@ -67,6 +69,7 @@ if (isset($_GET['error'])) {
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/tempahan.css">
   <link rel="stylesheet" href="../../css/rule.css">
+  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>
@@ -138,9 +141,11 @@ if (isset($_GET['error'])) {
                                 >Edit
                             </button>
                         </td>
-                         <td>
-                            <button class="delete-product-btn" onclick="return confirm('Padam tarikh tutup ini?')" 
-                                    style="background: none; border: none; color: #c62828; cursor: pointer; font-family: inherit; font-weight: bold;">
+                        <td>
+                            <button 
+                                class="delete-product-btn"
+                                onclick="deleteRule(<?= $c['closure_id'] ?>)"
+                                style="background: none; border: none; color: #c62828; cursor: pointer; font:inherit; font-weight: bold;">
                                 Delete
                             </button>
                         </td>
@@ -257,6 +262,13 @@ document.querySelectorAll('.edit-closure-btn').forEach(btn => {
     closureModal.classList.add('active');
   });
 });
+
+//delete button
+function deleteRule(id) {
+    if (confirm("Padam tarikh tutup ini?")) {
+        window.location = "delete_closure.php?id=" + id;
+    }
+}
 
 document.querySelectorAll('.close-popup').forEach(btn => {
   btn.addEventListener('click', () => {

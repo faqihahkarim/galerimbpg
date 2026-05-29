@@ -1,5 +1,6 @@
 <?php
 session_start();
+$base="/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../../login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include '../../timeout.php';
 
 $limit = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
@@ -35,17 +37,23 @@ $flashMessage = '';
 $flashClass = '';
 if (isset($_GET['success'])) {
     switch ($_GET['success']) {
-        case 'slot_updated':
-            $flashMessage = 'Slot berjaya dikemaskini.';
-            $flashClass = 'success-alert';
-            break;
-        case 'slots_generated':
-            $count = isset($_GET['count']) ? (int) $_GET['count'] : 0;
-            $flashMessage = $count . ' slot berjaya dijana.';
-            $flashClass = 'success-alert';
+    case 'slot_updated':
+        $flashMessage = 'Slot berjaya dikemaskini.';
+        $flashClass = 'success-alert';
+        break;
 
-            break;
-    }
+    case 'slots_generated':
+        $count = isset($_GET['count']) ? (int) $_GET['count'] : 0;
+        $flashMessage = $count . ' slot berjaya dijana.';
+        $flashClass = 'success-alert';
+        break; // ✅ IMPORTANT
+
+    case 'slots_deleted':
+        $count = isset($_GET['count']) ? (int) $_GET['count'] : 1;
+        $flashMessage = $count . ' slot berjaya dipadam.';
+        $flashClass = 'success-alert';
+        break;
+}
 }
 if (isset($_GET['error'])) {
     switch ($_GET['error']) {
@@ -73,6 +81,7 @@ if (isset($_GET['error'])) {
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/tempahan.css">
   <link rel="stylesheet" href="../../css/rule.css">
+  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>
@@ -150,8 +159,10 @@ if (isset($_GET['error'])) {
                             >Edit</button>
                          </td>
                         <td>
-                            <button class="delete-product-btn" onclick="return confirm('Padam slot ini?')" 
-                                    style="background: none; border: none; color: #c62828; cursor: pointer; font-family: inherit; font-weight: bold;">
+                            <button 
+                                class="delete-product-btn"
+                                onclick="deleteRule(<?= $slot['slot_id'] ?>)"
+                                style="background: none; border: none; color: #c62828; cursor: pointer; font:inherit; font-weight: bold;">
                                 Delete
                             </button>
                         </td>
@@ -294,6 +305,13 @@ document.querySelectorAll('.edit-slot-btn').forEach(btn => {
     editSlotModal.classList.add('active');
   });
 });
+
+// delete slot
+function deleteRule(id){
+  if(confirm("Padam slot ini?")){
+    window.location = "delete_slot.php?id=" + id;
+  }
+}
 
 document.querySelectorAll('.close-popup').forEach(btn => {
   btn.addEventListener('click', () => {

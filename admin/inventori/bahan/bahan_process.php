@@ -8,6 +8,12 @@ if (!isset($_SESSION['admin_login'])) {
 
 include '../../../db.php';
 
+include '../../log.php';
+
+if (!function_exists('addAdminLog')) {
+    die('addAdminLog function not found. Check log.php path.');
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: bahan.php");
     exit();
@@ -26,6 +32,19 @@ function getStockStatus($stock) {
         return 'Stok Rendah';
     } else {
         return 'Stok Tersedia';
+    }
+}
+
+function logLowStockIfNeeded($conn, $adminId, $materialName, $materialStock, $stockStatus, $materialId) {
+    if ($stockStatus === 'Stok Rendah' || $stockStatus === 'Tiada Stok') {
+        addAdminLog(
+            $conn,
+            $adminId,
+            'stock_low',
+            'Amaran stok: ' . $materialName . ' kini ' . $stockStatus . ' (' . $materialStock . ')',
+            'products',
+            $materialId
+        );
     }
 }
 
@@ -102,6 +121,20 @@ if ($action === 'add') {
     }
 
     $materialId = mysqli_insert_id($conn);
+
+    /*activity logs**/
+    addAdminLog(
+        $conn,
+        $adminId,
+        'material_added',
+        'Material baru ditambah: ' . $materialName,
+        'materials',
+        $materialId
+    );
+
+    logLowStockIfNeeded($conn, $adminId, $materialName, $materialStock, $stockStatus, $materialId);
+
+
     mysqli_stmt_close($stmt);
 
     // Proses Simpan Gambar Fail
@@ -241,6 +274,18 @@ if ($action === 'edit') {
         header("Location: bahan.php?error=update_failed");
         exit();
     }
+
+     addAdminLog(
+        $conn,
+        $adminId,
+        'material_updated',
+        'Bahan dikemaskini: ' . $productName,
+        'materials',
+        $materialId
+    );
+
+    logLowStockIfNeeded($conn, $adminId, $materialName, $materialStock, $stockStatus, $materialId);
+
 
     mysqli_stmt_close($stmt);
     mysqli_close($conn);

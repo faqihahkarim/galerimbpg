@@ -8,24 +8,45 @@ if (!isset($_SESSION['admin_login'])) {
 
 include '../../../db.php';
 
+include '../../log.php';
+
+if (!function_exists('addAdminLog')) {
+    die('addAdminLog function not found. Check log.php path.');
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: produk.php");
     exit();
 }
 
 $action = $_POST['action'] ?? '';
+$adminId = $_SESSION['admin_id'];
 
 
 // =====================================================
 // FUNCTION: Tentukan status stok
 // =====================================================
+
 function getStockStatus($stock) {
-    if ($stock == 0) {
+    if ($stock <= 0) {
         return 'Tiada Stok';
     } elseif ($stock <= 10) {
         return 'Stok Rendah';
     } else {
         return 'Stok Tersedia';
+    }
+}
+
+function logLowStockIfNeeded($conn, $adminId, $productName, $productStock, $stockStatus, $productId) {
+    if ($stockStatus === 'Stok Rendah' || $stockStatus === 'Tiada Stok') {
+        addAdminLog(
+            $conn,
+            $adminId,
+            'stock_low',
+            'Amaran stok: ' . $productName . ' kini ' . $stockStatus . ' (' . $productStock . ')',
+            'products',
+            $productId
+        );
     }
 }
 
@@ -44,12 +65,9 @@ if ($action === 'add') {
     $productPrice = $_POST['product_price'];
     $productStock = intval($_POST['product_stock']);
     $stockStatus = getStockStatus($productStock);
-    $adminId = $_SESSION['admin_login'];
+    $category = trim($_POST['category']);
 
-    if (
-        !isset($_FILES['product_images']) ||
-        count($_FILES['product_images']['name']) !== 3
-    ) {
+    if (!isset($_FILES['product_images']) || count($_FILES['product_images']['name']) !== 3) {
         header("Location: produk.php?error=need_3_images");
         exit();
     }
@@ -90,15 +108,16 @@ if ($action === 'add') {
             product_stock,
             stock_status,
             status,
-            created_by
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)
+            created_by,
+            category
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?)
     ";
 
     $stmt = mysqli_prepare($conn, $insertProductQuery);
 
     mysqli_stmt_bind_param(
         $stmt,
-        "sssddddisii",
+        "sssddddisis",
         $productName,
         $productType,
         $productMotif,
@@ -109,8 +128,8 @@ if ($action === 'add') {
         $productStock,
         $stockStatus,
         $adminId,
-        $productId
-        );
+        $category
+    );
 
     if (!mysqli_stmt_execute($stmt)) {
         header("Location: produk.php?error=insert_failed");
@@ -118,6 +137,17 @@ if ($action === 'add') {
     }
 
     $productId = mysqli_insert_id($conn);
+
+    addAdminLog(
+        $conn,
+        $adminId,
+        'product_added',
+        'Produk baru ditambah: ' . $productName,
+        'products',
+        $productId
+    );
+
+    logLowStockIfNeeded($conn, $adminId, $productName, $productStock, $stockStatus, $productId);
 
     $uploadDir = "../../../assets/images/products/";
     $dbImagePath = "assets/images/products/";
@@ -131,7 +161,6 @@ if ($action === 'add') {
         $imageExt = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 
         $newImageName = "product_" . $productId . "_" . time() . "_" . ($index + 1) . "." . $imageExt;
-
         $targetPath = $uploadDir . $newImageName;
         $imageUrl = $dbImagePath . $newImageName;
 
@@ -171,6 +200,9 @@ if ($action === 'add') {
 }
 
 
+
+
+
 // =====================================================
 // EDIT PRODUCT
 // =====================================================
@@ -192,7 +224,7 @@ if ($action === 'edit') {
     $productPrice = $_POST['product_price'];
     $productStock = intval($_POST['product_stock']);
     $stockStatus = getStockStatus($productStock);
-    $adminId = $_SESSION['admin_id'];
+    $category = $_POST['category'] ?? null;
 
     $existingImages = json_decode($_POST['existing_images'] ?? '[]', true);
     $deletedImages = json_decode($_POST['deleted_images'] ?? '[]', true);
@@ -264,7 +296,8 @@ if ($action === 'edit') {
             product_price = ?,
             product_stock = ?,
             stock_status = ?,
-            updated_by = ?
+            updated_by = ?,
+            category=?,
         WHERE product_id = ?
         AND status = 'active'
     ";
@@ -273,7 +306,7 @@ if ($action === 'edit') {
 
     mysqli_stmt_bind_param(
         $stmt,
-        "sssddddisii",
+        "sssddddisiis",
         $productName,
         $productType,
         $productMotif,
@@ -284,7 +317,8 @@ if ($action === 'edit') {
         $productStock,
         $stockStatus,
         $adminId,
-        $productId
+        $productId,
+        $category
     );
 
     if (!mysqli_stmt_execute($stmt)) {
@@ -292,7 +326,17 @@ if ($action === 'edit') {
         exit();
     }
 
-    // Delete gambar lama yang admin tekan X
+    addAdminLog(
+        $conn,
+        $adminId,
+        'product_updated',
+        'Produk dikemaskini: ' . $productName,
+        'products',
+        $productId
+    );
+
+    logLowStockIfNeeded($conn, $adminId, $productName, $productStock, $stockStatus, $productId);
+
     if (!empty($deletedImages)) {
         foreach ($deletedImages as $imageId) {
             $imageId = intval($imageId);
@@ -335,7 +379,6 @@ if ($action === 'edit') {
         }
     }
 
-    // Upload gambar baru
     $uploadDir = "../../../assets/images/products/";
     $dbImagePath = "assets/images/products/";
 
@@ -383,7 +426,6 @@ if ($action === 'edit') {
         }
     }
 
-    // Susun semula sort_order dan is_main ikut image_id ASC
     $reorderQuery = "
         SELECT image_id
         FROM product_images
@@ -396,7 +438,6 @@ if ($action === 'edit') {
     mysqli_stmt_execute($reorderStmt);
 
     $reorderResult = mysqli_stmt_get_result($reorderStmt);
-
     $sortOrder = 1;
 
     while ($image = mysqli_fetch_assoc($reorderResult)) {
@@ -441,21 +482,44 @@ if ($action === 'delete') {
         exit();
     }
 
+    $nameQuery = "SELECT product_name FROM products WHERE product_id = ? LIMIT 1";
+    $nameStmt = mysqli_prepare($conn, $nameQuery);
+    mysqli_stmt_bind_param($nameStmt, "i", $productId);
+    mysqli_stmt_execute($nameStmt);
+    $nameResult = mysqli_stmt_get_result($nameStmt);
+    $nameData = mysqli_fetch_assoc($nameResult);
+    mysqli_stmt_close($nameStmt);
+
+    $productName = $nameData['product_name'] ?? 'Produk';
+
     $deleteQuery = "
         UPDATE products
-        SET status = 'deleted'
+        SET 
+            status = 'deleted',
+            updated_by = ?
         WHERE product_id = ?
     ";
 
     $stmt = mysqli_prepare($conn, $deleteQuery);
-    mysqli_stmt_bind_param($stmt, "i", $productId);
+    mysqli_stmt_bind_param($stmt, "ii", $adminId, $productId);
 
     if (mysqli_stmt_execute($stmt)) {
+
+        addAdminLog(
+            $conn,
+            $adminId,
+            'product_deleted',
+            'Produk dipadam: ' . $productName,
+            'products',
+            $productId
+        );
+
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
 
         header("Location: produk.php?success=product_deleted");
         exit();
+
     } else {
         mysqli_stmt_close($stmt);
         mysqli_close($conn);

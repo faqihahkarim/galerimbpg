@@ -1,5 +1,6 @@
 <?php
 session_start();
+$base="/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include '../../timeout.php';
 
 function getBookingStatusLabel($status) {
   switch ($status) {
@@ -150,6 +152,7 @@ unset($booking);
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/tempahan.css">
+  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>
@@ -599,6 +602,9 @@ if (approveBookingBtn) {
     rejectBookingBtn.disabled = true;
 
     const data = await sendBookingStatus(formData);
+    console.log(data);
+    console.log(data.email_error);
+   
 
     approveBookingBtn.classList.remove('loading');
     approveBookingBtn.disabled = false;
@@ -658,6 +664,9 @@ if (confirmRejectBtn) {
     cancelRejectBtn.disabled = true;
 
     const data = await sendBookingStatus(formData);
+    console.log(data);
+    console.log(data.email_error);
+
 
     confirmRejectBtn.classList.remove('loading');
     confirmRejectBtn.disabled = false;

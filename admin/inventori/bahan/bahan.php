@@ -1,5 +1,6 @@
 <?php 
 session_start();
+$base="/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../../login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include '../../timeout.php';
 
 $materialQuery = "
     SELECT * FROM materials
@@ -90,6 +92,7 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="../../css/inventory.css">
     <link rel="stylesheet" href="../../css/tempahan.css">
     <link rel="stylesheet" href="../../css/bahan.css">
+    <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>

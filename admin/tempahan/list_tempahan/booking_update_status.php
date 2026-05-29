@@ -21,6 +21,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include'../../log.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
@@ -107,6 +108,55 @@ if (!$updateResult) {
     ]);
     exit;
 }
+
+/* ACTIVITY LOG */
+
+$adminId = $_SESSION['admin_id'];
+
+// Get admin name
+$adminName = 'Admin';
+
+$adminQuery = "
+    SELECT admin_name
+    FROM admins
+    WHERE admin_id = '$adminId'
+    LIMIT 1
+";
+
+$adminResult = mysqli_query($conn, $adminQuery);
+
+if ($adminResult && mysqli_num_rows($adminResult) > 0) {
+    $adminData = mysqli_fetch_assoc($adminResult);
+    $adminName = $adminData['admin_name'];
+}
+
+// Booking code
+$bookingCode = 'BK' . $booking_id;
+
+if ($action === 'approved') {
+
+    addAdminLog(
+        $conn,
+        $adminId,
+        'booking_approved',
+        'Tempahan ' . $bookingCode . ' diluluskan oleh admin ' . $adminName,
+        'bookings',
+        $booking_id
+    );
+
+} elseif ($action === 'rejected') {
+
+    addAdminLog(
+        $conn,
+        $adminId,
+        'booking_rejected',
+        'Tempahan ' . $bookingCode . ' ditolak oleh admin ' . $adminName,
+        'bookings',
+        $booking_id
+    );
+}
+
+
 
 $to = $booking['email'];
 $subject = "Status Tempahan Galeri Seramik MBPG";
