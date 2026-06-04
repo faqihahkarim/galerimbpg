@@ -111,6 +111,7 @@ if (!empty($bookingIds)) {
     SELECT
       ba.booking_id,
       a.activity_name,
+      a.price,
       ba.participant_count
     FROM booking_activities ba
     LEFT JOIN activities a ON ba.activity_id = a.activity_id
@@ -126,16 +127,36 @@ if (!empty($bookingIds)) {
 
   foreach ($bookingActivities as $bookingId => $activities) {
     $parts = [];
+    $totalFee = 0.00;
     foreach ($activities as $activityRow) {
       $parts[] = htmlspecialchars($activityRow['activity_name']) . ' (' . (int) $activityRow['participant_count'] . ')';
+      $participants = (int) $activityRow['participant_count'];
+      $price = isset($activityRow['price']) ? (float) $activityRow['price'] : 0.00;
+      $totalFee += $participants * $price;
     }
     $bookings[$bookingId]['activity_list'] = implode(' + ', $parts);
+    $bookings[$bookingId]['total_fee'] = $totalFee;
+    $bookings[$bookingId]['formatted_total_fee'] = 'RM ' . number_format($totalFee, 2);
   }
 }
 
 foreach ($bookings as &$booking) {
   if (empty($booking['activity_list'])) {
     $booking['activity_list'] = 'Tiada';
+  }
+
+  // If no activity fees present and package is a lawatan, apply flat per-person fee
+  $packageNameLower = strtolower($booking['package_name'] ?? '');
+  if (empty($booking['total_fee']) && strpos($packageNameLower, 'lawatan') !== false) {
+    $fee = (float) $booking['total_participants'] * 2.00;
+    $booking['total_fee'] = $fee;
+    $booking['formatted_total_fee'] = 'RM ' . number_format($fee, 2);
+  }
+
+  // Ensure fields exist
+  if (!isset($booking['total_fee'])) {
+    $booking['total_fee'] = 0.00;
+    $booking['formatted_total_fee'] = 'RM 0.00';
   }
 }
 unset($booking);
@@ -255,6 +276,7 @@ unset($booking);
                 <th>Jenis Tempahan</th>
                 <th>Tarikh & Slot Masa</th>
                 <th>Pax</th>
+                <th>Jumlah Bayaran</th>
                 <th>Status</th>
                 <th>Catatan</th>
             </tr>
@@ -265,12 +287,13 @@ unset($booking);
               <?php foreach ($bookings as $booking): ?>
                 <tr>
                   <td>
-                    <a href="#" class="booking-detail-link" data-booking-id="<?= $booking['booking_id'] ?>"><?= htmlspecialchars($booking['display_id']) ?></a>
+                    <a href="#" class="booking-detail-link" data-booking-id="<?= $booking['booking_id'] ?>" onclick="openBookingModal(<?= $booking['booking_id'] ?>); return false;"><?= htmlspecialchars($booking['display_id']) ?></a>
                   </td>
                   <td><?= htmlspecialchars($booking['organization_name']) ?></td>
                   <td><?= htmlspecialchars($booking['package_name'] ?? '-') ?></td>
                   <td><?= htmlspecialchars($booking['slot_display']) ?></td>
                   <td><?= (int) $booking['total_participants'] ?></td>
+                  <td><?= htmlspecialchars($booking['formatted_total_fee'] ?? 'RM 0.00') ?></td>
                   <td><span class="status <?= $booking['status_class'] ?>"><?= $booking['status_label'] ?></span></td>
                   <td><?= htmlspecialchars($booking['admin_comment'] ?? '-') ?></td>
                 </tr>
@@ -368,6 +391,14 @@ unset($booking);
           </div>
 
           <div class="booking-info-item">
+            <i class="fa-solid fa-dollar-sign"></i>
+            <div>
+              <p>Jumlah Bayaran</p>
+              <small id="modalTotalFee">-</small>
+            </div>
+          </div>
+
+          <div class="booking-info-item">
             <i class="fa-regular fa-clipboard"></i>
             <div>
               <p>Catatan</p>
@@ -454,6 +485,7 @@ const modalPackage = document.getElementById('modalPackage');
 const modalActivities = document.getElementById('modalActivities');
 const modalParticipants = document.getElementById('modalParticipants');
 const modalRemark = document.getElementById('modalRemark');
+const modalTotalFee = document.getElementById('modalTotalFee');
 
 const actionBookingId = document.getElementById('actionBookingId');
 const actionBookingStatus = document.getElementById('actionBookingStatus');
@@ -491,6 +523,25 @@ function setStatusLabel(statusClass, label) {
   modalBookingStatus.className = 'status ' + statusClass;
 }
 
+// Fallback helper for inline onclick links - must be defined early for global access
+function openBookingModal(bookingId) {
+  try {
+    const booking = findBooking(bookingId);
+    if (!booking) {
+      alert('Maklumat tempahan tidak dijumpai.');
+      return;
+    }
+    showBookingModal(booking);
+  } catch (e) {
+    console.error('openBookingModal error', e);
+    alert('Gagal membuka modal. Semak konsol.');
+  }
+}
+
+
+/**************************/
+/*WHATSAPP LINK GENERATION*/
+/*************************/
 function formatWhatsappPhone(phone) {
   let cleanPhone = String(phone || '').replace(/\D/g, '');
 
@@ -501,32 +552,53 @@ function formatWhatsappPhone(phone) {
   return cleanPhone;
 }
 
+/*Whatsapp message templates based on booking status*/
+
 function createWhatsappLink(booking) {
   const phone = formatWhatsappPhone(booking.phone_number || '');
 
   let message = '';
 
   if (booking.booking_status === 'approved') {
-    message = `Assalamualaikum / Salam Sejahtera. Tempahan anda di Galeri Seramik MBPG telah DILULUSKAN.
+    const feeDisplay = booking.formatted_total_fee || (booking.total_fee !== undefined ? ('RM ' + Number(booking.total_fee).toFixed(2)) : 'RM 0.00');
+    const isLawatan = String(booking.package_name || '').toLowerCase().includes('lawatan');
+    message = `GALERI SERAMIK MBPG.
+    
+Tempahan anda, ${booking.display_id || '-'} telah DILULUSKAN.
 
-No. Tempahan: ${booking.display_id || '-'}
 Tarikh & Masa: ${booking.slot_display || '-'}
 Pakej: ${booking.package_name || '-'}
+Aktiviti: ${booking.activity_list || '-'}
+Jumlah Peserta: ${booking.total_participants || '-'}
+Jumlah Bayaran: ${feeDisplay}${isLawatan ? ' (jika pakej lawatan berkumpulan)' : ''}
+
+Untuk maklumat lanjut, sila hubungi pihak Galeri Seramik MBPG.
+019-20828241 (En. Ahmad)
 
 Terima kasih.`;
   }
 
   if (booking.booking_status === 'rejected') {
-    message = `Assalamualaikum / Salam Sejahtera. Dukacita dimaklumkan bahawa tempahan anda di Galeri Seramik MBPG telah DITOLAK.
+    message = `GALERI SERAMIK MBPG. 
+    
+Tempahan anda, ${booking.display_id || '-'} telah DITOLAK.
 
-No. Tempahan: ${booking.display_id || '-'}
 Sebab: ${booking.admin_remark || '-'}
+
+Untuk maklumat lanjut, sila hubungi pihak Galeri Seramik MBPG.
+019-20828241 (En. Ahmad)
 
 Terima kasih.`;
   }
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
+
+
+
+/**************************/
+/*BOOKING FUNCTIONS      */
+/*************************/
 
 function showBookingModal(booking) {
   modalBookingRef.textContent = booking.display_id || '-';
@@ -540,6 +612,7 @@ function showBookingModal(booking) {
   modalActivities.textContent = booking.activity_list || 'Tiada';
   modalParticipants.textContent = booking.total_participants || '-';
   modalRemark.textContent = booking.admin_comment || booking.admin_remark || '-';
+  modalTotalFee.textContent = booking.formatted_total_fee || ('RM ' + (booking.total_fee !== undefined ? Number(booking.total_fee).toFixed(2) : '0.00'));
 
   actionBookingId.value = booking.booking_id || '';
   actionBookingStatus.value = booking.booking_status || '';
@@ -588,6 +661,11 @@ async function sendBookingStatus(formData) {
   }
 }
 
+
+/**************************/
+/*APPROVE BOOKING FUNCTION*/
+/*************************/
+
 if (approveBookingBtn) {
   approveBookingBtn.addEventListener('click', async function (event) {
     event.preventDefault();
@@ -619,13 +697,22 @@ if (approveBookingBtn) {
       approveBookingBtn.style.display = 'none';
       rejectBookingBtn.style.display = 'none';
 
-      whatsappBookingBtn.href = createWhatsappLink({
-        booking_status: 'approved',
-        phone_number: modalPhone.textContent,
-        display_id: modalBookingRef.textContent,
-        slot_display: modalSlot.textContent,
-        package_name: modalPackage.textContent
-      });
+      const approvedBooking = findBooking(actionBookingId.value);
+      if (approvedBooking) {
+        approvedBooking.booking_status = 'approved';
+        whatsappBookingBtn.href = createWhatsappLink(approvedBooking);
+      } else {
+        whatsappBookingBtn.href = createWhatsappLink({
+          booking_status: 'approved',
+          phone_number: modalPhone.textContent,
+          display_id: modalBookingRef.textContent,
+          slot_display: modalSlot.textContent,
+          package_name: modalPackage.textContent,
+          activity_list: modalActivities.textContent,
+          total_participants: modalParticipants.textContent,
+          formatted_total_fee: modalTotalFee ? modalTotalFee.textContent : undefined
+        });
+      }
 
       whatsappBookingBtn.style.display = 'flex';
     } else {
@@ -634,6 +721,11 @@ if (approveBookingBtn) {
   });
 }
 
+
+
+/**************************/
+/*REJECT BOOKING FUNCTION*/
+/*************************/
 
 if (rejectBookingBtn) {
   rejectBookingBtn.addEventListener('click', function (event) {
@@ -682,12 +774,20 @@ if (confirmRejectBtn) {
       approveBookingBtn.style.display = 'none';
       rejectBookingBtn.style.display = 'none';
 
-      whatsappBookingBtn.href = createWhatsappLink({
-        booking_status: 'rejected',
-        phone_number: modalPhone.textContent,
-        display_id: modalBookingRef.textContent,
-        admin_remark: reason
-      });
+      const rejectedBooking = findBooking(actionBookingId.value);
+      if (rejectedBooking) {
+        rejectedBooking.booking_status = 'rejected';
+        rejectedBooking.admin_remark = reason;
+        whatsappBookingBtn.href = createWhatsappLink(rejectedBooking);
+      } else {
+        whatsappBookingBtn.href = createWhatsappLink({
+          booking_status: 'rejected',
+          phone_number: modalPhone.textContent,
+          display_id: modalBookingRef.textContent,
+          admin_remark: reason,
+          formatted_total_fee: modalTotalFee ? modalTotalFee.textContent : undefined
+        });
+      }
 
       whatsappBookingBtn.style.display = 'flex';
 
@@ -827,7 +927,7 @@ function exportVisibleRows() {
   }
 
   const csvRows = [];
-  csvRows.push(['ID Tempahan', 'Nama Organisasi', 'Jenis Tempahan', 'Tarikh & Slot Masa', 'Pax', 'Status'].join(','));
+  csvRows.push(['ID Tempahan', 'Nama Organisasi', 'Jenis Tempahan', 'Tarikh & Slot Masa', 'Pax', 'Jumlah Bayaran', 'Status'].join(','));
 
   rows.forEach(row => {
     const cells = Array.from(row.querySelectorAll('td')).map(cell => `"${cell.textContent.trim().replace(/"/g, '""')}"`);

@@ -78,6 +78,8 @@ $pageType = "home";
       </div>
     </div>
 
+    <!-- navigation button for next and previous banner-->
+
     <button class="prev">&#10094;</button>
     <button class="next">&#10095;</button>
 
@@ -259,6 +261,29 @@ $pageType = "home";
             Telefon: 013-2988693 / 019-2028241<br>
             Emel: galeriseramik.mbpg@gmail.com
           </p>
+
+         <!--question box-->
+         <form id="footerQnaForm" action="chatbot/submit_question.php" method="POST" style="margin-top: 15px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <textarea 
+                name="question" 
+                id="footerQuestionInput" 
+                placeholder="Hantarkan sebarang pertanyaan anda di sini..." 
+                rows="3" 
+                required 
+                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; font-size: 14px; resize: none; color: #333;"
+              ></textarea>
+              
+              <button 
+                type="submit" 
+                id="footerSubmitBtn"
+                style="background-color: #fbc02d; color: #111; border: none; padding: 8px 16px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.2s; align-self: flex-start;"
+              >Hantar</button>
+            </div>
+            <div id="footerFormStatus" style="margin-top: 8px; font-size: 13px; font-weight: 500;"></div>
+          </form>
+        </div>
+
         </div>
       </div>
 
@@ -276,8 +301,103 @@ $pageType = "home";
   </div>
 </footer>
 
+<!-- CHATBOT BUBBLE -->
+<div class="chatbot-wrapper" style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; font-family: 'Poppins', sans-serif;">
+  
+  <button id="chatToggleBtn" style="background-color: #fbc02d; color: #111; border: none; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;">
+    <i class="fa-solid fa-comments"></i>
+  </button>
+
+  <div id="chatWindow" style="display: none; width: 360px; height: 480px; background-color: #fff; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); flex-direction: column; position: absolute; bottom: 75px; right: 0; overflow: hidden; border: 1px solid #eee;">
+    
+    <div style="background-color: #111; color: #fff; padding: 15px; display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="<?= $base ?>assets/images/logogaleri.png" style="width: 30px; height: 30px; object-fit: contain;">
+        <div>
+          <h4 style="margin: 0; font-size: 14px; font-weight: 600;">Anda Perlukan Bantuan?</h4>
+          <span style="font-size: 11px; color: #a5d6a7; display: flex; align-items: center; gap: 4px;">
+            <i class="fa-solid fa-circle" style="font-size: 8px;"></i> Online
+          </span>
+        </div>
+      </div>
+      <button id="closeChatBtn" style="background: none; border: none; color: #fff; cursor: pointer; font-size: 16px;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div id="chatMessages" style="flex: 1; padding: 15px; overflow-y: auto; background-color: #f8f9fa; display: flex; flex-direction: column; gap: 12px;">
+      <div class="msg-bot" style="align-self: flex-start; max-width: 80%; background-color: #fff; padding: 10px 14px; border-radius: 4px 12px 12px 12px; font-size: 13px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); color: #333;">
+        Selamat datang ke Galeri Seramik Pasir Gudang! Ada apa yang boleh saya bantu? Sila pilih soalan popular di bawah atau taip soalan anda.
+      </div>
+      
+      <div id="chatSuggestions" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px;">
+        <div style="font-size: 11px; color: #888;">Memuatkan soalan lazim...</div>
+      </div>
+    </div>
+
+    <form id="chatInputForm" style="border-top: 1px solid #eee; padding: 10px; display: flex; gap: 8px; background-color: #fff;">
+      <input type="text" id="chatMessageInput" placeholder="Taip soalan anda di sini..." autocomplete="off" required style="flex: 1; border: 1px solid #ddd; padding: 8px 12px; border-radius: 20px; font-size: 13px; outline: none; font-family: inherit;">
+      <button type="submit" style="background-color: #111; color: #fff; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-paper-plane" style="font-size: 12px;"></i></button>
+    </form>
+
+  </div>
+</div>
+
+
      <!-- SCRIPT-->
      <script src="assets/js/index.js"></script>
-     
+
+     <!-- Footer QnA Box Script -->
+     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const qnaForm = document.getElementById("footerQnaForm");
+        const statusDiv = document.getElementById("footerFormStatus");
+        const submitBtn = document.getElementById("footerSubmitBtn");
+
+        if (qnaForm) {
+          qnaForm.addEventListener("submit", function (e) {
+            e.preventDefault(); // Stop page refresh
+
+            // Visual feedback loading state
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Menghantar...";
+            statusDiv.style.color = "#666";
+            statusDiv.innerText = "Sila tunggu...";
+
+            const formData = new FormData(qnaForm);
+
+            fetch("chatbot/submit_question.php", {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.status === "success") {
+                  statusDiv.style.color = "#2e7d32"; // Green for success
+                  statusDiv.innerText = data.message;
+                  qnaForm.reset(); // Clear input box
+                } else {
+                  statusDiv.style.color = "#c62828"; // Red for error
+                  statusDiv.innerText = data.message;
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                statusDiv.style.color = "#c62828";
+                statusDiv.innerText = "Ralat menghantar soalan. Sila cuba lagi.";
+              })
+              .finally(() => {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Hantar";
+              });
+          });
+        }
+      });
+      </script>
+
+
+      <!-- script untuk chatbot -->
+      <script src="chatbot/chatbot.js"></script>
+
+          
 </body>
 </html>

@@ -34,6 +34,15 @@ $bookingRulesQuery = "
   ORDER BY rule_id ASC
 ";
 
+/*tarik package_activities dengan activities untuk brief desc aktiviti apa yang pakej ni ambil*/
+$packageActivityQuery = mysqli_query($conn, "
+  SELECT pa.activity_id, a.activity_name
+  FROM package_activities pa
+  JOIN activities a ON pa.activity_id = a.activity_id
+  WHERE a.status = 'active'
+  AND pa.package_id = $package_id
+");
+
 $bookingRulesResult = mysqli_query($conn, $bookingRulesQuery);
 
 /* Arrange schedule into columns */
@@ -88,6 +97,16 @@ foreach ($slotsByDay as $day => $slots) {
     $visibleDays[$day] = $slots;
   }
 }
+
+/*only display in the brief desc of ativity in the package detail page*/
+$activityNames = [];
+while ($activity = mysqli_fetch_assoc($packageActivityQuery)) {
+  if (!empty($activity['activity_name'])) {
+    $activityNames[] = $activity['activity_name'];
+  }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -154,7 +173,28 @@ foreach ($slotsByDay as $day => $slots) {
         </tbody>
       </table>
 
-      <a href="package_calendar.php?package_id=<?= $package['package_id']; ?>" class="booking-btn">
+      <br>
+      <p>Aktiviti yang disertakan dalam pakej ini:</p>
+      <?php if (!empty($activityNames)): ?>
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th>Aktiviti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($activityNames as $name): ?>
+              <tr>
+                <td><?= htmlspecialchars($name); ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      <?php else: ?>
+        <p>Pakej ini tidak disertakan dengan aktiviti</p>
+      <?php endif; ?>
+
+      <a href="package_calendar.php?package_id=<?= $package['package_id']; ?>" class="booking-btn" style="margin-top: 20px;">
         Tempah Sekarang
       </a>
     </div>

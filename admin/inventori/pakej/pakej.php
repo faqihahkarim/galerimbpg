@@ -123,6 +123,7 @@ $offset = ($page - 1) * $limit;
                             <th>ID</th>
                             <th>Nama Pakej</th>
                             <th>Kapasiti (Pax)</th>
+                            <th>Penerangan</th>
                             <th>Dengan Aktiviti</th>
                             <th>Aktiviti Pilihan (ID)</th>
                             <th>Gambar</th>

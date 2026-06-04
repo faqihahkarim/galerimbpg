@@ -30,7 +30,8 @@ $activityQuery = "
     LEFT JOIN activity_images ai 
         ON a.activity_id = ai.activity_id
         AND ai.is_main = 1
-    WHERE a.status = 'active'
+    WHERE a.status = 'active' & 'inactive'
+    AND a.status != 'deleted'
     ORDER BY a.activity_id ASC
 ";
 
