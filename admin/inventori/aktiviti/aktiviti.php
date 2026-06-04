@@ -1,5 +1,6 @@
 <?php 
 session_start();
+$base="/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../../login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include '../../timeout.php';
 
 
 // =====================================================
@@ -28,7 +30,8 @@ $activityQuery = "
     LEFT JOIN activity_images ai 
         ON a.activity_id = ai.activity_id
         AND ai.is_main = 1
-    WHERE a.status = 'active'
+    WHERE a.status = 'active' & 'inactive'
+    AND a.status != 'deleted'
     ORDER BY a.activity_id ASC
 ";
 
@@ -84,6 +87,7 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="../../css/activity.css">
     <link rel="stylesheet" href="../../css/inventory.css">
     <link rel="stylesheet" href="../../css/tempahan.css">
+    <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>

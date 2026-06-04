@@ -1,12 +1,16 @@
 <?php
 session_start();
+$base = "/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../login.php");
     exit;
 }
 
+$adminId = $_SESSION['admin_id'];
+
 include '../db.php';
+include 'timeout.php';
 
 $month = isset($_GET['month']) ? (int)$_GET['month'] : (int)date('m');
 $year  = isset($_GET['year']) ? (int)$_GET['year'] : (int)date('Y');
@@ -184,6 +188,8 @@ while ($row = mysqli_fetch_assoc($result)) {
   $bookingData[$date]['total'] += $row['total_booking'];
   $bookingData[$date]['types'][] = $packageType;
 }
+
+
 ?>
 
 
@@ -276,6 +282,23 @@ $totalProducts = getCount($conn, "
 ");
 
 $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
+
+/*ACTIVITY LOG QUERY*/
+
+$logQuery = "
+    SELECT *
+    FROM admin_logs
+    WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+    ORDER BY created_at DESC
+";
+
+$logResult = mysqli_query($conn, $logQuery);
+
+$query = "SELECT * FROM admins WHERE admin_id = '$adminId'";
+$result = mysqli_query($conn, $query);
+
+$admin = mysqli_fetch_assoc($result);
+
 ?>
 
 
@@ -296,7 +319,7 @@ $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/pop-up.css">
-  <link rel="favicon" href="../assets/images/logogaleri.png" type="image/png">
+  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>
@@ -315,7 +338,7 @@ $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
 
         <div>
           <h1>Dashboard</h1>
-            <p>Selamat Datang, Admin</p>
+            <p>Selamat Datang, Admin <?= htmlspecialchars($admin['admin_name']) ?></p>
         </div>
       </header>
 
@@ -437,45 +460,92 @@ $productTrend = ['text' => 'Jumlah produk keseluruhan', 'class' => 'neutral'];
 
     <!-- ACTIVITY LOGS-->
 
-       <div class="panel">
-        <div class="panel-header">
-            <h2>Aktiviti Terkini</h2>
-            <a class="link" href="#">Lihat Semua</a>
-        </div>
+      <div class="panel">
 
-        <div class="activity-item">
-            <div class="activity-icon"><i class="fa-regular fa-calendar-plus"></i></div>
-            <div>
-            <p>Tempahan baru oleh SK Taman Rinting</p>
-            <small>10 May 2025, 10:00 AM</small>
+            <div class="panel-header">
+                <h2>Aktiviti Terkini</h2>
             </div>
-        </div>
 
-        <div class="activity-item">
-            <div class="activity-icon"><i class="fa-regular fa-circle-check"></i></div>
-            <div>
-            <p>Permohonan diluluskan oleh PIBG SMK Pasir Gudang</p>
-            <small>11 May 2025, 09:15 AM</small>
-            </div>
-        </div>
+            <div class="activity-list">
 
-        <div class="activity-item">
-            <div class="activity-icon"><i class="fa-regular fa-clock"></i></div>
-            <div>
-            <p>Tempahan menunggu kelulusan</p>
-            <small>12 May 2025, 02:30 PM</small>
-            </div>
-        </div>
+                <?php if (mysqli_num_rows($logResult) > 0): ?>
 
-        <div class="activity-item">
-            <div class="activity-icon"><i class="fa-solid fa-ban"></i></div>
-            <div>
-            <p>Slot ditutup (Cuti Umum)</p>
-            <small>17 May 2025</small>
+                    <?php while ($log = mysqli_fetch_assoc($logResult)): ?>
+
+                        <?php
+                        // ICON BASED ON ACTION TYPE
+                        if ($log['action_type'] === 'booking_approved') {
+
+                            $icon = 'fa-regular fa-circle-check';
+
+                        } elseif ($log['action_type'] === 'booking_rejected') {
+
+                            $icon = 'fa-regular fa-circle-xmark';
+
+                        } elseif ($log['action_type'] === 'new_booking') {
+
+                            $icon = 'fa-regular fa-calendar-plus';
+
+                        } elseif ($log['action_type'] === 'new_slot') {
+
+                            $icon = 'fa-regular fa-clock';
+
+                        } elseif ($log['action_type'] === 'new_closure') {
+
+                            $icon = 'fa-solid fa-ban';
+
+                        } elseif ($log['action_type'] === 'stock_low') {
+
+                            $icon = 'fa-solid fa-box-open';
+
+                        } elseif ($log['action_type'] === 'product_added') {
+
+                            $icon = 'fa-solid fa-box';
+
+                        } elseif ($log['action_type'] === 'product_updated') {
+
+                            $icon = 'fa-solid fa-pen-to-square';
+
+                        } else {
+
+                            $icon = 'fa-solid fa-circle-info';
+                        }
+                        ?>
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+                                <i class="<?= $icon ?>"></i>
+                            </div>
+
+                            <div class="activity-content">
+
+                                <p>
+                                    <?= htmlspecialchars($log['description']) ?>
+                                </p>
+
+                                <small>
+                                    <?= date('d M Y, h:i A', strtotime($log['created_at'])) ?>
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    <?php endwhile; ?>
+
+                <?php else: ?>
+
+                    <div class="empty-log">
+                        <p>Tiada aktiviti dalam 7 hari terkini.</p>
+                    </div>
+
+                <?php endif; ?>
+
             </div>
+
         </div>
-        </div>
-      </section>
+              </section>
     </main>
   </div>
 

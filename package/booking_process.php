@@ -1,5 +1,6 @@
 <?php
 include '../db.php';
+include '../admin/log.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   header("Location: ../index.php");
@@ -15,7 +16,7 @@ $phone_number = mysqli_real_escape_string($conn, $_POST['phone_number']);
 $email = mysqli_real_escape_string($conn, $_POST['email']);
 $total_participants = intval($_POST['total_participants']);
 $admin_remark = mysqli_real_escape_string($conn, $_POST['admin_remark'] ?? '');
-$booked = 'pending'; // Initial booking status
+$booked = 'pending';
 
 /* Insert booking */
 $bookingQuery = "
@@ -47,6 +48,30 @@ $bookingQuery = "
 if (mysqli_query($conn, $bookingQuery)) {
 
   $booking_id = mysqli_insert_id($conn);
+  $packageName = 'Pakej';
+
+  $packageQuery = "
+    SELECT package_name
+    FROM packages
+    WHERE package_id = '$package_id'
+    LIMIT 1
+  ";
+
+$packageResult = mysqli_query($conn, $packageQuery);
+
+if ($packageResult && mysqli_num_rows($packageResult) > 0) {
+  $packageData = mysqli_fetch_assoc($packageResult);
+  $packageName = $packageData['package_name'];
+}
+
+  addAdminLog(
+    $conn,
+    null,
+    'new_booking',
+    'Tempahan baru' .$packageName. ':' . $organization_name,
+    'bookings',
+    $booking_id
+  );
 
   /* Insert activity allocation if exists */
   if (!empty($_POST['activity_participants'])) {

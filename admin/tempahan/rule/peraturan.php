@@ -1,5 +1,6 @@
 <?php
 session_start();
+$base="/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../../login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include '../../timeout.php';
 
 function getMalayDayName($day) {
     $day = trim($day);
@@ -104,6 +106,7 @@ if (isset($_GET['error'])) {
   <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="../../css/tempahan.css">
   <link rel="stylesheet" href="../../css/rule.css">
+  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>
@@ -182,8 +185,10 @@ if (isset($_GET['error'])) {
                         >Edit</button>
                         </td>
                         <td>
-                            <button class="delete-product-btn" onclick="return confirm('Padam peraturan ini?')" 
-                                    style="background: none; border: none; color: #c62828; cursor: pointer; font-family: inherit; font-weight: bold;">
+                            <button 
+                                class="delete-product-btn"
+                                onclick="deleteRule(<?= $rule['rule_id'] ?>)"
+                                style="background: none; border: none; color: #c62828; cursor: pointer; font:inherit; font-weight: bold;">
                                 Delete
                             </button>
                         </td>
@@ -317,6 +322,14 @@ document.querySelectorAll('.edit-rule-btn').forEach(btn => {
     ruleModal.classList.add('active');
   });
 });
+
+
+//delete button
+function deleteRule(id) {
+    if (confirm("Padam peraturan ini?")) {
+        window.location = "delete_rule.php?id=" + id;
+    }
+}
 
 document.querySelectorAll('.close-popup').forEach(btn => {
   btn.addEventListener('click', () => {

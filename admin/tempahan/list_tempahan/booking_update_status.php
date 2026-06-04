@@ -21,6 +21,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include'../../log.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
@@ -108,6 +109,55 @@ if (!$updateResult) {
     exit;
 }
 
+/* ACTIVITY LOG */
+
+$adminId = $_SESSION['admin_id'];
+
+// Get admin name
+$adminName = 'Admin';
+
+$adminQuery = "
+    SELECT admin_name
+    FROM admins
+    WHERE admin_id = '$adminId'
+    LIMIT 1
+";
+
+$adminResult = mysqli_query($conn, $adminQuery);
+
+if ($adminResult && mysqli_num_rows($adminResult) > 0) {
+    $adminData = mysqli_fetch_assoc($adminResult);
+    $adminName = $adminData['admin_name'];
+}
+
+// Booking code
+$bookingCode = 'BK' . $booking_id;
+
+if ($action === 'approved') {
+
+    addAdminLog(
+        $conn,
+        $adminId,
+        'booking_approved',
+        'Tempahan ' . $bookingCode . ' diluluskan oleh admin ' . $adminName,
+        'bookings',
+        $booking_id
+    );
+
+} elseif ($action === 'rejected') {
+
+    addAdminLog(
+        $conn,
+        $adminId,
+        'booking_rejected',
+        'Tempahan ' . $bookingCode . ' ditolak oleh admin ' . $adminName,
+        'bookings',
+        $booking_id
+    );
+}
+
+
+
 $to = $booking['email'];
 $subject = "Status Tempahan Galeri Seramik MBPG";
 
@@ -124,10 +174,11 @@ $endTime = !empty($booking['end_time'])
     : '-';
 
 $activityText = "Tiada aktiviti dipilih";
+$totalFee = 0.00;
 
 $activityQuery = "
     SELECT 
-        a.activity_name,
+        a.activity_name, a.price,
         ba.participant_count
     FROM booking_activities ba
     LEFT JOIN activities a ON ba.activity_id = a.activity_id
@@ -140,17 +191,29 @@ if ($activityResult && mysqli_num_rows($activityResult) > 0) {
     $activityLines = [];
 
     while ($activity = mysqli_fetch_assoc($activityResult)) {
-        $activityLines[] = "- " . $activity['activity_name'] . " (" . $activity['participant_count'] . " peserta)";
+        $participants = (int)$activity['participant_count'];
+        $price = (float)$activity['price'];
+        $subtotal = $participants * $price;
+        $totalFee += $subtotal;
+
+        $activityLines[] = "- " . $activity['activity_name'] . " (" . $participants . " peserta x RM " . number_format($price, 2) . ") = RM " . number_format($subtotal, 2);
     }
 
     $activityText = implode("\n", $activityLines);
 }
 
+$packageNameLower = strtolower($booking['package_name'] ?? '');
+if (strpos($packageNameLower, 'lawatan') !== false) {
+    $totalFee = (float)$booking['total_participants'] * 2.00;
+}
+
+$formattedTotalFee = 'RM ' . number_format($totalFee, 2);
+
 if ($action === 'approved') {
     $message = "
-Assalamualaikum / Salam Sejahtera,
+GALERI SERAMIK MBPG
 
-Sukacita dimaklumkan bahawa tempahan anda telah DILULUSKAN.
+Tempahan anda, BK{$booking['booking_id']} telah DILULUSKAN.
 
 Maklumat tempahan:
 Nama Organisasi: {$booking['organization_name']}
@@ -161,8 +224,13 @@ Aktiviti yang dipilih:
 Tarikh: {$slotDate}
 Masa: {$startTime} - {$endTime}
 Jumlah Peserta: {$booking['total_participants']}
+Jumlah Bayaran: {$formattedTotalFee}
 
 Sila hadir mengikut tarikh dan masa yang telah ditetapkan.
+
+Sila hubungi pihak Galeri Seramik MBPG untuk maklumat lanjut.
+
+019-20828241 (En. Ahmad)
 
 Terima kasih.
 Galeri Seramik MBPG
@@ -171,9 +239,10 @@ Galeri Seramik MBPG
     $reasonText = $admin_comment !== '' ? $admin_comment : 'Tidak dinyatakan';
 
     $message = "
-Assalamualaikum / Salam Sejahtera,
 
-Dukacita dimaklumkan bahawa tempahan anda telah DITOLAK.
+GALERI SERAMIK MBPG
+
+Tempahan anda, BK{$booking['booking_id']} telah DITOLAK.
 
 Maklumat tempahan:
 Nama Organisasi: {$booking['organization_name']}
@@ -186,6 +255,8 @@ Sebab penolakan:
 {$reasonText}
 
 Sila hubungi pihak Galeri Seramik MBPG untuk maklumat lanjut.
+
+019-20828241 (En. Ahmad)
 
 Terima kasih.
 Galeri Seramik MBPG
