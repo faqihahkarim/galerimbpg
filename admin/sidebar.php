@@ -136,6 +136,20 @@ $galleryPages = [
       </div>
     </div>
 
+  <!-- =========================
+         QNA
+    ========================== -->
+
+    <a 
+      href="<?= $base ?>/qna/qna.php"
+      class="<?= ($current == 'qna.php') ? 'active' : '' ?>"
+    >
+      <i class="fa-solid fa-question"></i>
+      QnA
+    </a>
+
+
+
     <!-- =========================
          REPORT
     ========================== -->

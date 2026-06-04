@@ -7,6 +7,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../db.php';
+include '../timeout.php';
 
 ?>
 

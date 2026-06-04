@@ -1,5 +1,6 @@
 <?php 
 session_start();
+$base="/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../../login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include '../../timeout.php';
 
 // =====================================================
 // PAGINATION CALCULATIONS & CONFIGURATIONS
@@ -86,6 +88,7 @@ if (isset($_GET['error'])) {
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/inventory.css">
     <link rel="stylesheet" href="../../css/tempahan.css">
+    <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>
@@ -138,6 +141,7 @@ if (isset($_GET['error'])) {
                             <th>Nama Produk</th>
                             <th>Harga</th>
                             <th>Stok</th>
+                            <th>Jenis</th>
                             <th>Kategori</th>
                             <th>Gambar</th>
                             <th>Edit</th>
@@ -178,6 +182,7 @@ if (isset($_GET['error'])) {
                                 </td>
 
                                 <td><?= htmlspecialchars($product['product_type']) ?></td>
+                                <td><?= htmlspecialchars($product['category']) ?></td>
 
                                 <td>
                                     <img 
@@ -296,6 +301,15 @@ if (isset($_GET['error'])) {
                         <div class="form-group">
                             <label>Jenis Produk</label>
                             <input type="text" name="product_type" id="productType" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Kategori Produk</label>
+                            <select name="product_type" id="productType" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                <option value="Aktiviti">Aktiviti</option>
+                                <option value="Jualan">Jualan</option>
+                            </select>
                         </div>
 
                         <div class="form-group">

@@ -1,5 +1,6 @@
 <?php 
 session_start();
+$base="/web/galeriseramikmbpg/";
 
 if (!isset($_SESSION['admin_login'])) {
     header("Location: ../../login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
+include '../../timeout.php';
 
 // Fetch all active activities to populate the dropdown in the modal setup
 $activityQuery = "SELECT activity_id, activity_name FROM activities WHERE status = 'active' ORDER BY activity_name ASC";
@@ -76,7 +78,9 @@ $offset = ($page - 1) * $limit;
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/inventory.css">
     <link rel="stylesheet" href="../../css/tempahan.css">
-    <link rel="stylesheet" href="../../css/activity.css"> </head>
+    <link rel="stylesheet" href="../../css/activity.css"> 
+    <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
+</head>
 
 <body>
 <div class="overlay"></div>
@@ -119,6 +123,7 @@ $offset = ($page - 1) * $limit;
                             <th>ID</th>
                             <th>Nama Pakej</th>
                             <th>Kapasiti (Pax)</th>
+                            <th>Penerangan</th>
                             <th>Dengan Aktiviti</th>
                             <th>Aktiviti Pilihan (ID)</th>
                             <th>Gambar</th>

@@ -27,7 +27,7 @@ $activityQuery = "
     SELECT *
     FROM activities
     WHERE activity_id = ?
-    AND status = 'active'
+    AND status = 'active' OR status = 'inactive'
     LIMIT 1
 ";
 

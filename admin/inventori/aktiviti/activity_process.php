@@ -170,6 +170,7 @@ if ($action === 'edit') {
     $existingImages = json_decode($_POST['existing_images'] ?? '[]', true);
     $deletedImages = json_decode($_POST['deleted_images'] ?? '[]', true);
     $adminId = $_SESSION['admin_id'];
+    $status = $_POST['status'] ?? 'active';
 
     if (!is_array($existingImages)) {
         $existingImages = [];
@@ -227,24 +228,24 @@ if ($action === 'edit') {
     }
 
     $updateActivityQuery = "
-        UPDATE activities
-        SET
-            activity_name = ?,
-            description = ?,
-            price = ?,
-            target = ?,
-            duration = ?,
-            default_capacity = ?,   
-            updated_by = ?
-        WHERE activity_id = ?
-        AND status = 'active'
-    ";
+    UPDATE activities
+    SET
+        activity_name = ?,
+        description = ?,
+        price = ?,
+        target = ?,
+        duration = ?,
+        default_capacity = ?,   
+        updated_by = ?,
+        status = ?
+    WHERE activity_id = ?
+";
 
     $stmt = mysqli_prepare($conn, $updateActivityQuery);
 
     mysqli_stmt_bind_param(
         $stmt,
-        "ssdssiii",
+        "ssdssiisi",
         $activityName,
         $description,
         $activityPrice,
@@ -252,6 +253,7 @@ if ($action === 'edit') {
         $duration,
         $defaultCapacity,
         $adminId,
+        $status,
         $activityId
 
     );
