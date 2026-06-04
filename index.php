@@ -27,7 +27,7 @@ $packageQuery= "SELECT
 
 $packageResult = mysqli_query($conn, $packageQuery);
 
-$base = "/web/galeriseramikmbpg/";
+$base = "/galeriseramikmbpg";
 $pageType = "home";
 
 ?>
@@ -45,11 +45,11 @@ $pageType = "home";
 
 
   <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/navbar.css">
-  <link rel="stylesheet" href="assets/css/index.css">
+  <link rel="stylesheet" href="<?= $base ?>/assets/css/navbar.css">
+  <link rel="stylesheet" href="<?= $base ?>/assets/css/index.css">
 
   <!-- Favicon -->
-  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
+  <link rel="icon" href="<?= $base ?>/assets/images/logogaleri.png" type="image/png">
 
 </head>
 
@@ -196,7 +196,7 @@ $pageType = "home";
             <p><?= htmlspecialchars($package['description']); ?></p>
 
             <a 
-              href="package/package_detail.php?id=<?= $package['package_id']; ?>" 
+              href="<?= $base ?>/package/package_detail.php?id=<?= $package['package_id']; ?>" 
               class="package-btn"
             >
               Lihat Slot Pakej
@@ -277,7 +277,7 @@ $pageType = "home";
 </footer>
 
      <!-- SCRIPT-->
-     <script src="assets/js/index.js"></script>
+     <script src="<?= $base ?>/assets/js/index.js"></script>
      
 </body>
 </html>

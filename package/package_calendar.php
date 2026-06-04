@@ -1,7 +1,7 @@
 <?php
 include '../db.php';
 
-$base = "/web/galeriseramikmbpg/";
+$base = "/galeriseramikmbpg";
 $pageType = "inner";
 
 $package_id = isset($_GET['package_id']) ? intval($_GET['package_id']) : 0;
@@ -201,12 +201,12 @@ $monthName = date('F Y', strtotime($startMonth));
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="stylesheet" href="<?= $base ?>assets/css/navbar.css">
-  <link rel="stylesheet" href="<?= $base ?>assets/css/index.css">
-  <link rel="stylesheet" href="<?= $base ?>package/package.css">
-  <link rel="stylesheet" href="<?= $base ?>package/calendar_page.css">
+  <link rel="stylesheet" href="<?= $base ?>/assets/css/navbar.css">
+  <link rel="stylesheet" href="<?= $base ?>/assets/css/index.css">
+  <link rel="stylesheet" href="<?= $base ?>/package/package.css">
+  <link rel="stylesheet" href="<?= $base ?>/package/calendar_page.css">
 
-  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
+  <link rel="icon" href="<?= $base ?>/assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>

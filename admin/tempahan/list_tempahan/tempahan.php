@@ -876,7 +876,7 @@ applyFilters();
 
 </script>
 
-<script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
+<script src="/galeriseramikmbpg/admin/js/sidebar.js"></script>
 
 
 </body>
