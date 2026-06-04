@@ -27,7 +27,7 @@ $packageQuery= "SELECT
 
 $packageResult = mysqli_query($conn, $packageQuery);
 
-$base = "/web/galeriseramikmbpg/";
+$base = "/galeriseramikmbpg";
 $pageType = "home";
 
 ?>
@@ -45,11 +45,11 @@ $pageType = "home";
 
 
   <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/navbar.css">
-  <link rel="stylesheet" href="assets/css/index.css">
+  <link rel="stylesheet" href="<?= $base ?>/assets/css/navbar.css">
+  <link rel="stylesheet" href="<?= $base ?>/assets/css/index.css">
 
   <!-- Favicon -->
-  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
+  <link rel="icon" href="<?= $base ?>/assets/images/logogaleri.png" type="image/png">
 
 </head>
 
@@ -198,7 +198,7 @@ $pageType = "home";
             <p><?= htmlspecialchars($package['description']); ?></p>
 
             <a 
-              href="package/package_detail.php?id=<?= $package['package_id']; ?>" 
+              href="<?= $base ?>/package/package_detail.php?id=<?= $package['package_id']; ?>" 
               class="package-btn"
             >
               Lihat Slot Pakej
@@ -344,60 +344,6 @@ $pageType = "home";
 
      <!-- SCRIPT-->
      <script src="assets/js/index.js"></script>
-
-     <!-- Footer QnA Box Script -->
-     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-        const qnaForm = document.getElementById("footerQnaForm");
-        const statusDiv = document.getElementById("footerFormStatus");
-        const submitBtn = document.getElementById("footerSubmitBtn");
-
-        if (qnaForm) {
-          qnaForm.addEventListener("submit", function (e) {
-            e.preventDefault(); // Stop page refresh
-
-            // Visual feedback loading state
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Menghantar...";
-            statusDiv.style.color = "#666";
-            statusDiv.innerText = "Sila tunggu...";
-
-            const formData = new FormData(qnaForm);
-
-            fetch("chatbot/submit_question.php", {
-              method: "POST",
-              body: formData,
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.status === "success") {
-                  statusDiv.style.color = "#2e7d32"; // Green for success
-                  statusDiv.innerText = data.message;
-                  qnaForm.reset(); // Clear input box
-                } else {
-                  statusDiv.style.color = "#c62828"; // Red for error
-                  statusDiv.innerText = data.message;
-                }
-              })
-              .catch((error) => {
-                console.error("Error:", error);
-                statusDiv.style.color = "#c62828";
-                statusDiv.innerText = "Ralat menghantar soalan. Sila cuba lagi.";
-              })
-              .finally(() => {
-                // Re-enable submit button
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Hantar";
-              });
-          });
-        }
-      });
-      </script>
-
-
-      <!-- script untuk chatbot -->
-      <script src="chatbot/chatbot.js"></script>
-
-          
+     
 </body>
 </html>

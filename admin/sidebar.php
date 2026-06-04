@@ -1,7 +1,8 @@
 <?php
 $current = basename($_SERVER['PHP_SELF']);
 
-$base = "/web/galeriseramikmbpg/admin";
+$root = "/galeriseramikmbpg";
+$base = $root . "/admin";
 
 $bookingPages = [
   'tempahan.php',
@@ -22,7 +23,7 @@ $galleryPages = [
 
   <div class="logo">
     <div class="logo-icon">
-      <img src="/web/galeriseramikmbpg/assets/images/logombpg.png" alt="Logo">
+      <img src="/galeriseramikmbpg/assets/images/logombpg.png" alt="Logo">
       <i class="fa-solid fa-vase"></i>
     </div>
 

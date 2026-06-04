@@ -52,6 +52,7 @@ function getStockStatus($stock) {
   <link rel="stylesheet" href="produk.css">
   <link rel="stylesheet" href="popup.css">
   <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
+  
 
   <style>
     .status-green {

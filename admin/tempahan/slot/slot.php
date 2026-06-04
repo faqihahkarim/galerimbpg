@@ -279,7 +279,7 @@ if (isset($_GET['error'])) {
   </div>
 </div>
 
-<script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
+<script src="/galeriseramikmbpg/admin/js/sidebar.js"></script>
 
 
 <!-- SCRIPT POP UP -->

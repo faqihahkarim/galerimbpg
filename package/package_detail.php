@@ -1,7 +1,7 @@
 <?php 
 include '../db.php';
 
-$base = "/web/galeriseramikmbpg/";
+$base = "/galeriseramikmbpg";
 $pageType = "inner";
 $package_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -119,11 +119,11 @@ while ($activity = mysqli_fetch_assoc($packageActivityQuery)) {
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="stylesheet" href="<?= $base ?>assets/css/navbar.css">
-  <link rel="stylesheet" href="<?= $base ?>assets/css/index.css">
-  <link rel="stylesheet" href="<?= $base ?>package/package.css">
+  <link rel="stylesheet" href="<?= $base ?>/assets/css/navbar.css">
+  <link rel="stylesheet" href="<?= $base ?>/assets/css/index.css">
+  <link rel="stylesheet" href="<?= $base ?>/package/package.css">
 
-  <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
+  <link rel="icon" href="<?= $base ?>/assets/images/logogaleri.png" type="image/png">
 </head>
 
 <body>
@@ -135,7 +135,7 @@ while ($activity = mysqli_fetch_assoc($packageActivityQuery)) {
 
     <div class="package-detail-image">
       <img 
-        src="<?= $base . htmlspecialchars($package['image_url']); ?>" 
+        src="<?= $base . '/' . htmlspecialchars($package['image_url']); ?>" 
         alt="<?= htmlspecialchars($package['package_name']); ?>"
       >
     </div>
