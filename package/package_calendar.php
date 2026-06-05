@@ -167,6 +167,7 @@ $selectedSlotQuery = "
 
   WHERE bs.package_id = $package_id
   AND bs.slot_date = '$selected_date'
+  AND bs.slot_date != CURDATE() /* Prevent showing today's slots */
 
   GROUP BY 
     bs.slot_id,
