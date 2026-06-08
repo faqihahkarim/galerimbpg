@@ -273,8 +273,8 @@ if (isset($_GET['error'])) {
       </select>
 
       <div class="popup-actions">
-        <button type="button" class="cancel-btn close-popup">Batal</button>
         <button type="submit" class="save-btn">Simpan</button>
+        <button type="button" class="cancel-btn close-popup">Batal</button>
       </div>
     </form>
   </div>

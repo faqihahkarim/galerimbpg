@@ -300,12 +300,20 @@ if (isset($_GET['error'])) {
 
                         <div class="form-group">
                             <label>Jenis Produk</label>
-                            <input type="text" name="product_type" id="productType" required>
+                            <select name="product_type" id="productType" required>
+                                <option value="">-- Pilih Jenis Produk --</option>
+                                <option value="Pasu">Pasu</option>
+                                <option value="Pinggan">Pinggan</option>
+                                <option value="Mangkuk">Mangkuk</option>
+                                <option value="Tempat Hiasan">Tempat Hiasan</option>
+                                <option value="Aksesori">Aksesori</option>
+                                <option value="Lain-lain">Lain-lain</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label>Kategori Produk</label>
-                            <select name="product_type" id="productType" required>
+                            <select name="category" id="productCategory" required>
                                 <option value="">-- Pilih Kategori --</option>
                                 <option value="Aktiviti">Aktiviti</option>
                                 <option value="Jualan">Jualan</option>
@@ -547,6 +555,7 @@ document.querySelectorAll('.edit-product-btn').forEach(button => {
                 document.getElementById('productId').value = product.product_id;
                 document.getElementById('productName').value = product.product_name;
                 document.getElementById('productType').value = product.product_type;
+                document.getElementById('productCategory').value = product.category ?? '';
                 document.getElementById('productMotif').value = product.product_motif;
                 document.getElementById('productWeight').value = product.product_weight ?? '';
                 document.getElementById('productHeight').value = product.product_height ?? '';
