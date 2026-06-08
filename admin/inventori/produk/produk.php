@@ -181,8 +181,8 @@ if (isset($_GET['error'])) {
                                     <?= htmlspecialchars($product['product_stock'] ?? '0') ?>
                                 </td>
 
-                                <td><?= htmlspecialchars($product['product_type']) ?></td>
-                                <td><?= htmlspecialchars($product['category']) ?></td>
+                                <td><?= htmlspecialchars($product['product_type']?? '') ?></td>
+                                <td><?= htmlspecialchars($product['category'] ?? '') ?></td>
 
                                 <td>
                                     <img 

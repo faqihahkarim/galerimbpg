@@ -7,7 +7,6 @@ if (!isset($_SESSION['admin_login'])) {
 }
 
 include '../../../db.php';
-
 include '../../log.php';
 
 if (!function_exists('addAdminLog')) {
@@ -26,7 +25,6 @@ $adminId = $_SESSION['admin_id'];
 // =====================================================
 // FUNCTION: Tentukan status stok
 // =====================================================
-
 function getStockStatus($stock) {
     if ($stock <= 0) {
         return 'Tiada Stok';
@@ -115,9 +113,10 @@ if ($action === 'add') {
 
     $stmt = mysqli_prepare($conn, $insertProductQuery);
 
+    // FIX: Match exact parameters string count to 11 assignments
     mysqli_stmt_bind_param(
         $stmt,
-        "sssddddisis",
+        "sssddddisis", 
         $productName,
         $productType,
         $productMotif,
@@ -198,9 +197,6 @@ if ($action === 'add') {
     header("Location: produk.php?success=product_added");
     exit();
 }
-
-
-
 
 
 // =====================================================
@@ -297,28 +293,28 @@ if ($action === 'edit') {
             product_stock = ?,
             stock_status = ?,
             updated_by = ?,
-            category=?,
+            category = ?
         WHERE product_id = ?
         AND status = 'active'
-    ";
+    "; 
 
     $stmt = mysqli_prepare($conn, $updateProductQuery);
-
+    
     mysqli_stmt_bind_param(
         $stmt,
-        "sssddddisiis",
-        $productName,
-        $productType,
-        $productMotif,
-        $productWeight,
-        $productHeight,
-        $productDiameter,
-        $productPrice,
-        $productStock,
-        $stockStatus,
-        $adminId,
-        $productId,
-        $category
+        "sssddddisisi", 
+        $productName,     
+        $productType,     
+        $productMotif,    
+        $productWeight,   
+        $productHeight,   
+        $productDiameter, 
+        $productPrice,    
+        $productStock,    
+        $stockStatus,     
+        $adminId,         
+        $category,        
+        $productId       
     );
 
     if (!mysqli_stmt_execute($stmt)) {
@@ -411,11 +407,13 @@ if ($action === 'edit') {
                     image_url,
                     is_main,
                     sort_order
-                ) VALUES (?, ?, 0, 0)
+                ) VALUES (?, ?, ?, ?)
             ";
 
             $imageStmt = mysqli_prepare($conn, $insertImageQuery);
-            mysqli_stmt_bind_param($imageStmt, "is", $productId, $imageUrl);
+            $defaultIsMain = 0;
+            $defaultSort = 0;
+            mysqli_stmt_bind_param($imageStmt, "isii", $productId, $imageUrl, $defaultIsMain, $defaultSort);
 
             if (!mysqli_stmt_execute($imageStmt)) {
                 header("Location: produk.php?error=image_insert_failed");
