@@ -181,6 +181,9 @@ $selectedSlotQuery = "
 
 $selectedSlotResult = mysqli_query($conn, $selectedSlotQuery);
 
+$today = date('Y-m-d');
+$isCurrentDate = ($selected_date === $today);
+
 /* MONTH NAVIGATION */
 $prevMonth = date('m', strtotime("$startMonth -1 month"));
 $prevYear = date('Y', strtotime("$startMonth -1 month"));
@@ -378,83 +381,91 @@ $monthName = date('F Y', strtotime($startMonth));
 
         <h4>Slot yang tersedia</h4>
 
-        <?php
-          mysqli_data_seek($selectedSlotResult, 0);
-          $hasAvailable = false;
+        <?php if ($isCurrentDate): ?>
+          <p>Slot untuk tarikh hari ini tidak dipaparkan. Sila pilih tarikh selepas hari ini.</p>
+        <?php else: ?>
+          <?php
+            mysqli_data_seek($selectedSlotResult, 0);
+            $hasAvailable = false;
 
-          while ($slot = mysqli_fetch_assoc($selectedSlotResult)):
-            $maxBooking = $slot['max_booking_per_slot'] ?? 1;
-            $bookingCount = $slot['booking_count'];
+            while ($slot = mysqli_fetch_assoc($selectedSlotResult)):
+              $maxBooking = $slot['max_booking_per_slot'] ?? 1;
+              $bookingCount = $slot['booking_count'];
 
-            $isUnavailable = (
-              $slot['slot_status'] != 'available' ||
-              $bookingCount >= $maxBooking
-            );
+              $isUnavailable = (
+                $slot['slot_status'] != 'available' ||
+                $bookingCount >= $maxBooking
+              );
 
-            if (!$isUnavailable):
-              $hasAvailable = true;
-        ?>
+              if (!$isUnavailable):
+                $hasAvailable = true;
+          ?>
 
-          <div class="slot-item">
-            <div>
-              <strong>
-                <i class="fa-regular fa-clock"></i>
-                <?= date("g.i A", strtotime($slot['start_time'])); ?>
-                -
-                <?= date("g.i A", strtotime($slot['end_time'])); ?>
-              </strong>
+            <div class="slot-item">
+              <div>
+                <strong>
+                  <i class="fa-regular fa-clock"></i>
+                  <?= date("g.i A", strtotime($slot['start_time'])); ?>
+                  -
+                  <?= date("g.i A", strtotime($slot['end_time'])); ?>
+                </strong>
+              </div>
+
+              <a 
+                href="booking_form.php?package_id=<?= $package_id; ?>&slot_id=<?= $slot['slot_id']; ?>&date=<?= $selected_date; ?>" 
+                class="book-btn"
+              >
+                Pilih Slot
+              </a>
             </div>
 
-            <a 
-              href="booking_form.php?package_id=<?= $package_id; ?>&slot_id=<?= $slot['slot_id']; ?>&date=<?= $selected_date; ?>" 
-              class="book-btn"
-            >
-              Pilih Slot
-            </a>
-          </div>
+          <?php endif; endwhile; ?>
 
-        <?php endif; endwhile; ?>
-
-        <?php if (!$hasAvailable): ?>
-          <p>Tiada slot tersedia untuk tarikh ini.</p>
+          <?php if (!$hasAvailable): ?>
+            <p>Tiada slot tersedia untuk tarikh ini.</p>
+          <?php endif; ?>
         <?php endif; ?>
 
         <h4>Slot penuh / tidak tersedia</h4>
 
-        <?php
-          mysqli_data_seek($selectedSlotResult, 0);
-          $hasUnavailable = false;
+        <?php if ($isCurrentDate): ?>
+          <p>Tiada slot dipaparkan untuk tarikh hari ini.</p>
+        <?php else: ?>
+          <?php
+            mysqli_data_seek($selectedSlotResult, 0);
+            $hasUnavailable = false;
 
-          while ($slot = mysqli_fetch_assoc($selectedSlotResult)):
-            $maxBooking = $slot['max_booking_per_slot'] ?? 1;
-            $bookingCount = $slot['booking_count'];
+            while ($slot = mysqli_fetch_assoc($selectedSlotResult)):
+              $maxBooking = $slot['max_booking_per_slot'] ?? 1;
+              $bookingCount = $slot['booking_count'];
 
-            $isUnavailable = (
-              $slot['slot_status'] != 'available' ||
-              $bookingCount >= $maxBooking
-            );
+              $isUnavailable = (
+                $slot['slot_status'] != 'available' ||
+                $bookingCount >= $maxBooking
+              );
 
-            if ($isUnavailable):
-              $hasUnavailable = true;
-        ?>
+              if ($isUnavailable):
+                $hasUnavailable = true;
+          ?>
 
-          <div class="slot-item unavailable">
-            <div>
-              <strong>
-                <i class="fa-regular fa-clock"></i>
-                <?= date("g.i A", strtotime($slot['start_time'])); ?>
-                -
-                <?= date("g.i A", strtotime($slot['end_time'])); ?>
-              </strong>
+            <div class="slot-item unavailable">
+              <div>
+                <strong>
+                  <i class="fa-regular fa-clock"></i>
+                  <?= date("g.i A", strtotime($slot['start_time'])); ?>
+                  -
+                  <?= date("g.i A", strtotime($slot['end_time'])); ?>
+                </strong>
 
-              <p>Status: <?= htmlspecialchars($slot['slot_status']); ?></p>
+                <p>Status: <?= htmlspecialchars($slot['slot_status']); ?></p>
+              </div>
             </div>
-          </div>
 
-        <?php endif; endwhile; ?>
+          <?php endif; endwhile; ?>
 
-        <?php if (!$hasUnavailable): ?>
-          <p>Tiada slot penuh / tidak tersedia untuk tarikh ini.</p>
+          <?php if (!$hasUnavailable): ?>
+            <p>Tiada slot penuh / tidak tersedia untuk tarikh ini.</p>
+          <?php endif; ?>
         <?php endif; ?>
 
         <div class="slot-note">
