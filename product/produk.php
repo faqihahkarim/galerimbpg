@@ -1,19 +1,7 @@
 <?php
-// 1. Get the directory path of the current file
-$currentDir = str_replace('\\', '/', __DIR__);
-
-// 2. Clear out the server root path to find the relative project root folder
-$documentRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
-$projectDir = str_replace($documentRoot, '', $currentDir);
-
-// 3. Formulate a base path that works on ANY machine (XAMPP, Laragon, or Live Hosting)
-// This will naturally strip out or add /web/ depending on how the laptop hosts it.
-$base = '/' . trim($projectDir, '/') . '/';
-if ($base === '//') { $base = '/'; }
-
+$base = "/web/galeriseramikmbpg/";
 $pageType = "inner";
 include '../db.php';
-// ... rest of your script stays exactly the sam
 
 $productQuery = "
   SELECT 
