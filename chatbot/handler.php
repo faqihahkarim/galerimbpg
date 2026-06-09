@@ -55,8 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // --- UPGRADED LEVEL 2: Tokenized Keyword Relevance Match ---
-    $stopWords = ['je', 'ke', 'di', 'dan', 'yang', 'untuk', 'ada', 'kah', 'itu', 'ini', 'saya', 'nak', 'boleh', 'tolong', 'mana', 'bila', 'nak', 'pergi',
-                  'adakah','bilakah','bolehkah','berapa','berapakah','apa','apakah','siapa','siapakah','mengapa','bagaimana'];
+    $stopWords = ['je', 'ke', 'di', 'dan', 'yang', 'untuk', 'ada', 'kah', 'itu', 'ini', 'saya', 'nak', 'boleh', 'tolong', 'bila', 'nak', 'pergi',
+                  'adakah','bilakah','bolehkah','berapa','berapakah','apa','apakah','siapa','siapakah','mengapa','bagaimana','galeri'];
     
     $words = explode(' ', $cleanMsg);
     $filteredKeywords = [];

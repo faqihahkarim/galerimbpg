@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Reuse the exact text cleaner routine locally 
             $sentenceClean = strtolower($question);
             $sentenceClean = preg_replace('/[^\w\s]/u', '', $sentenceClean);
-            $stop_words = ['saya', 'awak', 'kamu', 'nak', 'ke', 'di', 'dari', 'yang', 'ini', 'itu', 'dan', 'atau', 'adakah', 'apa', 'apakah', 'bagaimana', 'macam', 'mana', 'bila', 'siapa', 'mengapa', 'kenapa', 'ada'];
+            $stop_words = ['saya', 'awak', 'kamu', 'nak', 'ke', 'di', 'dari', 'yang', 'ini', 'itu', 'dan', 'atau', 'adakah', 'apa', 'apakah', 'bagaimana', 'macam', 'mana', 'bila', 'siapa', 'mengapa', 'kenapa', 'ada','galeri', 'Galeri'];
             $words = explode(' ', $sentenceClean);
             $filtered = array_diff($words, $stop_words);
             $keywordString = implode(', ', array_filter(array_map('trim', $filtered)));
