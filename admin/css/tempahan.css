@@ -466,11 +466,13 @@ button.loading .btn-text {
 .approve-booking-btn {
   background: linear-gradient(180deg, #2563eb, #155eef);
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+  cursor: pointer;
 }
 
 .reject-booking-btn {
   background: linear-gradient(180deg, #dc2626, #b91c1c);
   box-shadow: 0 8px 20px rgba(220, 38, 38, 0.22);
+  cursor: pointer;
 }
 
 /* =========================

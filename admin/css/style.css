@@ -239,6 +239,7 @@ select {
   padding: 9px 13px;
   font-family: inherit;
   color: var(--text-main);
+  cursor:pointer;
 }
 
 .overlay {
