@@ -28,7 +28,7 @@
             <?php
               $back = $_SERVER['HTTP_REFERER'] ?? $base . "index.php";
             ?>
-            <a href="<?= $back ?>" class="btn-primary">Kembali</a>
+            <!--a href="<?= $back ?>" class="btn-primary">Kembali</a-->
 
           <?php else: ?>
 

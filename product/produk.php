@@ -305,7 +305,7 @@ function filterProducts() {
   let visibleCount = 0;
 
   cards.forEach(card => {
-    const name = card.dataset.name;
+    const name = card.dataset.name.toLowerCase();
     const jenis = card.dataset.jenis;
     const stock = Number(card.dataset.stock);
     const stockStatus = getStockFilterStatus(stock);
