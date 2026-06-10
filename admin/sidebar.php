@@ -166,7 +166,7 @@ $galleryPages = [
          LOGOUT
     ========================== -->
 
-    <a href="<?= $base ?>../../login.php">
+    <a href="<?= $base ?>../../index.php">
       <i class="fa-solid fa-arrow-right-from-bracket"></i>
       Log Keluar
     </a>
