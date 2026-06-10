@@ -10,8 +10,6 @@ if (!isset($_SESSION['admin_login'])) {
 include '../../db.php';
 include '../timeout.php';
 
-
-
 function getQnaStatus($answer) {
     return trim($answer) !== '' ? 'Dijawab' : 'Belum Dijawab';
 }
@@ -34,44 +32,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $answerEscaped = mysqli_real_escape_string($conn, $answer);
     $statusEscaped = mysqli_real_escape_string($conn, getQnaStatus($answer));
 
-    // --- POST BLOCK ---
-        if ($formAction === 'save') {
-            if ($question === '') {
-                header('Location: qna.php?error=empty_question');
+    if ($formAction === 'save') {
+        // Reuse text cleaner routine locally for safety references
+        $sentenceClean = strtolower($question);
+        $sentenceClean = preg_replace('/[^\w\s]/u', '', $sentenceClean);
+        $stop_words = ['saya', 'awak', 'kamu', 'nak', 'ke', 'di', 'dari', 'yang', 'ini', 'itu', 'dan', 'atau', 'adakah', 'apa', 'apakah', 'bagaimana', 'macam', 'mana', 'bila', 'siapa', 'mengapa', 'kenapa', 'ada','galeri', 'Galeri'];
+        $words = explode(' ', $sentenceClean);
+        $filtered = array_diff($words, $stop_words);
+        $keywordString = implode(', ', array_filter(array_map('trim', $filtered)));
+
+        $keywordsEscaped = mysqli_real_escape_string($conn, strtolower($_POST['keywords'] ?? '')); 
+        
+        // --- 1. MODIFIED PROCESSING PART: Extract & escape admin phrases field ---
+        $phrasesEscaped = mysqli_real_escape_string($conn, strtolower($_POST['phrases'] ?? ''));
+
+        if ($qnaId > 0) {
+            // Updated to save phrases column
+            $updateQuery = "UPDATE qna SET question = '$questionEscaped', answer = '$answerEscaped', keywords = '$keywordsEscaped', phrases = '$phrasesEscaped', status = '$statusEscaped' WHERE qna_id = $qnaId";
+            if (mysqli_query($conn, $updateQuery)) {
+                header('Location: qna.php?success=qna_updated');
                 exit;
             }
-
-            // Reuse the exact text cleaner routine locally 
-            $sentenceClean = strtolower($question);
-            $sentenceClean = preg_replace('/[^\w\s]/u', '', $sentenceClean);
-            $stop_words = ['saya', 'awak', 'kamu', 'nak', 'ke', 'di', 'dari', 'yang', 'ini', 'itu', 'dan', 'atau', 'adakah', 'apa', 'apakah', 'bagaimana', 'macam', 'mana', 'bila', 'siapa', 'mengapa', 'kenapa', 'ada','galeri', 'Galeri'];
-            $words = explode(' ', $sentenceClean);
-            $filtered = array_diff($words, $stop_words);
-            $keywordString = implode(', ', array_filter(array_map('trim', $filtered)));
-
-            $questionEscaped = mysqli_real_escape_string($conn, $question);
-            $answerEscaped = mysqli_real_escape_string($conn, $_POST['answer']);
-            $keywordsEscaped = mysqli_real_escape_string($conn, strtolower($_POST['keywords'])); // Save as lowercase
-
-            $updateQuery = "UPDATE qna SET answer = '$answerEscaped', keywords = '$keywordsEscaped', status = 'Dijawab' WHERE id = $id";
-            $statusEscaped = mysqli_real_escape_string($conn, getQnaStatus($answer));
-
-            if ($qnaId > 0) {
-                // Add keywords assignment here
-                $updateQuery = "UPDATE qna SET question = '$questionEscaped', answer = '$answerEscaped', keywords = '$keywordsEscaped', status = '$statusEscaped' WHERE qna_id = $qnaId";
-                if (mysqli_query($conn, $updateQuery)) {
-                    header('Location: qna.php?success=qna_updated');
-                    exit;
-                }
-            } else {
-                // Add keywords tracking here
-                $insertQuery = "INSERT INTO qna (question, answer, keywords, status) VALUES ('$questionEscaped', '$answerEscaped', '$keywordsEscaped', '$statusEscaped')";
-                if (mysqli_query($conn, $insertQuery)) {
-                    header('Location: qna.php?success=qna_added');
-                    exit;
-                }
+        } else {
+            // Insert tracking to handle phrases column
+            $insertQuery = "INSERT INTO qna (question, answer, keywords, phrases, status) VALUES ('$questionEscaped', '$answerEscaped', '$keywordsEscaped', '$phrasesEscaped', '$statusEscaped')";
+            if (mysqli_query($conn, $insertQuery)) {
+                header('Location: qna.php?success=qna_added');
+                exit;
             }
         }
+    }
 }
 
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id']) && is_numeric($_GET['id'])) {
@@ -96,46 +86,21 @@ $totalPages = max(1, (int) ceil($totalRules / $limit));
 $page = min($page, $totalPages);
 $offset = ($page - 1) * $limit;
 
-$qnaQuery = "
-    SELECT * FROM qna
-    ORDER BY qna_id DESC
-    LIMIT $limit
-    OFFSET $offset
-";
-
+$qnaQuery = "SELECT * FROM qna ORDER BY qna_id DESC LIMIT $limit OFFSET $offset";
 $qnaResult = mysqli_query($conn, $qnaQuery);
 
 if (isset($_GET['success'])) {
     switch ($_GET['success']) {
-        case 'qna_updated':
-            $flashMessage = 'QnA berjaya dikemaskini.';
-            $flashClass = 'success-alert';
-            break;
-        case 'qna_added':
-            $flashMessage = 'QnA baru berjaya disimpan.';
-            $flashClass = 'success-alert';
-            break;
-        case 'qna_deleted':
-            $flashMessage = 'QnA berjaya dipadam.';
-            $flashClass = 'success-alert';
-            break;
+        case 'qna_updated': $flashMessage = 'QnA berjaya dikemaskini.'; $flashClass = 'success-alert'; break;
+        case 'qna_added': $flashMessage = 'QnA baru berjaya disimpan.'; $flashClass = 'success-alert'; break;
+        case 'qna_deleted': $flashMessage = 'QnA berjaya dipadam.'; $flashClass = 'success-alert'; break;
     }
 }
 if (isset($_GET['error'])) {
     switch ($_GET['error']) {
-        case 'invalid_id':
-            $flashMessage = 'ID QnA tidak sah.';
-            $flashClass = 'error-alert';
-            break;
-        case 'empty_question':
-            $flashMessage = 'Sila masukkan pertanyaan.';
-            $flashClass = 'error-alert';
-            break;
-        default:
-            if ($flashMessage === '') {
-                $flashMessage = 'Terdapat ralat. Sila cuba lagi.';
-                $flashClass = 'error-alert';
-            }
+        case 'invalid_id': $flashMessage = 'ID QnA tidak sah.'; $flashClass = 'error-alert'; break;
+        case 'empty_question': $flashMessage = 'Sila masukkan pertanyaan.'; $flashClass = 'error-alert'; break;
+        default: $flashMessage = 'Terdapat ralat. Sila cuba lagi.'; $flashClass = 'error-alert'; break;
     }
 }
 ?>
@@ -146,29 +111,21 @@ if (isset($_GET['error'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MBPG</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/tempahan.css">
   <link rel="stylesheet" href="../css/rule.css">
   <link rel="icon" href="<?= $base ?>assets/images/logogaleri.png" type="image/png">
 </head>
-
 <body>
 <div class="overlay"></div>
 
 <div class="admin-layout">
-
     <?php include '../sidebar.php'; ?>
-
     <main class="main">
-
     <header class="topbar">
-        <button id="menu-toggle" class="menu-toggle">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-
+        <button id="menu-toggle" class="menu-toggle"><i class="fa-solid fa-bars"></i></button>
         <div>
             <h1>Bahagian Pertanyaan Pengunjung</h1>
             <p>Pengaturan QnA</p>
@@ -176,35 +133,28 @@ if (isset($_GET['error'])) {
     </header>
 
     <?php if ($flashMessage): ?>
-      <div class="alert <?= $flashClass ?>">
-        <?= htmlspecialchars($flashMessage) ?>
-      </div>
+      <div class="alert <?= $flashClass ?>"><?= htmlspecialchars($flashMessage) ?></div>
     <?php endif; ?>
 
     <section class="booking-panel">
-
-    <div class="rule-actions">
-              <button type="button" class="red-btn" id="openRuleModal">
-                <i class="fa-solid fa-plus"></i> Tambah QnA
-              </button>
-            </div>
+        <div class="rule-actions">
+          <button type="button" class="red-btn" id="openRuleModal"><i class="fa-solid fa-plus"></i> Tambah QnA</button>
+        </div>
 
         <div class="table-wrap">
-            <!-- Action Buttons -->
-            
             <table>
                 <thead>
                     <tr>
-                    <th>No.</th>
-                    <th>Pertanyaan</th>
-                    <th>Kata Kunci</th>
-                    <th>Jawapan</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                    <th>Action</th>
+                        <th>No.</th>
+                        <th>Pertanyaan</th>
+                        <th>Kata Kunci (Auto)</th>
+                        <th>Kombinasi Frasa (Admin)</th>
+                        <th>Jawapan</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     <?php $no = $offset + 1; ?>
                     <?php while ($qna = mysqli_fetch_assoc($qnaResult)): ?>
@@ -212,7 +162,8 @@ if (isset($_GET['error'])) {
                         <td><?= $no++ ?></td>
                         <td><?= htmlspecialchars($qna['question']) ?></td>
                         <td><?= htmlspecialchars($qna['keywords']) ?></td>
-                        <td><?= htmlspecialchars($qna['answer']) ?></td>
+                        <td><?= htmlspecialchars($qna['phrases'] ?? '') ?></td>
+                        <td style="text-align: left;"><?= htmlspecialchars($qna['answer']) ?></td>
                         <td><?= htmlspecialchars($qna['status']) ?></td>
                         <td>
                             <button type="button" class="edit-qna-btn"
@@ -220,13 +171,12 @@ if (isset($_GET['error'])) {
                                 data-id="<?= $qna['qna_id'] ?>"
                                 data-question="<?= htmlspecialchars($qna['question']) ?>"
                                 data-keywords="<?= htmlspecialchars($qna['keywords']) ?>"
+                                data-phrases="<?= htmlspecialchars($qna['phrases'] ?? '') ?>"
                                 data-answer="<?= htmlspecialchars($qna['answer']) ?>"
                             >Edit</button>
                         </td>
                         <td>
-                            <button
-                                class="delete-qna-btn"
-                                onclick="deleteQna(<?= $qna['qna_id'] ?>)"
+                            <button class="delete-qna-btn" onclick="deleteQna(<?= $qna['qna_id'] ?>)"
                                 style="background: none; border: none; color: #c62828; cursor: pointer; font:inherit; font-weight: bold;">
                                 Delete
                             </button>
@@ -236,38 +186,20 @@ if (isset($_GET['error'])) {
                 </tbody>
             </table>
 
-            <!--pagination-->
             <div class="pagination">
-
                 <?php if ($page > 1): ?>
-                    <a href="?page=<?= $page - 1 ?>" class="page-btn">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </a>
+                    <a href="?page=<?= $page - 1 ?>" class="page-btn"><i class="fa-solid fa-chevron-left"></i></a>
                 <?php endif; ?>
-
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-
-                    <a 
-                        href="?page=<?= $i ?>" 
-                        class="page-btn <?= $page == $i ? 'active-page' : '' ?>"
-                    >
-                        <?= $i ?>
-                    </a>
-
+                    <a href="?page=<?= $i ?>" class="page-btn <?= $page == $i ? 'active-page' : '' ?>"><?= $i ?></a>
                 <?php endfor; ?>
-
                 <?php if ($page < $totalPages): ?>
-                    <a href="?page=<?= $page + 1 ?>" class="page-btn">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </a>
+                    <a href="?page=<?= $page + 1 ?>" class="page-btn"><i class="fa-solid fa-chevron-right"></i></a>
                 <?php endif; ?>
-
             </div>
         </div>
-
     </section>
 
-<!-- POP UP TAMBAH QNA -->
 <div class="popup-modal" id="qnaModal">
   <div class="popup-card">
     <h2>Tambah / Edit QnA</h2>
@@ -279,8 +211,11 @@ if (isset($_GET['error'])) {
       <label>Pertanyaan</label>
       <input type="text" id="qnaQuestion" name="question" required>
 
-      <label>Kata Kunci</label>
+      <label>Kata Kunci (Asingkan dengan koma)</label>
       <input type="text" id="qnaKeywords" name="keywords" required>
+
+      <label>Kombinasi Frasa Admin (Asingkan dengan koma - cth: had masa tempah, lewat booking)</label>
+      <input type="text" id="qnaPhrases" name="phrases">
 
       <label>Jawapan</label>
       <textarea id="qnaAnswer" name="answer"></textarea>
@@ -295,9 +230,7 @@ if (isset($_GET['error'])) {
 
 <script src="/web/galeriseramikmbpg/admin/js/sidebar.js"></script>
 
-
-<!-- SCRIPT POP UP -->
- <script>
+<script>
 const openRuleModal = document.getElementById('openRuleModal');
 const qnaModal = document.getElementById('qnaModal');
 const qnaForm = document.getElementById('qnaForm');
@@ -308,6 +241,8 @@ openRuleModal.addEventListener('click', () => {
   document.getElementById('qna_id').value = '';
   document.getElementById('qnaQuestion').value = '';
   document.getElementById('qnaKeywords').value = '';
+  // --- 4. MODIFIED SCRIPT PART: Clear phrases field on fresh add entry ---
+  document.getElementById('qnaPhrases').value = '';
   document.getElementById('qnaAnswer').value = '';
   qnaModal.classList.add('active');
 });
@@ -320,12 +255,13 @@ document.querySelectorAll('.edit-qna-btn').forEach(btn => {
     document.getElementById('qna_id').value = id;
     document.getElementById('qnaQuestion').value = btn.dataset.question || '';
     document.getElementById('qnaKeywords').value = btn.dataset.keywords || '';
+    // --- 4. MODIFIED SCRIPT PART: Populate phrase data tracking on edit click ---
+    document.getElementById('qnaPhrases').value = btn.dataset.phrases || '';
     document.getElementById('qnaAnswer').value = btn.dataset.answer || '';
     qnaModal.classList.add('active');
   });
 });
 
-// delete button
 function deleteQna(id) {
     if (confirm("Padam soalan ini?")) {
         window.location = "qna.php?action=delete&id=" + id;
@@ -348,5 +284,5 @@ document.querySelectorAll('.popup-modal').forEach(modal => {
   });
 });
 </script>
-
 </body>
+</html>

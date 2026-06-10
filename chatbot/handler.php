@@ -14,8 +14,7 @@ if (!isset($conn) || !$conn) {
 // Handle GET request for dynamic suggestions
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'get_suggestions') {
     
-    // Using a completely standard safe SQL query to prevent any 500 server crashes
-    $query = "SELECT qna_id, question FROM qna WHERE qna_id IN (1, 6, 7, 2) AND status = 'Dijawab'";
+    $query = "SELECT qna_id, question FROM qna WHERE qna_id IN (1, 2, 3, 4) AND status = 'Dijawab'";
     $result = mysqli_query($conn, $query);
     $data = [];
     
@@ -25,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['action'] ?? '') === 'get_sug
         }
         echo json_encode(['status' => 'success', 'data' => $data]);
     } else {
-        // If the query fails, output the error message directly instead of throwing a blank 500 page
         echo json_encode(['status' => 'error', 'message' => mysqli_error($conn)]);
     }
     exit;
 }
+
 // Handle POST request for chat messaging
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userMsg = trim($_POST['message'] ?? '');
@@ -54,7 +53,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // --- UPGRADED LEVEL 2: Tokenized Keyword Relevance Match ---
+    // 1.5: Short Phrase Matching 
+    // Fetch answers and phrases to check multi-word intent directly
+    $phraseQuery = "SELECT answer, phrases FROM qna WHERE status = 'Dijawab' AND phrases IS NOT NULL AND phrases != ''";
+    $phraseResult = mysqli_query($conn, $phraseQuery);
+
+    if ($phraseResult && mysqli_num_rows($phraseResult) > 0) {
+        while ($row = mysqli_fetch_assoc($phraseResult)) {
+            // Split phrases by comma
+            $phraseArray = explode(',', $row['phrases']);
+            foreach ($phraseArray as $phrase) {
+                $trimmedPhrase = trim(strtolower($phrase));
+                
+                // If the user's cleaned input text explicitly contains this admin phrase
+                if ($trimmedPhrase !== '' && strpos($cleanMsg, $trimmedPhrase) !== false) {
+                    echo json_encode(['status' => 'success', 'answer' => $row['answer']]);
+                    exit; // Match found! Stop execution and reply immediately
+                }
+            }
+        }
+    }
+
+    // --- LEVEL 2: Tokenized Keyword Relevance Match (Fallback if phrases do not match) ---
     $stopWords = ['je', 'ke', 'di', 'dan', 'yang', 'untuk', 'ada', 'kah', 'itu', 'ini', 'saya', 'nak', 'boleh', 'tolong', 'bila', 'nak', 'pergi',
                   'adakah','bilakah','bolehkah','berapa','berapakah','apa','apakah','siapa','siapakah','mengapa','bagaimana','galeri'];
     
@@ -69,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!empty($filteredKeywords)) {
-        // dynamic scoring system using CASE WHEN
+        // Dynamic scoring system using CASE WHEN
         $scoreFields = [];
         foreach ($filteredKeywords as $keyword) {
             $scoreFields[] = "(CASE WHEN LOWER(question) LIKE '%$keyword%' THEN 2 ELSE 0 END)";
@@ -104,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // LEVEL 3: If absolute match and keyword match both fail, return conversational fallback instructions
+    // LEVEL 3: Fallback Form Context Instruction
     echo json_encode([
         'status' => 'fallback', 
         'message' => 'Maaf, saya tidak menemui jawapan tepat untuk soalan itu. 
@@ -113,8 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       Anda juga boleh berhubung secara terus kepada:
                       013-2988693 / 019-2028241 
                       (Pn. ....) untuk bantuan segera.'
-
-                      
     ]);
     exit;
 }
