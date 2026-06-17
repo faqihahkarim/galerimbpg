@@ -450,7 +450,6 @@ $admin = mysqli_fetch_assoc($result);
 
   <div class="legend">
         <span><b class="legend-box booking-box"></b> Tempahan</span>
-        <span><b class="legend-box available-box"></b> Slot Tiada Tempahan</span>
         <span><b class="legend-box closure-box"></b> Tarikh Tutup</span>
       </div>
     </div>         

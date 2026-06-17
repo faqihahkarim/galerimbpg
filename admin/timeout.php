@@ -2,7 +2,7 @@
 
 
 // DO NOT start session again
-$timeout_duration = 3600;
+$timeout_duration = 1800;
 
 if (isset($_SESSION['LAST_ACTIVITY']) && 
    (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {

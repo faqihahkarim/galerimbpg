@@ -154,7 +154,6 @@ if (isset($_GET['error'])) {
                     <th>Hari</th>
                     <th>Masa Mula</th>
                     <th>Masa Akhir</th>
-                    <th>Max Tempah/Slot</th>
                     <th>Status</th>
                     <th>Action</th>
                     <th>Action</th>
@@ -170,7 +169,6 @@ if (isset($_GET['error'])) {
                         <td><?= htmlspecialchars(getMalayDayName($rule['day_of_week'])) ?></td>
                         <td><?= date('g:iA', strtotime($rule['start_time'])) ?></td>
                         <td><?= date('g:iA', strtotime($rule['end_time'])) ?></td>
-                        <td><?= $rule['max_booking_per_slot'] ?></td>
                         <td><?= htmlspecialchars($rule['status']) ?></td>
                         <td>
                         <button type="button" class="edit-rule-btn" 
